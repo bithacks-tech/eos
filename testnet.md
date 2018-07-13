@@ -116,7 +116,7 @@ The ssh helper fields are paths to ssh and scp, an identity if necessary, and an
         "remote": true,
         "ssh_identity": "",
         "ssh_args": "",
-        "enu_root_dir": "/home/phil/blockchain/enu",
+        "myeos_root_dir": "/home/phil/blockchain/enu",
         "data_dir": "tn_data_0",
         "hostname": "remoteserv",
         "public_name": "remoteserv",
@@ -170,7 +170,7 @@ This table describes all of the key/value pairs used in the testnet.json file.
 | remote             | specifies whether this node is in the local network or not. This flag ties in with the launch mode command line option (-l) to determine if the local launcher instance will attempt to start this node.
 | ssh_identity       | a per-node override of the general ssh_identity defined above.
 | ssh_args           | a per-node override of the general ssh_args
-| enu_root_dir       | specifies the directory into which all enudaemon artifacts are based. This is required for any hosts that are not the local host.
+| myeos_root_dir       | specifies the directory into which all enudaemon artifacts are based. This is required for any hosts that are not the local host.
 | data_dir           | the root for the remaining node-specific settings below.
 | hostname           | the domain name for the server, or its IP address.
 | public_name        | possibly different from the hostname, this name will get substituted for the aliases when creating the per-node config.ini file's peer list.

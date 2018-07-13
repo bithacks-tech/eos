@@ -73,11 +73,11 @@ FC_REFLECT( withdraw_t, (to)(amount) );
 
 struct __attribute((packed)) account_t {
    account_name owner;
-   asset        enu_balance;
+   asset        myeos_balance;
    uint32_t     open_offers;
    uint32_t     open_games;
 };
-FC_REFLECT(account_t, (owner)(enu_balance)(open_offers)(open_games));
+FC_REFLECT(account_t, (owner)(myeos_balance)(open_offers)(open_games));
 
 struct player_t {
    checksum_type commitment;
@@ -195,7 +195,7 @@ struct dice_tester : TESTER {
    asset balance_of(account_name account) {
       account_t acnt;
       if(!dice_account(account, acnt)) return asset();
-      return acnt.enu_balance;
+      return acnt.myeos_balance;
    }
 
    checksum_type commitment_for( const char* secret ) {
@@ -226,8 +226,8 @@ BOOST_FIXTURE_TEST_CASE( dice_test, dice_tester ) try {
 
    create_accounts( {N(enu.token), N(dice),N(alice),N(bob),N(carol),N(david)}, false);
 
-   set_code(N(enu.token), enu_token_wast);
-   set_abi(N(enu.token), enu_token_abi);
+   set_code(N(enu.token), myeos_token_wast);
+   set_abi(N(enu.token), myeos_token_abi);
 
    produce_block();
 

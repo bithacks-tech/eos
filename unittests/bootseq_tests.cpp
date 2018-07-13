@@ -188,18 +188,18 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         //  - myeosio (code: enu.bios) (already set by tester constructor)
         //  - enu.msig (code: enu.msig)
         //  - enu.token (code: enu.token)
-        set_code_abi(N(enu.msig), enu_msig_wast, enu_msig_abi);//, &myeosio_active_pk);
-        set_code_abi(N(enu.token), enu_token_wast, enu_token_abi); //, &myeosio_active_pk);
+        set_code_abi(N(enu.msig), myeos_msig_wast, myeos_msig_abi);//, &myeosio_active_pk);
+        set_code_abi(N(enu.token), myeos_token_wast, myeos_token_abi); //, &myeosio_active_pk);
 
         // Set privileged for enu.msig and enu.token
         set_privileged(N(enu.msig));
         set_privileged(N(enu.token));
 
         // Verify enu.msig and enu.token is privileged
-        const auto& enu_msig_acc = get<account_object, by_name>(N(enu.msig));
-        BOOST_TEST(enu_msig_acc.privileged == true);
-        const auto& enu_token_acc = get<account_object, by_name>(N(enu.token));
-        BOOST_TEST(enu_token_acc.privileged == true);
+        const auto& myeos_msig_acc = get<account_object, by_name>(N(enu.msig));
+        BOOST_TEST(myeos_msig_acc.privileged == true);
+        const auto& myeos_token_acc = get<account_object, by_name>(N(enu.token));
+        BOOST_TEST(myeos_token_acc.privileged == true);
 
 
         // Create MES tokens in enu.token, set its manager as myeosio
@@ -218,7 +218,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         }
 
         // Set enu.system to myeosio
-        set_code_abi(N(myeosio), enu_system_wast, enu_system_abi);
+        set_code_abi(N(myeosio), myeos_system_wast, myeos_system_abi);
 
         // Buy ram and stake cpu and net for each genesis accounts
         for( const auto& a : test_genesis ) {

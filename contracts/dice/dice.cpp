@@ -64,8 +64,8 @@ class dice : public myeosio::contract {
 
             // No matching bet found, update player's account
             accounts.modify( cur_player_itr, 0, [&](auto& acnt) {
-               myeosio_assert( acnt.enu_balance >= bet, "insufficient balance" );
-               acnt.enu_balance -= bet;
+               myeosio_assert( acnt.myeos_balance >= bet, "insufficient balance" );
+               acnt.myeos_balance -= bet;
                acnt.open_offers++;
             });
 
@@ -114,8 +114,8 @@ class dice : public myeosio::contract {
             });
 
             accounts.modify( cur_player_itr, 0, [&](auto& acnt) {
-               myeosio_assert( acnt.enu_balance >= bet, "insufficient balance" );
-               acnt.enu_balance -= bet;
+               myeosio_assert( acnt.myeos_balance >= bet, "insufficient balance" );
+               acnt.myeos_balance -= bet;
                acnt.open_games++;
             });
          }
@@ -134,7 +134,7 @@ class dice : public myeosio::contract {
          auto acnt_itr = accounts.find(offer_itr->owner);
          accounts.modify(acnt_itr, 0, [&](auto& acnt){
             acnt.open_offers--;
-            acnt.enu_balance += offer_itr->bet;
+            acnt.myeos_balance += offer_itr->bet;
          });
 
          idx.erase(offer_itr);
@@ -232,7 +232,7 @@ class dice : public myeosio::contract {
          ).send();
 
          accounts.modify( itr, 0, [&]( auto& acnt ) {
-            acnt.enu_balance += quantity;
+            acnt.myeos_balance += quantity;
          });
       }
 
@@ -247,8 +247,8 @@ class dice : public myeosio::contract {
          myeosio_assert(itr != accounts.end(), "unknown account");
 
          accounts.modify( itr, 0, [&]( auto& acnt ) {
-            myeosio_assert( acnt.enu_balance >= quantity, "insufficient balance" );
-            acnt.enu_balance -= quantity;
+            myeosio_assert( acnt.myeos_balance >= quantity, "insufficient balance" );
+            acnt.myeos_balance -= quantity;
          });
 
          action(
@@ -329,15 +329,15 @@ class dice : public myeosio::contract {
          account( account_name o = account_name() ):owner(o){}
 
          account_name owner;
-         asset        enu_balance;
+         asset        myeos_balance;
          uint32_t     open_offers = 0;
          uint32_t     open_games = 0;
 
-         bool is_empty()const { return !( enu_balance.amount | open_offers | open_games ); }
+         bool is_empty()const { return !( myeos_balance.amount | open_offers | open_games ); }
 
          uint64_t primary_key()const { return owner; }
 
-         MESLIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
+         MESLIB_SERIALIZE( account, (owner)(myeos_balance)(open_offers)(open_games) )
       };
 
       typedef myeosio::multi_index< N(account), account> account_index;
@@ -368,7 +368,7 @@ class dice : public myeosio::contract {
          // Update winner account balance and game count
          auto winner_account = accounts.find(winner_offer.owner);
          accounts.modify( winner_account, 0, [&]( auto& acnt ) {
-            acnt.enu_balance += 2*g.bet;
+            acnt.myeos_balance += 2*g.bet;
             acnt.open_games--;
          });
 

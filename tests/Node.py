@@ -748,7 +748,7 @@ class Node(object):
 
             account=self.getEnuAccountFromDb(scope)
             if account is not None:
-                balance=account["enu_balance"]
+                balance=account["myeos_balance"]
                 return balance
 
         return None

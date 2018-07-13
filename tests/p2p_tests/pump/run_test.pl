@@ -9,15 +9,15 @@ use File::Spec;
 use File::Path;
 use Cwd;
 
-my $enu_home = defined $ENV{MES_HOME} ? $ENV{MES_HOME} : getcwd;
-my $enudaemon = $enu_home . "/programs/enudaemon/enudaemon";
-my $mycleosent = $enu_home . "/programs/mycleosent/mycleosent";
+my $myeos_home = defined $ENV{MES_HOME} ? $ENV{MES_HOME} : getcwd;
+my $enudaemon = $myeos_home . "/programs/enudaemon/enudaemon";
+my $mycleosent = $myeos_home . "/programs/mycleosent/mycleosent";
 
 my $nodes = defined $ENV{MES_TEST_RING} ? $ENV{MES_TEST_RING} : "1";
 my $pnodes = defined $ENV{MES_TEST_PRODUCERS} ? $ENV{MES_TEST_PRODUCERS} : "1";
 
 my $prods = 21;
-my $genesis = "$enu_home/genesis.json";
+my $genesis = "$myeos_home/genesis.json";
 my $http_port_base = 8888;
 my $p2p_port_base = 9876;
 my $data_dir_base = "tdn";

@@ -163,12 +163,12 @@ mycleos get table dice dice account
 {
   "rows": [{
       "owner": "alice",
-      "enu_balance": "97.0000 MES",
+      "myeos_balance": "97.0000 MES",
       "open_offers": 0,
       "open_games": 1
     },{
       "owner": "bob",
-      "enu_balance": "97.0000 MES",
+      "myeos_balance": "97.0000 MES",
       "open_offers": 0,
       "open_games": 1
     }
@@ -242,12 +242,12 @@ mycleos get table dice dice account
 {
   "rows": [{
       "owner": "alice",
-      "enu_balance": "103.0000 MES",
+      "myeos_balance": "103.0000 MES",
       "open_offers": 0,
       "open_games": 0
     },{
       "owner": "bob",
-      "enu_balance": "97.0000 MES",
+      "myeos_balance": "97.0000 MES",
       "open_offers": 0,
       "open_games": 0
     }

@@ -7,7 +7,7 @@ add_library( myeosio_testing
              ${HEADERS}
         )
 
-target_link_libraries( myeosio_testing myeosio_chain enu_utilities fc chainbase Logging IR WAST WASM Runtime )
+target_link_libraries( myeosio_testing myeosio_chain myeos_utilities fc chainbase Logging IR WAST WASM Runtime )
 target_include_directories( myeosio_testing
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                                    "${CMAKE_CURRENT_SOURCE_DIR}/../wasm-jit/Include"

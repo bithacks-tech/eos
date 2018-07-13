@@ -11,9 +11,9 @@ namespace myeosio { namespace utilities {
 
 fc::path temp_directory_path()
 {
-   const char* enu_tempdir = getenv("MES_TEMPDIR");
-   if( enu_tempdir != nullptr )
-      return fc::path( enu_tempdir );
+   const char* myeos_tempdir = getenv("MES_TEMPDIR");
+   if( myeos_tempdir != nullptr )
+      return fc::path( myeos_tempdir );
    return fc::temp_directory_path() / "enu-tmp";
 }
 

@@ -49,7 +49,7 @@ add_library( myeosio_chain
              ${HEADERS}
              )
 
-target_link_libraries( myeosio_chain enu_utilities fc chainbase Logging IR WAST WASM Runtime
+target_link_libraries( myeosio_chain myeos_utilities fc chainbase Logging IR WAST WASM Runtime
       wasm asmjs passes cfg ast emscripten-optimizer support softfloat builtins
                      )
 target_include_directories( myeosio_chain

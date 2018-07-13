@@ -759,9 +759,9 @@ namespace myeosio { namespace testing {
    }
 
    void base_tester::push_genesis_block() {
-      set_code(config::system_account_name, enu_bios_wast);
+      set_code(config::system_account_name, myeos_bios_wast);
 
-      set_abi(config::system_account_name, enu_bios_abi);
+      set_abi(config::system_account_name, myeos_bios_abi);
       //produce_block();
    }
 

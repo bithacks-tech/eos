@@ -10,7 +10,7 @@ if( GPERFTOOLS_FOUND )
 endif()
 
 target_link_libraries( debug_node
-                       PRIVATE enu_app enu_producer enu_debug_producer enu_chain enu_egenesis_full fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+                       PRIVATE myeos_app myeos_producer myeos_debug_producer myeos_chain myeos_egenesis_full fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
 
 install( TARGETS
    debug_node

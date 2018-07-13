@@ -29,10 +29,10 @@ using namespace fc;
 
 using mvo = fc::mutable_variant_object;
 
-class enu_msig_tester : public tester {
+class myeos_msig_tester : public tester {
 public:
 
-   enu_msig_tester() {
+   myeos_msig_tester() {
       create_accounts( { N(enu.msig), N(enu.stake), N(enu.ram), N(enu.ramfee), N(alice), N(bob), N(carol) } );
       produce_block();
 
@@ -42,8 +42,8 @@ public:
                                             ("is_priv", 1)
       );
 
-      set_code( N(enu.msig), enu_msig_wast );
-      set_abi( N(enu.msig), enu_msig_abi );
+      set_code( N(enu.msig), myeos_msig_wast );
+      set_abi( N(enu.msig), myeos_msig_abi );
 
       produce_blocks();
       const auto& accnt = control->db().get<account_object,by_name>( N(enu.msig) );
@@ -163,7 +163,7 @@ public:
    abi_serializer abi_ser;
 };
 
-transaction enu_msig_tester::reqauth( account_name from, const vector<permission_level>& auths ) {
+transaction myeos_msig_tester::reqauth( account_name from, const vector<permission_level>& auths ) {
    fc::variants v;
    for ( auto& level : auths ) {
       v.push_back(fc::mutable_variant_object()
@@ -191,9 +191,9 @@ transaction enu_msig_tester::reqauth( account_name from, const vector<permission
    return trx;
 }
 
-BOOST_AUTO_TEST_SUITE(enu_msig_tests)
+BOOST_AUTO_TEST_SUITE(myeos_msig_tests)
 
-BOOST_FIXTURE_TEST_CASE( propose_approve_execute, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( propose_approve_execute, myeos_msig_tester ) try {
    auto trx = reqauth("alice", {permission_level{N(alice), config::active_name}} );
 
    push_action( N(alice), N(propose), mvo()
@@ -234,7 +234,7 @@ BOOST_FIXTURE_TEST_CASE( propose_approve_execute, enu_msig_tester ) try {
 } FC_LOG_AND_RETHROW()
 
 
-BOOST_FIXTURE_TEST_CASE( propose_approve_unapprove, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( propose_approve_unapprove, myeos_msig_tester ) try {
    auto trx = reqauth("alice", {permission_level{N(alice), config::active_name}} );
 
    push_action( N(alice), N(propose), mvo()
@@ -268,7 +268,7 @@ BOOST_FIXTURE_TEST_CASE( propose_approve_unapprove, enu_msig_tester ) try {
 } FC_LOG_AND_RETHROW()
 
 
-BOOST_FIXTURE_TEST_CASE( propose_approve_by_two, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( propose_approve_by_two, myeos_msig_tester ) try {
    auto trx = reqauth("alice", vector<permission_level>{ { N(alice), config::active_name }, { N(bob), config::active_name } } );
    push_action( N(alice), N(propose), mvo()
                   ("proposer",      "alice")
@@ -316,7 +316,7 @@ BOOST_FIXTURE_TEST_CASE( propose_approve_by_two, enu_msig_tester ) try {
 } FC_LOG_AND_RETHROW()
 
 
-BOOST_FIXTURE_TEST_CASE( propose_with_wrong_requested_auth, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( propose_with_wrong_requested_auth, myeos_msig_tester ) try {
    auto trx = reqauth("alice", vector<permission_level>{ { N(alice), config::active_name },  { N(bob), config::active_name } } );
    //try with not enough requested auth
    BOOST_REQUIRE_EXCEPTION( push_action( N(alice), N(propose), mvo()
@@ -332,7 +332,7 @@ BOOST_FIXTURE_TEST_CASE( propose_with_wrong_requested_auth, enu_msig_tester ) tr
 } FC_LOG_AND_RETHROW()
 
 
-BOOST_FIXTURE_TEST_CASE( big_transaction, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( big_transaction, myeos_msig_tester ) try {
    vector<permission_level> perm = { { N(alice), config::active_name }, { N(bob), config::active_name } };
    auto wasm = wast_to_wasm( exchange_wast );
 
@@ -396,7 +396,7 @@ BOOST_FIXTURE_TEST_CASE( big_transaction, enu_msig_tester ) try {
 
 
 
-BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, myeos_msig_tester ) try {
 
    // required to set up the link between (myeosio active) and (myeosio.prods active)
    //
@@ -415,16 +415,16 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, enu_msig_tester ) t
    produce_blocks(50);
 
    create_accounts( { N(enu.token) } );
-   set_code( N(enu.token), enu_token_wast );
-   set_abi( N(enu.token), enu_token_abi );
+   set_code( N(enu.token), myeos_token_wast );
+   set_abi( N(enu.token), myeos_token_abi );
 
    create_currency( N(enu.token), config::system_account_name, core_from_string("10000000000.0000") );
    issue(config::system_account_name, core_from_string("1000000000.0000"));
    BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"),
                         get_balance("myeosio") + get_balance("enu.ramfee") + get_balance("enu.stake") + get_balance("enu.ram") );
 
-   set_code( config::system_account_name, enu_system_wast );
-   set_abi( config::system_account_name, enu_system_abi );
+   set_code( config::system_account_name, myeos_system_wast );
+   set_abi( config::system_account_name, myeos_system_abi );
 
    produce_blocks();
 
@@ -514,7 +514,7 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, enu_msig_tester ) t
    );
 } FC_LOG_AND_RETHROW()
 
-BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, enu_msig_tester ) try {
+BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, myeos_msig_tester ) try {
 
    // set up the link between (myeosio active) and (myeosio.prods active)
    set_authority(N(myeosio), "active", authority(1,
@@ -527,15 +527,15 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, enu_msig_tester )
    produce_blocks(50);
 
    create_accounts( { N(enu.token) } );
-   set_code( N(enu.token), enu_token_wast );
-   set_abi( N(enu.token), enu_token_abi );
+   set_code( N(enu.token), myeos_token_wast );
+   set_abi( N(enu.token), myeos_token_abi );
 
    create_currency( N(enu.token), config::system_account_name, core_from_string("10000000000.0000") );
    issue(config::system_account_name, core_from_string("1000000000.0000"));
    BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( "myeosio" ) );
 
-   set_code( config::system_account_name, enu_system_wast );
-   set_abi( config::system_account_name, enu_system_abi );
+   set_code( config::system_account_name, myeos_system_wast );
+   set_abi( config::system_account_name, myeos_system_abi );
 
    produce_blocks();
 
