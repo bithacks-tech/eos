@@ -37,3 +37,10 @@ MyEOSIO currently supports the following operating systems:
 1. [MyEOSIO Website](https://myeosio.org)
 2. [MyEOSIO Forum](https://myeosio.com)
 3. [Community Telegram Group](https://t.me/myeosiochat)
+
+# Running
+To run MyEOSIO, the git clone command is:
+```bash
+git clone -b myeosio https://github.com/bithacks-tech/myeosio --recursive
+```
+
