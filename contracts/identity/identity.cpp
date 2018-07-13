@@ -1,8 +1,8 @@
 #include "common.hpp"
 
-#include <enulib/contract.hpp>
-#include <enulib/dispatcher.hpp>
-#include <enulib/vector.hpp>
+#include <myeoslib/contract.hpp>
+#include <myeoslib/dispatcher.hpp>
+#include <myeoslib/vector.hpp>
 
 namespace identity {
    using myeosio::action_meta;

@@ -2,8 +2,8 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/enu.hpp>
-#include <enulib/transaction.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/transaction.hpp>
 
 #include "test_api.hpp"
 #include "test_action.cpp"

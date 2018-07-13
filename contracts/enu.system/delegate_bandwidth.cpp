@@ -4,13 +4,13 @@
  */
 #include "enu.system.hpp"
 
-#include <enulib/enu.hpp>
-#include <enulib/print.hpp>
-#include <enulib/datastream.hpp>
-#include <enulib/serialize.hpp>
-#include <enulib/multi_index.hpp>
-#include <enulib/privileged.h>
-#include <enulib/transaction.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/print.hpp>
+#include <myeoslib/datastream.hpp>
+#include <myeoslib/serialize.hpp>
+#include <myeoslib/multi_index.hpp>
+#include <myeoslib/privileged.h>
+#include <myeoslib/transaction.hpp>
 
 #include <enu.token/enu.token.hpp>
 

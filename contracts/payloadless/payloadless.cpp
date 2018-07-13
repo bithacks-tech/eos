@@ -1,5 +1,5 @@
-#include <enulib/enu.hpp>
-#include <enulib/print.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/print.hpp>
 using namespace myeosio;
 
 class payloadless : public myeosio::contract {

@@ -1,6 +1,6 @@
 
-#include <enulib/enu.hpp>
-#include <enulib/datastream.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/datastream.hpp>
 #include <cmath>
 
 #include "test_api.hpp"

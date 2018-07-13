@@ -1,6 +1,6 @@
 #pragma once
-#include <enulib/enu.hpp>
-#include <enulib/transaction.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/transaction.hpp>
 
 namespace myeosio {
 

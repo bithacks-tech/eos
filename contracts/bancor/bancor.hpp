@@ -4,10 +4,10 @@
  */
 #pragma once
 
-#include <enulib/enu.hpp>
-#include <enulib/token.hpp>
-#include <enulib/reflect.hpp>
-#include <enulib/generic_currency.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/token.hpp>
+#include <myeoslib/reflect.hpp>
+#include <myeoslib/generic_currency.hpp>
 
 #include <bancor/converter.hpp>
 #include <currency/currency.hpp>

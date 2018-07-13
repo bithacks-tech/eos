@@ -1,6 +1,6 @@
-#include <enulib/enu.hpp>
-#include <enulib/privileged.h>
-#include <enulib/producer_schedule.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/privileged.h>
+#include <myeoslib/producer_schedule.hpp>
 
 namespace myeosio {
 

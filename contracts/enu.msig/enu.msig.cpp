@@ -1,6 +1,6 @@
 #include <enu.msig/enu.msig.hpp>
-#include <enulib/action.hpp>
-#include <enulib/permission.hpp>
+#include <myeoslib/action.hpp>
+#include <myeoslib/permission.hpp>
 
 namespace myeosio {
 

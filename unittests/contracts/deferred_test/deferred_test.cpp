@@ -3,9 +3,9 @@
  *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <enulib/enu.hpp>
-#include <enulib/transaction.hpp>
-#include <enulib/dispatcher.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/transaction.hpp>
+#include <myeoslib/dispatcher.hpp>
 
 using namespace myeosio;
 

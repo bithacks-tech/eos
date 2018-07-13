@@ -1,6 +1,6 @@
 #pragma once
-#include <enulib/enu.hpp>
-#include <enulib/privileged.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/privileged.hpp>
 
 namespace myeosio {
 

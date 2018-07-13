@@ -5,7 +5,7 @@
 #pragma once
 
 #ifdef DISABLE_MESLIB_SERIALIZE
-#include <enulib/serialize.hpp>
+#include <myeoslib/serialize.hpp>
 #undef MESLIB_SERIALIZE
 #define MESLIB_SERIALIZE(...)
 #endif

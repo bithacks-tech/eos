@@ -2,9 +2,9 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/enu.hpp>
-#include <enulib/crypto.h>
-#include <enulib/print.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/crypto.h>
+#include <myeoslib/print.hpp>
 
 #include "test_api.hpp"
 #define WASM_TEST_FAIL 1

@@ -1,5 +1,5 @@
-#include <enulib/fixedpoint.hpp>
-#include <enulib/enu.hpp>
+#include <myeoslib/fixedpoint.hpp>
+#include <myeoslib/enu.hpp>
 
 #include "test_api.hpp"
 

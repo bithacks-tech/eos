@@ -1,6 +1,6 @@
-#include <enulib/enu.hpp>
-#include <enulib/dispatcher.hpp>
-#include <enulib/multi_index.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/dispatcher.hpp>
+#include <myeoslib/multi_index.hpp>
 
 using namespace myeosio;
 

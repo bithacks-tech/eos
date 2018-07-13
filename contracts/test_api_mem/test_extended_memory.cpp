@@ -1,5 +1,5 @@
-#include <enulib/enu.hpp>
-#include <enulib/memory.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/memory.hpp>
 #include "../test_api/test_api.hpp"
 
 //using namespace myeosio;

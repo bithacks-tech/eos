@@ -1,6 +1,6 @@
-#include <enulib/multi_index.hpp>
+#include <myeoslib/multi_index.hpp>
 #include "../test_api/test_api.hpp"
-#include <enulib/print.hpp>
+#include <myeoslib/print.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <limits>
 #include <cmath>

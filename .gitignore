@@ -48,9 +48,9 @@ libraries/wasm-jit/Source/Programs/wavm
 programs/mycleos/mycleos
 programs/js_operation_serializer/js_operation_serializer
 programs/data-dir
-programs/enugenabi/enugenabi
+programs/myeosgenabi/myeosgenabi
 programs/mycleos/config.hpp
-programs/enuapplesedemo/enuapplesedemo
+programs/myeosapplesedemo/myeosapplesedemo
 programs/enulauncher/config.hpp
 programs/enulauncher/enulauncher
 programs/mykeosd/mykeosd

@@ -2,14 +2,14 @@
  * @file action_test.cpp
  * @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/permission.h>
-#include <enulib/db.h>
+#include <myeoslib/permission.h>
+#include <myeoslib/db.h>
 
-#include <enulib/enu.hpp>
-#include <enulib/print.hpp>
-#include <enulib/compiler_builtins.h>
-#include <enulib/serialize.hpp>
-#include <enulib/action.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/print.hpp>
+#include <myeoslib/compiler_builtins.h>
+#include <myeoslib/serialize.hpp>
+#include <myeoslib/action.hpp>
 
 #include "test_api.hpp"
 

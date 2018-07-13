@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/print.hpp> /// defines transfer struct (abi)
+#include <myeoslib/print.hpp> /// defines transfer struct (abi)
 
 extern "C" {
 

@@ -3,9 +3,9 @@
  *    @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <enulib/enu.hpp>
-#include <enulib/print.hpp>
-#include <enulib/compiler_builtins.h>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/print.hpp>
+#include <myeoslib/compiler_builtins.h>
 
 #include "test_api.hpp"
 

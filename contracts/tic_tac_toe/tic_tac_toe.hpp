@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/enu.hpp>
+#include <myeoslib/enu.hpp>
 
 /**
  *  @defgroup tictactoecontract Tic Tac Toe Contract

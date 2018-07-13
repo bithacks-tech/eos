@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/enu.hpp>
+#include <myeoslib/enu.hpp>
 #include "../test_api/test_api.hpp"
 
 #include "test_extended_memory.cpp"

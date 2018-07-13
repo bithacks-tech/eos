@@ -4,15 +4,15 @@
  */
 #include "enu.system.hpp"
 
-#include <enulib/enu.hpp>
-#include <enulib/crypto.h>
-#include <enulib/print.hpp>
-#include <enulib/datastream.hpp>
-#include <enulib/serialize.hpp>
-#include <enulib/multi_index.hpp>
-#include <enulib/privileged.hpp>
-#include <enulib/singleton.hpp>
-#include <enulib/transaction.hpp>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/crypto.h>
+#include <myeoslib/print.hpp>
+#include <myeoslib/datastream.hpp>
+#include <myeoslib/serialize.hpp>
+#include <myeoslib/multi_index.hpp>
+#include <myeoslib/privileged.hpp>
+#include <myeoslib/singleton.hpp>
+#include <myeoslib/transaction.hpp>
 #include <enu.token/enu.token.hpp>
 
 #include <algorithm>

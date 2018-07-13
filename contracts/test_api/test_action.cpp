@@ -2,16 +2,16 @@
  * @file action_test.cpp
  * @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/action.hpp>
-#include <enulib/transaction.hpp>
-#include <enulib/chain.h>
-#include <enulib/db.h>
-#include <enulib/crypto.h>
-#include <enulib/privileged.h>
-#include <enulib/enu.hpp>
-#include <enulib/datastream.hpp>
-#include <enulib/print.hpp>
-#include <enulib/compiler_builtins.h>
+#include <myeoslib/action.hpp>
+#include <myeoslib/transaction.hpp>
+#include <myeoslib/chain.h>
+#include <myeoslib/db.h>
+#include <myeoslib/crypto.h>
+#include <myeoslib/privileged.h>
+#include <myeoslib/enu.hpp>
+#include <myeoslib/datastream.hpp>
+#include <myeoslib/print.hpp>
+#include <myeoslib/compiler_builtins.h>
 #include "test_api.hpp"
 
 void test_action::read_action_normal() {

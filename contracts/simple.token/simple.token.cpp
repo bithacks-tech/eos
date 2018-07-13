@@ -1,4 +1,4 @@
-#include <enulib/enu.hpp>
+#include <myeoslib/enu.hpp>
 
 class simpletoken : public myeosio::contract {
    public:

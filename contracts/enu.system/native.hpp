@@ -4,14 +4,14 @@
  */
 #pragma once
 
-#include <enulib/action.hpp>
-#include <enulib/public_key.hpp>
-#include <enulib/types.hpp>
-#include <enulib/print.hpp>
-#include <enulib/privileged.h>
-#include <enulib/optional.hpp>
-#include <enulib/producer_schedule.hpp>
-#include <enulib/contract.hpp>
+#include <myeoslib/action.hpp>
+#include <myeoslib/public_key.hpp>
+#include <myeoslib/types.hpp>
+#include <myeoslib/print.hpp>
+#include <myeoslib/privileged.h>
+#include <myeoslib/optional.hpp>
+#include <myeoslib/producer_schedule.hpp>
+#include <myeoslib/contract.hpp>
 
 namespace myeosiosystem {
    using myeosio::permission_level;

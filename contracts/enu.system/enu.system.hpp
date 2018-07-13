@@ -5,10 +5,10 @@
 #pragma once
 
 #include <enu.system/native.hpp>
-#include <enulib/asset.hpp>
-#include <enulib/time.hpp>
-#include <enulib/privileged.hpp>
-#include <enulib/singleton.hpp>
+#include <myeoslib/asset.hpp>
+#include <myeoslib/time.hpp>
+#include <myeoslib/privileged.hpp>
+#include <myeoslib/singleton.hpp>
 #include <enu.system/exchange_state.hpp>
 
 #include <string>

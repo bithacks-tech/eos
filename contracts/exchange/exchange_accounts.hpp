@@ -1,6 +1,6 @@
 #pragma once
-#include <enulib/asset.hpp>
-#include <enulib/multi_index.hpp>
+#include <myeoslib/asset.hpp>
+#include <myeoslib/multi_index.hpp>
 
 namespace myeosio {
 

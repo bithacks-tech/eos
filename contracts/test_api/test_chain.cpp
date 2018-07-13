@@ -2,9 +2,9 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/action.h>
-#include <enulib/chain.h>
-#include <enulib/enu.hpp>
+#include <myeoslib/action.h>
+#include <myeoslib/chain.h>
+#include <myeoslib/enu.hpp>
 #include "test_api.hpp"
 
 #pragma pack(push, 1)

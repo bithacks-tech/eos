@@ -2,9 +2,9 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enulib/action.hpp>
-#include <enulib/crypto.h>
-#include <enulib/transaction.hpp>
+#include <myeoslib/action.hpp>
+#include <myeoslib/crypto.h>
+#include <myeoslib/transaction.hpp>
 
 #include "test_api.hpp"
 

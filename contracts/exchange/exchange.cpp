@@ -5,7 +5,7 @@
 #include "exchange_accounts.cpp"
 #include "market_state.cpp"
 
-#include <enulib/dispatcher.hpp>
+#include <myeoslib/dispatcher.hpp>
 
 namespace myeosio {
 

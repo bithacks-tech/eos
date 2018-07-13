@@ -3,7 +3,7 @@
  *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <enulib/memory.hpp>
+#include <myeoslib/memory.hpp>
 
 
 void verify_mem(const void* const ptr, const uint32_t val, const uint32_t size)
