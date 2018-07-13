@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <algorithm>
 #include <vector>
@@ -15,16 +15,16 @@
 #include <fc/log/logger.hpp>
 #include <fc/scoped_exit.hpp>
 
-#include <enumivo/chain/contract_types.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
-#include <enumivo/chain/enumivo_contract.hpp>
-#include <enumivo/abi_generator/abi_generator.hpp>
+#include <myeosio/chain/contract_types.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
+#include <myeosio/chain/myeosio_contract.hpp>
+#include <myeosio/abi_generator/abi_generator.hpp>
 
 #include <boost/test/framework.hpp>
 
 #include <config.hpp>
 
-using namespace enumivo;
+using namespace myeosio;
 using namespace chain;
 
 BOOST_AUTO_TEST_SUITE(abi_tests)
@@ -48,7 +48,7 @@ fc::variant verify_byte_round_trip_conversion( const abi_serializer& abis, const
 auto get_resolver(const abi_def& abi = abi_def())
 {
    return [&abi](const account_name &name) -> optional<abi_serializer> {
-      return abi_serializer(enumivo_contract_abi(abi));
+      return abi_serializer(myeosio_contract_abi(abi));
    };
 }
 
@@ -499,7 +499,7 @@ BOOST_AUTO_TEST_CASE(uint_types)
 
    auto abi = fc::json::from_string(currency_abi).as<abi_def>();
 
-   abi_serializer abis(enumivo_contract_abi(abi));
+   abi_serializer abis(myeosio_contract_abi(abi));
    abis.validate();
 
    const char* test_data = R"=====(
@@ -517,13 +517,13 @@ BOOST_AUTO_TEST_CASE(uint_types)
 
 } FC_LOG_AND_RETHROW() }
 
-using namespace enumivo::unittests::config;
+using namespace myeosio::unittests::config;
 
 struct abi_gen_helper {
 
   abi_gen_helper() {}
 
-  static bool is_abi_generation_exception(const enumivo::abi_generation_exception& e) { return true; };
+  static bool is_abi_generation_exception(const myeosio::abi_generation_exception& e) { return true; };
 
   bool generate_abi(const char* source, const char* abi, bool opt_sfs=false) {
 
@@ -544,7 +544,7 @@ struct abi_gen_helper {
       stdc_include_param, pfr_include_param };
 
     bool res = runToolOnCodeWithArgs(
-      new find_enumivo_abi_macro_action(contract, actions, ""),
+      new find_myeosio_abi_macro_action(contract, actions, ""),
       source,
       extra_args      
     );
@@ -586,7 +586,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_unknown_type, abi_gen_helper)
    };
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(unknown_type, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(unknown_type, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -600,7 +600,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_all_types, abi_gen_helper)
    #include <enulib/asset.hpp>
    #include <enulib/time.hpp>
 
-   using namespace enumivo;
+   using namespace myeosio;
 
    typedef signed_int varint32;
    typedef unsigned_int varuint32;
@@ -761,7 +761,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_double_base, abi_gen_helper)
    };
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(double_base, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(double_base, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -837,7 +837,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_all_indexes, abi_gen_helper)
    #include <enulib/types.hpp>
    #include <string>
 
-   using namespace enumivo;
+   using namespace myeosio;
 
    //@abi table
    struct table1 {
@@ -848,7 +848,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_all_indexes, abi_gen_helper)
 
    const char* all_indexes_abi = R"=====(
    {
-     "version": "enumivo::abi/1.0",
+     "version": "myeosio::abi/1.0",
      "types": [],
      "structs": [{
          "name": "table1",
@@ -897,7 +897,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_unable_to_determine_index, abi_gen_helper)
 
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(unable_to_determine_index, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(unable_to_determine_index, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -964,7 +964,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_same_type_different_namespace, abi_gen_helper)
 
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(same_type_different_namespace, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(same_type_different_namespace, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -983,7 +983,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_bad_index_type, abi_gen_helper)
 
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(bad_index_type, "{}"), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(bad_index_type, "{}"), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -997,7 +997,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_full_table_decl, abi_gen_helper)
    class table1 {
    public:
       uint64_t  id;
-      enumivo::name name;
+      myeosio::name name;
       uint32_t  age;
    };
 
@@ -1055,7 +1055,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_union_table, abi_gen_helper)
 
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(union_table, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(union_table, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -1077,7 +1077,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_same_action_different_type, abi_gen_helper)
 
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(same_action_different_type, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(same_action_different_type, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 } FC_LOG_AND_RETHROW() }
 
 BOOST_FIXTURE_TEST_CASE(abigen_template_base, abi_gen_helper)
@@ -1198,7 +1198,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_simple_typedef, abi_gen_helper)
    const char* simple_typedef = R"=====(
    #include <enulib/types.hpp>
 
-   using namespace enumivo;
+   using namespace myeosio;
 
    struct common_params {
       uint64_t c1;
@@ -1261,7 +1261,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_field_typedef, abi_gen_helper)
    const char* field_typedef = R"=====(
    #include <enulib/types.hpp>
 
-   using namespace enumivo;
+   using namespace myeosio;
 
    typedef name my_name_alias;
 
@@ -1342,7 +1342,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_vector_of_POD, abi_gen_helper)
    #include <string>
    #include <enulib/types.hpp>
 
-   using namespace enumivo;
+   using namespace myeosio;
    using namespace std;
 
    //@abi table
@@ -1410,7 +1410,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_vector_of_structs, abi_gen_helper)
    #include <string>
    #include <enulib/types.hpp>
 
-   using namespace enumivo;
+   using namespace myeosio;
    using namespace std;
 
    struct my_struct {
@@ -1494,7 +1494,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_vector_multidimension, abi_gen_helper)
    #include <string>
    #include <enulib/types.hpp>
 
-   using namespace enumivo;
+   using namespace myeosio;
    using namespace std;
 
    //@abi table
@@ -1505,7 +1505,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_vector_multidimension, abi_gen_helper)
 
    )=====";
 
-   BOOST_CHECK_EXCEPTION( generate_abi(abigen_vector_multidimension, ""), enumivo::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
+   BOOST_CHECK_EXCEPTION( generate_abi(abigen_vector_multidimension, ""), myeosio::abi_generation_exception, abi_gen_helper::is_abi_generation_exception );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -1577,10 +1577,10 @@ BOOST_FIXTURE_TEST_CASE(abigen_vector_alias, abi_gen_helper)
 
 } FC_LOG_AND_RETHROW() }
 
-BOOST_FIXTURE_TEST_CASE(abgigen_enumivoabi_macro, abi_gen_helper)
+BOOST_FIXTURE_TEST_CASE(abgigen_myeosioabi_macro, abi_gen_helper)
 { try {
 
-   const char* abgigen_enumivoabi_macro = R"=====(
+   const char* abgigen_myeosioabi_macro = R"=====(
 
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Wpointer-bool-conversion"
@@ -1589,9 +1589,9 @@ BOOST_FIXTURE_TEST_CASE(abgigen_enumivoabi_macro, abi_gen_helper)
       #include <enulib/print.hpp>
 
 
-      using namespace enumivo;
+      using namespace myeosio;
 
-      struct hello : public enumivo::contract {
+      struct hello : public myeosio::contract {
         public:
             using contract::contract;
 
@@ -1610,7 +1610,7 @@ BOOST_FIXTURE_TEST_CASE(abgigen_enumivoabi_macro, abi_gen_helper)
 
    )=====";
 
-   const char* abgigen_enumivoabi_macro_abi = R"=====(
+   const char* abgigen_myeosioabi_macro_abi = R"=====(
    {
      "types": [],
      "structs": [{
@@ -1633,7 +1633,7 @@ BOOST_FIXTURE_TEST_CASE(abgigen_enumivoabi_macro, abi_gen_helper)
    }
    )=====";
 
-   BOOST_TEST( generate_abi(abgigen_enumivoabi_macro, abgigen_enumivoabi_macro_abi) == true );
+   BOOST_TEST( generate_abi(abgigen_myeosioabi_macro, abgigen_myeosioabi_macro_abi) == true );
 
 } FC_LOG_AND_RETHROW() }
 
@@ -1648,9 +1648,9 @@ BOOST_FIXTURE_TEST_CASE(abigen_contract_inheritance, abi_gen_helper)
       #include <enulib/print.hpp>
 
 
-      using namespace enumivo;
+      using namespace myeosio;
 
-      struct hello : public enumivo::contract {
+      struct hello : public myeosio::contract {
         public:
             using contract::contract;
 
@@ -1710,19 +1710,19 @@ BOOST_FIXTURE_TEST_CASE(abigen_contract_inheritance, abi_gen_helper)
 
 } FC_LOG_AND_RETHROW() }
 
-BOOST_FIXTURE_TEST_CASE(abigen_no_enumivoabi_macro, abi_gen_helper)
+BOOST_FIXTURE_TEST_CASE(abigen_no_myeosioabi_macro, abi_gen_helper)
 { try {
 
-   const char* abigen_no_enumivoabi_macro = R"=====(
+   const char* abigen_no_myeosioabi_macro = R"=====(
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Wpointer-bool-conversion"
       #include <enulib/enu.hpp>
       #include <enulib/print.hpp>
       #pragma GCC diagnostic pop
 
-      using namespace enumivo;
+      using namespace myeosio;
 
-      struct hello : public enumivo::contract {
+      struct hello : public myeosio::contract {
         public:
             using contract::contract;
 
@@ -1748,14 +1748,14 @@ BOOST_FIXTURE_TEST_CASE(abigen_no_enumivoabi_macro, abi_gen_helper)
          [[noreturn]] void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
             hello  h( receiver );
             h.apply( code, action );
-            enumivo_exit(0);
+            myeosio_exit(0);
          }
       }
    )=====";
 
-   const char* abigen_no_enumivoabi_macro_abi = R"=====(
+   const char* abigen_no_myeosioabi_macro_abi = R"=====(
    {
-     "version": "enumivo::abi/1.0",
+     "version": "myeosio::abi/1.0",
      "types": [],
      "structs": [{
          "name": "hi",
@@ -1792,24 +1792,24 @@ BOOST_FIXTURE_TEST_CASE(abigen_no_enumivoabi_macro, abi_gen_helper)
    }
    )=====";
 
-   BOOST_TEST( generate_abi(abigen_no_enumivoabi_macro, abigen_no_enumivoabi_macro_abi) == true );
+   BOOST_TEST( generate_abi(abigen_no_myeosioabi_macro, abigen_no_myeosioabi_macro_abi) == true );
 
 } FC_LOG_AND_RETHROW() }
 
 BOOST_AUTO_TEST_CASE(general)
 { try {
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(my_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(my_abi).as<abi_def>());
 
    abi_serializer abis(abi);
    abis.validate();
 
    const char *my_other = R"=====(
     {
-      "publickey"     :  "ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
-      "publickey_arr" :  ["ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"],
-      "asset"         : "100.0000 ENU",
-      "asset_arr"     : ["100.0000 ENU","100.0000 ENU"],
+      "publickey"     :  "MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+      "publickey_arr" :  ["MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"],
+      "asset"         : "100.0000 MES",
+      "asset_arr"     : ["100.0000 MES","100.0000 MES"],
 
       "string"            : "ola ke ase",
       "string_arr"        : ["ola ke ase","ola ke desi"],
@@ -1943,22 +1943,22 @@ BOOST_AUTO_TEST_CASE(general)
         "delay_sec":0,
         "transaction_extensions": []
       }],
-      "keyweight": {"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},
-      "keyweight_arr": [{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"200"}],
+      "keyweight": {"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},
+      "keyweight_arr": [{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"200"}],
       "authority": {
          "threshold":"10",
-         "keys":[{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":100},{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":200}],
+         "keys":[{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":100},{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":200}],
          "accounts":[{"permission":{"actor":"acc1","permission":"permname1"},"weight":"1"},{"permission":{"actor":"acc2","permission":"permname2"},"weight":"2"}],
          "waits":[]
        },
       "authority_arr": [{
          "threshold":"10",
-         "keys":[{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"200"}],
+         "keys":[{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"200"}],
          "accounts":[{"permission":{"actor":"acc1","permission":"permname1"},"weight":"1"},{"permission":{"actor":"acc2","permission":"permname2"},"weight":"2"}],
          "waits":[]
        },{
          "threshold":"10",
-         "keys":[{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},{"key":"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"200"}],
+         "keys":[{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"100"},{"key":"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV", "weight":"200"}],
          "accounts":[{"permission":{"actor":"acc1","permission":"permname1"},"weight":"1"},{"permission":{"actor":"acc2","permission":"permname2"},"weight":"2"}],
          "waits":[]
        }],
@@ -2046,7 +2046,7 @@ BOOST_AUTO_TEST_CASE(abi_cycle)
    }
    )=====";
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(typedef_cycle_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(typedef_cycle_abi).as<abi_def>());
 
    auto is_assert_exception = [](fc::assert_exception const & e) -> bool {
       wlog(e.to_string()); return true;
@@ -2062,7 +2062,7 @@ BOOST_AUTO_TEST_CASE(abi_cycle)
 BOOST_AUTO_TEST_CASE(linkauth_test)
 { try {
 
-   abi_serializer abis(enumivo_contract_abi(abi_def()));
+   abi_serializer abis(myeosio_contract_abi(abi_def()));
 
    BOOST_CHECK(true);
    const char* test_data = R"=====(
@@ -2096,7 +2096,7 @@ BOOST_AUTO_TEST_CASE(linkauth_test)
 BOOST_AUTO_TEST_CASE(unlinkauth_test)
 { try {
 
-   abi_serializer abis(enumivo_contract_abi(abi_def()));
+   abi_serializer abis(myeosio_contract_abi(abi_def()));
 
    BOOST_CHECK(true);
    const char* test_data = R"=====(
@@ -2127,7 +2127,7 @@ BOOST_AUTO_TEST_CASE(unlinkauth_test)
 BOOST_AUTO_TEST_CASE(updateauth_test)
 { try {
 
-   abi_serializer abis(enumivo_contract_abi(abi_def()));
+   abi_serializer abis(myeosio_contract_abi(abi_def()));
 
    BOOST_CHECK(true);
    const char* test_data = R"=====(
@@ -2137,8 +2137,8 @@ BOOST_AUTO_TEST_CASE(updateauth_test)
      "parent" : "updauth.prnt",
      "auth" : {
         "threshold" : "2147483145",
-        "keys" : [ {"key" : "ENU65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im", "weight" : 57005},
-                   {"key" : "ENU5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf", "weight" : 57605} ],
+        "keys" : [ {"key" : "MES65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im", "weight" : 57005},
+                   {"key" : "MES5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf", "weight" : 57605} ],
         "accounts" : [ {"permission" : {"actor" : "prm.acct1", "permission" : "prm.prm1"}, "weight" : 53005 },
                        {"permission" : {"actor" : "prm.acct2", "permission" : "prm.prm2"}, "weight" : 53405 } ],
         "waits" : []
@@ -2155,9 +2155,9 @@ BOOST_AUTO_TEST_CASE(updateauth_test)
    BOOST_TEST(2147483145u == updauth.auth.threshold);
 
    BOOST_TEST_REQUIRE(2 == updauth.auth.keys.size());
-   BOOST_TEST("ENU65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im" == (std::string)updauth.auth.keys[0].key);
+   BOOST_TEST("MES65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im" == (std::string)updauth.auth.keys[0].key);
    BOOST_TEST(57005u == updauth.auth.keys[0].weight);
-   BOOST_TEST("ENU5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf" == (std::string)updauth.auth.keys[1].key);
+   BOOST_TEST("MES5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf" == (std::string)updauth.auth.keys[1].key);
    BOOST_TEST(57605u == updauth.auth.keys[1].weight);
 
    BOOST_TEST_REQUIRE(2 == updauth.auth.accounts.size());
@@ -2197,7 +2197,7 @@ BOOST_AUTO_TEST_CASE(updateauth_test)
 BOOST_AUTO_TEST_CASE(deleteauth_test)
 { try {
 
-   abi_serializer abis(enumivo_contract_abi(abi_def()));
+   abi_serializer abis(myeosio_contract_abi(abi_def()));
 
    BOOST_CHECK(true);
    const char* test_data = R"=====(
@@ -2225,7 +2225,7 @@ BOOST_AUTO_TEST_CASE(deleteauth_test)
 BOOST_AUTO_TEST_CASE(newaccount_test)
 { try {
 
-   abi_serializer abis(enumivo_contract_abi(abi_def()));
+   abi_serializer abis(myeosio_contract_abi(abi_def()));
 
    BOOST_CHECK(true);
    const char* test_data = R"=====(
@@ -2234,16 +2234,16 @@ BOOST_AUTO_TEST_CASE(newaccount_test)
      "name" : "newacct.name",
      "owner" : {
         "threshold" : 2147483145,
-        "keys" : [ {"key" : "ENU65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im", "weight" : 57005},
-                   {"key" : "ENU5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf", "weight" : 57605} ],
+        "keys" : [ {"key" : "MES65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im", "weight" : 57005},
+                   {"key" : "MES5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf", "weight" : 57605} ],
         "accounts" : [ {"permission" : {"actor" : "prm.acct1", "permission" : "prm.prm1"}, "weight" : 53005 },
                        {"permission" : {"actor" : "prm.acct2", "permission" : "prm.prm2"}, "weight" : 53405 }],
         "waits" : []
      },
      "active" : {
         "threshold" : 2146483145,
-        "keys" : [ {"key" : "ENU65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im", "weight" : 57005},
-                   {"key" : "ENU5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf", "weight" : 57605} ],
+        "keys" : [ {"key" : "MES65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im", "weight" : 57005},
+                   {"key" : "MES5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf", "weight" : 57605} ],
         "accounts" : [ {"permission" : {"actor" : "prm.acct1", "permission" : "prm.prm1"}, "weight" : 53005 },
                        {"permission" : {"actor" : "prm.acct2", "permission" : "prm.prm2"}, "weight" : 53405 }],
         "waits" : []
@@ -2259,9 +2259,9 @@ BOOST_AUTO_TEST_CASE(newaccount_test)
    BOOST_TEST(2147483145u == newacct.owner.threshold);
 
    BOOST_TEST_REQUIRE(2 == newacct.owner.keys.size());
-   BOOST_TEST("ENU65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im" == (std::string)newacct.owner.keys[0].key);
+   BOOST_TEST("MES65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im" == (std::string)newacct.owner.keys[0].key);
    BOOST_TEST(57005u == newacct.owner.keys[0].weight);
-   BOOST_TEST("ENU5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf" == (std::string)newacct.owner.keys[1].key);
+   BOOST_TEST("MES5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf" == (std::string)newacct.owner.keys[1].key);
    BOOST_TEST(57605u == newacct.owner.keys[1].weight);
 
    BOOST_TEST_REQUIRE(2 == newacct.owner.accounts.size());
@@ -2275,9 +2275,9 @@ BOOST_AUTO_TEST_CASE(newaccount_test)
    BOOST_TEST(2146483145u == newacct.active.threshold);
 
    BOOST_TEST_REQUIRE(2 == newacct.active.keys.size());
-   BOOST_TEST("ENU65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im" == (std::string)newacct.active.keys[0].key);
+   BOOST_TEST("MES65rXebLhtk2aTTzP4e9x1AQZs7c5NNXJp89W8R3HyaA6Zyd4im" == (std::string)newacct.active.keys[0].key);
    BOOST_TEST(57005u == newacct.active.keys[0].weight);
-   BOOST_TEST("ENU5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf" == (std::string)newacct.active.keys[1].key);
+   BOOST_TEST("MES5eVr9TVnqwnUBNwf9kwMTbrHvX5aPyyEG97dz2b2TNeqWRzbJf" == (std::string)newacct.active.keys[1].key);
    BOOST_TEST(57605u == newacct.active.keys[1].weight);
 
    BOOST_TEST_REQUIRE(2 == newacct.active.accounts.size());
@@ -2335,7 +2335,7 @@ BOOST_AUTO_TEST_CASE(newaccount_test)
 BOOST_AUTO_TEST_CASE(setcode_test)
 { try {
 
-   abi_serializer abis(enumivo_contract_abi(abi_def()));
+   abi_serializer abis(myeosio_contract_abi(abi_def()));
 
    const char* test_data = R"=====(
    {
@@ -2498,7 +2498,7 @@ BOOST_AUTO_TEST_CASE(setabi_test)
 
    auto v = fc::json::from_string(abi_def_abi);
 
-   abi_serializer abis(enumivo_contract_abi(v.as<abi_def>()));
+   abi_serializer abis(myeosio_contract_abi(v.as<abi_def>()));
 
    const char* abi_string = R"=====(
       {
@@ -2894,7 +2894,7 @@ BOOST_AUTO_TEST_CASE(abi_type_repeat)
    }
    )=====";
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
    auto is_table_exception = [](fc::assert_exception const & e) -> bool { return e.to_detail_string().find("type already exists") != std::string::npos; };
    BOOST_CHECK_EXCEPTION( abi_serializer abis(abi), fc::assert_exception, is_table_exception );
 } FC_LOG_AND_RETHROW() }
@@ -2951,7 +2951,7 @@ BOOST_AUTO_TEST_CASE(abi_struct_repeat)
    }
    )=====";
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
    auto is_table_exception = [](fc::assert_exception const & e) -> bool { return e.to_detail_string().find("structs.size") != std::string::npos; };
    BOOST_CHECK_EXCEPTION( abi_serializer abis(abi), fc::assert_exception, is_table_exception );
 } FC_LOG_AND_RETHROW() }
@@ -3011,7 +3011,7 @@ BOOST_AUTO_TEST_CASE(abi_action_repeat)
    }
    )=====";
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
    auto is_table_exception = [](fc::assert_exception const & e) -> bool { return e.to_detail_string().find("actions.size") != std::string::npos; };
    BOOST_CHECK_EXCEPTION( abi_serializer abis(abi), fc::assert_exception, is_table_exception );
 } FC_LOG_AND_RETHROW() }
@@ -3074,7 +3074,7 @@ BOOST_AUTO_TEST_CASE(abi_table_repeat)
    }
    )=====";
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
    auto is_table_exception = [](fc::assert_exception const & e) -> bool { return e.to_detail_string().find("tables.size") != std::string::npos; };
    BOOST_CHECK_EXCEPTION( abi_serializer abis(abi), fc::assert_exception, is_table_exception );
 } FC_LOG_AND_RETHROW() }
@@ -3260,7 +3260,7 @@ BOOST_AUTO_TEST_CASE(abi_type_nested_in_vector)
 
 } FC_LOG_AND_RETHROW() }
 
-BOOST_AUTO_TEST_CASE(abi_account_name_in_enumivo_abi)
+BOOST_AUTO_TEST_CASE(abi_account_name_in_myeosio_abi)
 { try {
    // inifinite loop in types
    const char* repeat_abi = R"=====(
@@ -3295,7 +3295,7 @@ BOOST_AUTO_TEST_CASE(abi_account_name_in_enumivo_abi)
    }
    )=====";
 
-   auto abi = enumivo_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
+   auto abi = myeosio_contract_abi(fc::json::from_string(repeat_abi).as<abi_def>());
    auto is_type_exception = [](fc::assert_exception const & e) -> bool { return e.to_detail_string().find("abi.types.size") != std::string::npos; };
 
 } FC_LOG_AND_RETHROW() }
@@ -3397,7 +3397,7 @@ BOOST_AUTO_TEST_CASE(abi_recursive_structs)
       )=====";
 
       abi_serializer abis(fc::json::from_string(abi_str).as<abi_def>());
-      string hi_data = "{\"user\":\"enumivo\",\"arg2\":{\"user\":\"1\"}}";
+      string hi_data = "{\"user\":\"myeosio\",\"arg2\":{\"user\":\"1\"}}";
       auto bin = abis.variant_to_binary("hi", fc::json::from_string(hi_data));
       BOOST_CHECK_THROW( abis.binary_to_variant("hi", bin);, fc::exception );
 

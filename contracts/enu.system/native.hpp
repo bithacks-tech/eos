@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
@@ -13,9 +13,9 @@
 #include <enulib/producer_schedule.hpp>
 #include <enulib/contract.hpp>
 
-namespace enumivosystem {
-   using enumivo::permission_level;
-   using enumivo::public_key;
+namespace myeosiosystem {
+   using myeosio::permission_level;
+   using myeosio::public_key;
 
    typedef std::vector<char> bytes;
 
@@ -24,7 +24,7 @@ namespace enumivosystem {
       weight_type       weight;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE( permission_level_weight, (permission)(weight) )
+      MESLIB_SERIALIZE( permission_level_weight, (permission)(weight) )
    };
 
    struct key_weight {
@@ -32,7 +32,7 @@ namespace enumivosystem {
       weight_type  weight;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE( key_weight, (key)(weight) )
+      MESLIB_SERIALIZE( key_weight, (key)(weight) )
    };
 
    struct authority {
@@ -42,7 +42,7 @@ namespace enumivosystem {
       std::vector<permission_level_weight>  accounts;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE( authority, (threshold)(delay_sec)(keys)(accounts) )
+      MESLIB_SERIALIZE( authority, (threshold)(delay_sec)(keys)(accounts) )
    };
 
    struct block_header {
@@ -53,10 +53,10 @@ namespace enumivosystem {
       checksum256                               transaction_mroot;
       checksum256                               action_mroot;
       uint32_t                                  schedule_version = 0;
-      enumivo::optional<enumivo::producer_schedule> new_producers;
+      myeosio::optional<myeosio::producer_schedule> new_producers;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE(block_header, (timestamp)(producer)(confirmed)(previous)(transaction_mroot)(action_mroot)
+      MESLIB_SERIALIZE(block_header, (timestamp)(producer)(confirmed)(previous)(transaction_mroot)(action_mroot)
                                      (schedule_version)(new_producers))
    };
 
@@ -64,10 +64,10 @@ namespace enumivosystem {
    /*
     * Method parameters commented out to prevent generation of code that parses input data.
     */
-   class native : public enumivo::contract {
+   class native : public myeosio::contract {
       public:
 
-         using enumivo::contract::contract;
+         using myeosio::contract::contract;
 
          /**
           *  Called after a new account is created. This code enforces resource-limits rules

@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #pragma once
@@ -8,11 +8,11 @@
 #include "consumer_core.h"
 
 #include <memory>
-#include <enumivo/chain/block_state.hpp>
+#include <myeosio/chain/block_state.hpp>
 
 #include "database.h"
 
-namespace enumivo {
+namespace myeosio {
 
 class irreversible_block_storage : public consumer_core<chain::block_state_ptr>
 {

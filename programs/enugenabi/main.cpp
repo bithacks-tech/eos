@@ -1,10 +1,10 @@
 #include <fc/exception/exception.hpp>
 #include <fc/io/json.hpp>
-#include <enumivo/abi_generator/abi_generator.hpp>
+#include <myeosio/abi_generator/abi_generator.hpp>
 #include <fc/variant_object.hpp>
 
-using namespace enumivo;
-using namespace enumivo::chain;
+using namespace myeosio;
+using namespace myeosio::chain;
 
 using mvo = fc::mutable_variant_object;
 
@@ -46,7 +46,7 @@ std::unique_ptr<FrontendActionFactory> create_find_macro_factory(string& contrac
       string abi_context ) : contract(contract), actions(actions), abi_context(abi_context) {}
 
     clang::FrontendAction *create() override {
-      return new find_enumivo_abi_macro_action(contract, actions, abi_context);
+      return new find_myeosio_abi_macro_action(contract, actions, abi_context);
     }
 
   };

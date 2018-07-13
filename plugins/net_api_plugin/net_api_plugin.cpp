@@ -1,27 +1,27 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/net_api_plugin/net_api_plugin.hpp>
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/transaction.hpp>
+#include <myeosio/net_api_plugin/net_api_plugin.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/transaction.hpp>
 
 #include <fc/variant.hpp>
 #include <fc/io/json.hpp>
 
 #include <chrono>
 
-namespace enumivo { namespace detail {
+namespace myeosio { namespace detail {
   struct net_api_plugin_empty {};
 }}
 
-FC_REFLECT(enumivo::detail::net_api_plugin_empty, );
+FC_REFLECT(myeosio::detail::net_api_plugin_empty, );
 
-namespace enumivo {
+namespace myeosio {
 
 static appbase::abstract_plugin& _net_api_plugin = app().register_plugin<net_api_plugin>();
 
-using namespace enumivo;
+using namespace myeosio;
 
 #define CALL(api_name, api_handle, call_name, INVOKE, http_response_code) \
 {std::string("/v1/" #api_name "/" #call_name), \
@@ -47,16 +47,16 @@ using namespace enumivo;
 
 #define INVOKE_V_R(api_handle, call_name, in_param) \
      api_handle.call_name(fc::json::from_string(body).as<in_param>()); \
-     enumivo::detail::net_api_plugin_empty result;
+     myeosio::detail::net_api_plugin_empty result;
 
 #define INVOKE_V_R_R(api_handle, call_name, in_param0, in_param1) \
      const auto& vs = fc::json::json::from_string(body).as<fc::variants>(); \
      api_handle.call_name(vs.at(0).as<in_param0>(), vs.at(1).as<in_param1>()); \
-     enumivo::detail::net_api_plugin_empty result;
+     myeosio::detail::net_api_plugin_empty result;
 
 #define INVOKE_V_V(api_handle, call_name) \
      api_handle.call_name(); \
-     enumivo::detail::net_api_plugin_empty result;
+     myeosio::detail::net_api_plugin_empty result;
 
 
 void net_api_plugin::plugin_startup() {

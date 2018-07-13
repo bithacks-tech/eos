@@ -1,16 +1,16 @@
-#include <enumivo/history_plugin.hpp>
-#include <enumivo/history_plugin/account_control_history_object.hpp>
-#include <enumivo/history_plugin/public_key_history_object.hpp>
-#include <enumivo/chain/controller.hpp>
-#include <enumivo/chain/trace.hpp>
-#include <enumivo/chain_plugin/chain_plugin.hpp>
+#include <myeosio/history_plugin.hpp>
+#include <myeosio/history_plugin/account_control_history_object.hpp>
+#include <myeosio/history_plugin/public_key_history_object.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/trace.hpp>
+#include <myeosio/chain_plugin/chain_plugin.hpp>
 
 #include <fc/io/json.hpp>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/signals2/connection.hpp>
 
-namespace enumivo { 
+namespace myeosio { 
    using namespace chain;
    using boost::signals2::scoped_connection;
 
@@ -73,12 +73,12 @@ namespace enumivo {
       >
    >;
 
-} /// namespace enumivo
+} /// namespace myeosio
 
-CHAINBASE_SET_INDEX_TYPE(enumivo::account_history_object, enumivo::account_history_index)
-CHAINBASE_SET_INDEX_TYPE(enumivo::action_history_object, enumivo::action_history_index)
+CHAINBASE_SET_INDEX_TYPE(myeosio::account_history_object, myeosio::account_history_index)
+CHAINBASE_SET_INDEX_TYPE(myeosio::action_history_object, myeosio::action_history_index)
 
-namespace enumivo {
+namespace myeosio {
 
    template<typename MultiIndex, typename LookupType>
    static void remove(chainbase::database& db, const account_name& account_name, const permission_name& permission)
@@ -272,14 +272,14 @@ namespace enumivo {
          for( auto& s : fo ) {
             if( s == "*" ) {
                my->bypass_filter = true;
-               wlog("--filter-on * enabled. This can fill shared_mem, causing enunode to stop.");
+               wlog("--filter-on * enabled. This can fill shared_mem, causing myeosnode to stop.");
                break;
             }
             std::vector<std::string> v;
             boost::split(v, s, boost::is_any_of(":"));
-            ENU_ASSERT(v.size() == 3, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
+            MES_ASSERT(v.size() == 3, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
             filter_entry fe{ v[0], v[1], v[2] };
-            ENU_ASSERT(fe.receiver.value && fe.action.value, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
+            MES_ASSERT(fe.receiver.value && fe.action.value, fc::invalid_arg_exception, "Invalid value ${s} for --filter-on", ("s",s));
             my->filter_on.insert( fe );
          }
       }
@@ -466,4 +466,4 @@ namespace enumivo {
 
 
 
-} /// namespace enumivo
+} /// namespace myeosio

@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <enulib/enu.hpp>
 #include "../test_api/test_api.hpp"
@@ -43,7 +43,7 @@ extern "C" {
       WASM_TEST_HANDLER(test_memory, test_outofbound_13);
       
       //unhandled test call
-      enumivo_assert(false, "Unknown Test");
+      myeosio_assert(false, "Unknown Test");
    }
 
 }

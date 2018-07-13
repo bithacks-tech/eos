@@ -1,7 +1,7 @@
-add_executable(enumivo-wast2wasm Assemble.cpp CLI.h)
-target_link_libraries(enumivo-wast2wasm Logging IR WAST WASM)
-set_target_properties(enumivo-wast2wasm PROPERTIES FOLDER Programs)
-INSTALL(TARGETS enumivo-wast2wasm DESTINATION ${CMAKE_INSTALL_BINDIR})
+add_executable(myeosio-wast2wasm Assemble.cpp CLI.h)
+target_link_libraries(myeosio-wast2wasm Logging IR WAST WASM)
+set_target_properties(myeosio-wast2wasm PROPERTIES FOLDER Programs)
+INSTALL(TARGETS myeosio-wast2wasm DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_executable(Disassemble Disassemble.cpp CLI.h)
 target_link_libraries(Disassemble Logging IR WAST WASM)

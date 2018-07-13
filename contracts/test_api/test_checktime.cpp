@@ -1,6 +1,6 @@
 /**
  * @file
- * @copyright defined in enumivo/LICENSE.txt
+ * @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <enulib/enu.hpp>
@@ -15,7 +15,7 @@ void test_checktime::checktime_pass() {
    for ( int i = 0; i < 10000; i++ )
       p += i;
 
-   enumivo::print(p);
+   myeosio::print(p);
 }
 
 void test_checktime::checktime_failure() {
@@ -25,7 +25,7 @@ void test_checktime::checktime_failure() {
          p += i+j;
 
 
-   enumivo::print(p);
+   myeosio::print(p);
 }
 
 constexpr size_t size = 20000000;

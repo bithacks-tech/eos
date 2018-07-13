@@ -2,7 +2,7 @@
 #include <enulib/enu.hpp>
 #include <enulib/transaction.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    class multisig : public contract {
       public:
@@ -21,7 +21,7 @@ namespace enumivo {
 
             auto primary_key()const { return proposal_name.value; }
          };
-         typedef enumivo::multi_index<N(proposal),proposal> proposals;
+         typedef myeosio::multi_index<N(proposal),proposal> proposals;
 
          struct approvals_info {
             name                       proposal_name;
@@ -30,7 +30,7 @@ namespace enumivo {
 
             auto primary_key()const { return proposal_name.value; }
          };
-         typedef enumivo::multi_index<N(approvals),approvals_info> approvals;
+         typedef myeosio::multi_index<N(approvals),approvals_info> approvals;
    };
 
-} /// namespace enumivo
+} /// namespace myeosio

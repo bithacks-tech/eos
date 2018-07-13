@@ -2,7 +2,7 @@
 #include <enulib/privileged.h>
 #include <enulib/producer_schedule.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    class testinline : public contract {
       public:
@@ -16,8 +16,8 @@ namespace enumivo {
             require_auth( reqauth );
             INLINE_ACTION_SENDER(testinline, reqauth)( forward_code, {forward_auth,N(active)}, {forward_auth} );
             //SEND_INLINE_ACTION( testinline(forward_code), reqauth, {forward_auth,N(active)}, {forward_auth} );
-            //enumivo::dispatch_inline<account_name>( N(forward_code), N(reqauth), {{forward_auth, N(active)}}, {forward_auth} );
+            //myeosio::dispatch_inline<account_name>( N(forward_code), N(reqauth), {{forward_auth, N(active)}}, {forward_auth} );
          }
    };
 
-} /// namespace enumivo
+} /// namespace myeosio

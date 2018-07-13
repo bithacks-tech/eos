@@ -1,11 +1,11 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <stdint.h>
-#include <enumivo/utilities/words.hpp>
+#include <myeosio/utilities/words.hpp>
 
-namespace enumivo { namespace words {
+namespace myeosio { namespace words {
 
 const const_char_ptr word_list[] = { 
 "a",
@@ -49761,4 +49761,4 @@ void hide_unused_warning() {
   (void)word_list; 
 }
 
-} } // enumivo::words
+} } // myeosio::words

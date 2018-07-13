@@ -3,10 +3,10 @@
 #include <enulib/stdlib.hpp>
 #include <vector>
 
-namespace enumivo {
+namespace myeosio {
 
    using std::vector;
 
    typedef std::vector<char> bytes;
 
-}  /// namespace enumivo
+}  /// namespace myeosio

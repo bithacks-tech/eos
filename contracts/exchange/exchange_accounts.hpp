@@ -2,7 +2,7 @@
 #include <enulib/asset.hpp>
 #include <enulib/multi_index.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    using boost::container::flat_map;
 
@@ -18,10 +18,10 @@ namespace enumivo {
       flat_map<extended_symbol, int64_t>   balances;
 
       uint64_t primary_key() const { return owner; }
-      ENULIB_SERIALIZE( exaccount, (owner)(balances) )
+      MESLIB_SERIALIZE( exaccount, (owner)(balances) )
    };
 
-   typedef enumivo::multi_index<N(exaccounts), exaccount> exaccounts;
+   typedef myeosio::multi_index<N(exaccounts), exaccount> exaccounts;
 
 
    /**
@@ -40,4 +40,4 @@ namespace enumivo {
           */
          flat_map<account_name, exaccounts> exaccounts_cache;
    };
-} /// namespace enumivo
+} /// namespace myeosio

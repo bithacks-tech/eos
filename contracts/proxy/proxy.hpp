@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
@@ -13,7 +13,7 @@ namespace proxy {
       account_name owner;
       uint32_t     delay;
 
-      ENULIB_SERIALIZE( set_owner, (owner)(delay) )
+      MESLIB_SERIALIZE( set_owner, (owner)(delay) )
    };
 
    //@abi table

@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/merkle.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/merkle.hpp>
 #include <fc/io/json.hpp>
 
 #ifdef NON_VALIDATING_TEST
@@ -9,9 +9,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 
 struct action_proof_data {
    account_name              receiver;

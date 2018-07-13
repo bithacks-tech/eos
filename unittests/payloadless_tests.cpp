@@ -3,8 +3,8 @@
 #include <boost/test/unit_test.hpp>
 #pragma GCC diagnostic pop
 #include <boost/algorithm/string/predicate.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
 
 #include <payloadless/payloadless.wast.hpp>
 #include <payloadless/payloadless.abi.hpp>
@@ -20,9 +20,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 
 class payloadless_tester : public TESTER {
@@ -42,7 +42,7 @@ BOOST_FIXTURE_TEST_CASE( test_doit, payloadless_tester ) {
    BOOST_CHECK_EQUAL(msg == "Im a payloadless action", true);
 }
 
-// test GH#3916 - contract api action with no parameters fails when called from enucli
+// test GH#3916 - contract api action with no parameters fails when called from mycleos
 // abi_serializer was failing when action data was empty.
 BOOST_FIXTURE_TEST_CASE( test_abi_serializer, payloadless_tester ) {
 

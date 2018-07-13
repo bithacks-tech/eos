@@ -2,7 +2,7 @@
 #include <enulib/enu.hpp>
 #include <enulib/privileged.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    class bios : public contract {
       public:
@@ -23,7 +23,7 @@ namespace enumivo {
             require_auth( _self );
          }
 
-         void setprods( std::vector<enumivo::producer_key> schedule ) {
+         void setprods( std::vector<myeosio::producer_key> schedule ) {
             (void)schedule; // schedule argument just forces the deserialization of the action data into vector<producer_key> (necessary check)
             require_auth( _self );
 
@@ -41,4 +41,4 @@ namespace enumivo {
       private:
    };
 
-} /// namespace enumivo
+} /// namespace myeosio

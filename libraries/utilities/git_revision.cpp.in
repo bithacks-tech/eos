@@ -1,14 +1,14 @@
 #include <stdint.h>
-#include <enumivo/utilities/git_revision.hpp>
+#include <myeosio/utilities/git_revision.hpp>
 
-#define ENU_GIT_REVISION_SHA "@ENU_GIT_REVISION_SHA@"
-#define ENU_GIT_REVISION_UNIX_TIMESTAMP @ENU_GIT_REVISION_UNIX_TIMESTAMP@
-#define ENU_GIT_REVISION_DESCRIPTION "@ENU_GIT_REVISION_DESCRIPTION@"
+#define MES_GIT_REVISION_SHA "@MES_GIT_REVISION_SHA@"
+#define MES_GIT_REVISION_UNIX_TIMESTAMP @MES_GIT_REVISION_UNIX_TIMESTAMP@
+#define MES_GIT_REVISION_DESCRIPTION "@MES_GIT_REVISION_DESCRIPTION@"
 
-namespace enumivo { namespace utilities {
+namespace myeosio { namespace utilities {
 
-const char* const git_revision_sha = ENU_GIT_REVISION_SHA;
-const uint32_t git_revision_unix_timestamp = ENU_GIT_REVISION_UNIX_TIMESTAMP;
-const char* const git_revision_description = ENU_GIT_REVISION_DESCRIPTION;
+const char* const git_revision_sha = MES_GIT_REVISION_SHA;
+const uint32_t git_revision_unix_timestamp = MES_GIT_REVISION_UNIX_TIMESTAMP;
+const char* const git_revision_description = MES_GIT_REVISION_DESCRIPTION;
 
-} } // end namespace enumivo::utilities
+} } // end namespace myeosio::utilities

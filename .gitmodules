@@ -1,30 +1,30 @@
 [submodule "libraries/chainbase"]
 	path = libraries/chainbase
-	url = https://github.com/enumivo/chainbase
+	url = https://github.com/myeosio/chainbase
         ignore = dirty
 [submodule "libraries/appbase"]
 	path = libraries/appbase
-	url = https://github.com/enumivo/appbase
+	url = https://github.com/myeosio/appbase
         ignore = dirty
 [submodule "contracts/musl/upstream"]
 	path = contracts/musl/upstream
-	url = https://github.com/enumivo/musl.git
-	branch = enumivo
+	url = https://github.com/myeosio/musl.git
+	branch = myeosio
 [submodule "contracts/libc++/upstream"]
 	path = contracts/libc++/upstream
-	url = https://github.com/enumivo/libcxx.git
-	branch = enumivo
+	url = https://github.com/myeosio/libcxx.git
+	branch = myeosio
 [submodule "externals/binaryen"]
 	path = externals/binaryen
-	url = https://github.com/enumivo/binaryen
-	branch = enumivo
+	url = https://github.com/myeosio/binaryen
+	branch = myeosio
 
 [submodule "libraries/softfloat"]
 	path = libraries/softfloat
-	url = https://github.com/enumivo/berkeley-softfloat-3
+	url = https://github.com/myeosio/berkeley-softfloat-3
 [submodule "externals/magic_get"]
 	path = externals/magic_get
-	url = https://github.com/enumivo/magic_get
+	url = https://github.com/myeosio/magic_get
 [submodule "libraries/fc"]
 	path = libraries/fc
-	url = https://github.com/enumivo/fc
+	url = https://github.com/myeosio/fc

@@ -1,8 +1,8 @@
 #include <enulib/enu.hpp>
 #include <enulib/print.hpp>
-using namespace enumivo;
+using namespace myeosio;
 
-class payloadless : public enumivo::contract {
+class payloadless : public myeosio::contract {
   public:
       using contract::contract;
 

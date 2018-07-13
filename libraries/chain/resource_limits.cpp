@@ -1,11 +1,11 @@
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/resource_limits.hpp>
-#include <enumivo/chain/resource_limits_private.hpp>
-#include <enumivo/chain/transaction_metadata.hpp>
-#include <enumivo/chain/transaction.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/resource_limits.hpp>
+#include <myeosio/chain/resource_limits_private.hpp>
+#include <myeosio/chain/transaction_metadata.hpp>
+#include <myeosio/chain/transaction.hpp>
 #include <algorithm>
 
-namespace enumivo { namespace chain { namespace resource_limits {
+namespace myeosio { namespace chain { namespace resource_limits {
 
 static_assert( config::rate_limiting_precision > 0, "config::rate_limiting_precision must be positive" );
 
@@ -117,7 +117,7 @@ void resource_limits_manager::add_transaction_usage(const flat_set<account_name>
 
          auto max_user_use_in_window = (virtual_network_capacity_in_window * user_weight) / all_user_weight;
 
-         ENU_ASSERT( cpu_used_in_window <= max_user_use_in_window,
+         MES_ASSERT( cpu_used_in_window <= max_user_use_in_window,
                      tx_cpu_usage_exceeded,
                      "authorizing account '${n}' has insufficient cpu resources for this transaction",
                      ("n", name(a))
@@ -136,7 +136,7 @@ void resource_limits_manager::add_transaction_usage(const flat_set<account_name>
 
          auto max_user_use_in_window = (virtual_network_capacity_in_window * user_weight) / all_user_weight;
 
-         ENU_ASSERT( net_used_in_window <= max_user_use_in_window,
+         MES_ASSERT( net_used_in_window <= max_user_use_in_window,
                      tx_net_usage_exceeded,
                      "authorizing account '${n}' has insufficient net resources for this transaction",
                      ("n", name(a))
@@ -152,8 +152,8 @@ void resource_limits_manager::add_transaction_usage(const flat_set<account_name>
       rls.pending_net_usage += net_usage;
    });
 
-   ENU_ASSERT( state.pending_cpu_usage <= config.cpu_limit_parameters.max, block_resource_exhausted, "Block has insufficient cpu resources" );
-   ENU_ASSERT( state.pending_net_usage <= config.net_limit_parameters.max, block_resource_exhausted, "Block has insufficient net resources" );
+   MES_ASSERT( state.pending_cpu_usage <= config.cpu_limit_parameters.max, block_resource_exhausted, "Block has insufficient cpu resources" );
+   MES_ASSERT( state.pending_net_usage <= config.net_limit_parameters.max, block_resource_exhausted, "Block has insufficient net resources" );
 }
 
 void resource_limits_manager::add_pending_ram_usage( const account_name account, int64_t ram_delta ) {
@@ -163,9 +163,9 @@ void resource_limits_manager::add_pending_ram_usage( const account_name account,
 
    const auto& usage  = _db.get<resource_usage_object,by_owner>( account );
 
-   ENU_ASSERT( ram_delta <= 0 || UINT64_MAX - usage.ram_usage >= (uint64_t)ram_delta, transaction_exception,
+   MES_ASSERT( ram_delta <= 0 || UINT64_MAX - usage.ram_usage >= (uint64_t)ram_delta, transaction_exception,
               "Ram usage delta would overflow UINT64_MAX");
-   ENU_ASSERT(ram_delta >= 0 || usage.ram_usage >= (uint64_t)(-ram_delta), transaction_exception,
+   MES_ASSERT(ram_delta >= 0 || usage.ram_usage >= (uint64_t)(-ram_delta), transaction_exception,
               "Ram usage delta would underflow UINT64_MAX");
 
    _db.modify( usage, [&]( auto& u ) {
@@ -179,7 +179,7 @@ void resource_limits_manager::verify_account_ram_usage( const account_name accou
    const auto& usage  = _db.get<resource_usage_object,by_owner>( account );
 
    if( ram_bytes >= 0 ) {
-      ENU_ASSERT( usage.ram_usage <= ram_bytes, ram_usage_exceeded,
+      MES_ASSERT( usage.ram_usage <= ram_bytes, ram_usage_exceeded,
                   "account ${account} has insufficient ram; needs ${needs} bytes has ${available} bytes",
                   ("account", account)("needs",usage.ram_usage)("available",ram_bytes)              );
    }
@@ -224,9 +224,9 @@ bool resource_limits_manager::set_account_limits( const account_name& account, i
 
       /*
       if( limits.ram_bytes < 0 ) {
-         ENU_ASSERT(ram_bytes >= usage.ram_usage, wasm_execution_error, "converting unlimited account would result in overcommitment [commit=${c}, desired limit=${l}]", ("c", usage.ram_usage)("l", ram_bytes));
+         MES_ASSERT(ram_bytes >= usage.ram_usage, wasm_execution_error, "converting unlimited account would result in overcommitment [commit=${c}, desired limit=${l}]", ("c", usage.ram_usage)("l", ram_bytes));
       } else {
-         ENU_ASSERT(ram_bytes >= usage.ram_usage, wasm_execution_error, "attempting to release committed ram resources [commit=${c}, desired limit=${l}]", ("c", usage.ram_usage)("l", ram_bytes));
+         MES_ASSERT(ram_bytes >= usage.ram_usage, wasm_execution_error, "attempting to release committed ram resources [commit=${c}, desired limit=${l}]", ("c", usage.ram_usage)("l", ram_bytes));
       }
       */
    }
@@ -262,12 +262,12 @@ void resource_limits_manager::process_account_limit_updates() {
    // convenience local lambda to reduce clutter
    auto update_state_and_value = [](uint64_t &total, int64_t &value, int64_t pending_value, const char* debug_which) -> void {
       if (value > 0) {
-         ENU_ASSERT(total >= value, rate_limiting_state_inconsistent, "underflow when reverting old value to ${which}", ("which", debug_which));
+         MES_ASSERT(total >= value, rate_limiting_state_inconsistent, "underflow when reverting old value to ${which}", ("which", debug_which));
          total -= value;
       }
 
       if (pending_value > 0) {
-         ENU_ASSERT(UINT64_MAX - total >= pending_value, rate_limiting_state_inconsistent, "overflow when applying new value to ${which}", ("which", debug_which));
+         MES_ASSERT(UINT64_MAX - total >= pending_value, rate_limiting_state_inconsistent, "overflow when applying new value to ${which}", ("which", debug_which));
          total += pending_value;
       }
 
@@ -413,4 +413,4 @@ account_resource_limit resource_limits_manager::get_account_net_limit_ex( const 
 }
 
 
-} } } /// enumivo::chain::resource_limits
+} } } /// myeosio::chain::resource_limits

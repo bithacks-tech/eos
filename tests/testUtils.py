@@ -12,13 +12,13 @@ class Utils:
     Debug=False
     FNull = open(os.devnull, 'w')
 
-    EnuClientPath="programs/enucli/enucli"
+    EnuClientPath="programs/mycleos/mycleos"
 
-    EnuWalletName="enuwallet"
-    EnuWalletPath="programs/enuwallet/"+ EnuWalletName
+    EnuWalletName="mykeosd"
+    EnuWalletPath="programs/mykeosd/"+ EnuWalletName
 
-    EnuServerName="enunode"
-    EnuServerPath="programs/enunode/"+ EnuServerName
+    EnuServerName="myeosnode"
+    EnuServerPath="programs/myeosnode/"+ EnuServerName
 
     EnuLauncherPath="programs/enulauncher/enulauncher"
     MongoPath="mongo"
@@ -42,7 +42,7 @@ class Utils:
 
     systemWaitTimeout=90
 
-    # mongoSyncTime: enunode mongodb plugin seems to sync with a 10-15 seconds delay. This will inject
+    # mongoSyncTime: myeosnode mongodb plugin seems to sync with a 10-15 seconds delay. This will inject
     #  a wait period before the 2nd DB check (if first check fails)
     mongoSyncTime=25
 

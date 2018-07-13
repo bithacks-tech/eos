@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.5 )
 
-project( Enumivo )
+project( MyEOSIO )
 
 enable_testing()
 
@@ -13,7 +13,7 @@ include( SetupTargetMacros )
 include( InstallDirectoryPermissions )
 include( MASSigning )
 
-set( BLOCKCHAIN_NAME "Enumivo" )
+set( BLOCKCHAIN_NAME "MyEOSIO" )
 set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_EXTENSIONS ON )
 set( CXX_STANDARD_REQUIRED ON)
@@ -22,8 +22,8 @@ set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 7)
 
-set( CLI_CLIENT_EXECUTABLE_NAME enucli )
-set( GUI_CLIENT_EXECUTABLE_NAME enumivo )
+set( CLI_CLIENT_EXECUTABLE_NAME mycleos )
+set( GUI_CLIENT_EXECUTABLE_NAME myeosio )
 set( CUSTOM_URL_SCHEME "gcs" )
 set( INSTALLER_APP_ID "68ad7005-8eee-49c9-95ce-9eed97e5b347" )
 
@@ -100,7 +100,7 @@ FIND_PACKAGE(Boost 1.67 REQUIRED COMPONENTS
 
 if( WIN32 )
 
-    message( STATUS "Configuring Enumivo on WIN32")
+    message( STATUS "Configuring MyEOSIO on WIN32")
     set( DB_VERSION 60 )
     set( BDB_STATIC_LIBS 1 )
 
@@ -135,11 +135,11 @@ else( WIN32 ) # Apple AND Linux
 
     if( APPLE )
         # Apple Specific Options Here
-        message( STATUS "Configuring Enumivo on OS X" )
+        message( STATUS "Configuring MyEOSIO on OS X" )
         set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-deprecated-declarations" )
     else( APPLE )
         # Linux Specific Options Here
-        message( STATUS "Configuring Enumivo on Linux" )
+        message( STATUS "Configuring MyEOSIO on Linux" )
         set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall" )
         if ( FULL_STATIC_BUILD )
           set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
@@ -168,7 +168,7 @@ else( WIN32 ) # Apple AND Linux
 
 endif( WIN32 )
 
-set(ENABLE_COVERAGE_TESTING FALSE CACHE BOOL "Build Enumivo for code coverage analysis")
+set(ENABLE_COVERAGE_TESTING FALSE CACHE BOOL "Build MyEOSIO for code coverage analysis")
 
 if(ENABLE_COVERAGE_TESTING)
   SET(CMAKE_CXX_FLAGS "--coverage ${CMAKE_CXX_FLAGS}")
@@ -180,7 +180,7 @@ endif()
 add_subdirectory( externals )
 
 if ("${CORE_SYMBOL_NAME}" STREQUAL "")
-  set( CORE_SYMBOL_NAME "ENU" )
+  set( CORE_SYMBOL_NAME "MES" )
 endif()
 string(TOUPPER ${CORE_SYMBOL_NAME} CORE_SYMBOL_NAME)
 
@@ -192,10 +192,10 @@ endif()
 message( STATUS "Using '${CORE_SYMBOL_NAME}' as CORE symbol name" )
 
 if ("${ENUMIVO_ROOT_KEY}" STREQUAL "")
-   set(ENUMIVO_ROOT_KEY "ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
+   set(ENUMIVO_ROOT_KEY "MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
 endif()
 
-message( STATUS "Using '${ENUMIVO_ROOT_KEY}' as public key for 'enumivo' account" )
+message( STATUS "Using '${ENUMIVO_ROOT_KEY}' as public key for 'myeosio' account" )
 
 include(wasm)
 
@@ -209,12 +209,12 @@ add_subdirectory( tests )
 add_subdirectory( tools )
 add_subdirectory( debian )
 
-install_directory_permissions(DIRECTORY ${CMAKE_INSTALL_FULL_SYSCONFDIR}/enumivo)
+install_directory_permissions(DIRECTORY ${CMAKE_INSTALL_FULL_SYSCONFDIR}/myeosio)
 
-install(FILES testnet.template DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/enumivo/launcher)
-install_directory_permissions(DIRECTORY ${CMAKE_INSTALL_FULL_SYSCONFDIR}/enumivo)
-install_directory_permissions(DIRECTORY ${CMAKE_INSTALL_FULL_SYSCONFDIR}/enumivo/launcher)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/testnet.template ${CMAKE_CURRENT_BINARY_DIR}/etc/enumivo/launcher/testnet.template COPYONLY)
+install(FILES testnet.template DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/myeosio/launcher)
+install_directory_permissions(DIRECTORY ${CMAKE_INSTALL_FULL_SYSCONFDIR}/myeosio)
+install_directory_permissions(DIRECTORY ${CMAKE_INSTALL_FULL_SYSCONFDIR}/myeosio/launcher)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/testnet.template ${CMAKE_CURRENT_BINARY_DIR}/etc/myeosio/launcher/testnet.template COPYONLY)
 
 include(installer)
 

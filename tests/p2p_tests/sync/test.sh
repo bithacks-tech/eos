@@ -54,14 +54,14 @@ fi
 
 total_nodes="${total_nodes:-`echo $pnodes`}"
 launcherPath="programs/enulauncher/enulauncher"
-clientPath="programs/enucli/enucli"
+clientPath="programs/mycleos/mycleos"
 
-rm -rf etc/enumivo/node_* var/lib/* stage
-ls -l etc/enumivo var/lib
+rm -rf etc/myeosio/node_* var/lib/* stage
+ls -l etc/myeosio var/lib
 
 debugArg=""
 if [ "$debug" == true ]; then
-   debugArg="--enunode \"--log-level-net-plugin debug\""
+   debugArg="--myeosnode \"--log-level-net-plugin debug\""
 fi
 
 cmd="$launcherPath -p $pnodes -n $total_nodes -s $topo -d $delay $debugArg"
@@ -143,8 +143,8 @@ count=0
 while [ $count -lt $total_nodes ]; do
     num=$(printf "%02s" $count)
     echo =================================================================
-    echo Contents of etc/enumivo/node_${num}/config.ini:
-    cat etc/enumivo/node_${num}/config.ini
+    echo Contents of etc/myeosio/node_${num}/config.ini:
+    cat etc/myeosio/node_${num}/config.ini
     echo =================================================================
     echo Contents of var/lib/node_${num}/stderr.txt:
     cat var/lib/node_${num}/stderr.txt

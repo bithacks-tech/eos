@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/testing/tester_network.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/testing/tester_network.hpp>
 
 #include <fc/variant_object.hpp>
 
@@ -16,9 +16,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 
 using mvo = fc::mutable_variant_object;
 
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_SUITE(whitelist_blacklist_tests)
 
 BOOST_AUTO_TEST_CASE( actor_whitelist ) { try {
    whitelist_blacklist_tester<> test;
-   test.actor_whitelist = {N(enumivo), N(enu.token), N(alice)};
+   test.actor_whitelist = {N(myeosio), N(enu.token), N(alice)};
    test.init();
 
    test.transfer( N(enu.token), N(alice), "1000.00 TOK" );
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE( actor_blacklist ) { try {
 
 BOOST_AUTO_TEST_CASE( contract_whitelist ) { try {
    whitelist_blacklist_tester<> test;
-   test.contract_whitelist = {N(enumivo), N(enu.token), N(bob)};
+   test.contract_whitelist = {N(myeosio), N(enu.token), N(bob)};
    test.init();
 
    test.transfer( N(enu.token), N(alice), "1000.00 TOK" );
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE( contract_blacklist ) { try {
 
 BOOST_AUTO_TEST_CASE( action_blacklist ) { try {
    whitelist_blacklist_tester<> test;
-   test.contract_whitelist = {N(enumivo), N(enu.token), N(bob), N(charlie)};
+   test.contract_whitelist = {N(myeosio), N(enu.token), N(bob), N(charlie)};
    test.action_blacklist = {{N(charlie), N(create)}};
    test.init();
 
@@ -323,14 +323,14 @@ BOOST_AUTO_TEST_CASE( action_blacklist ) { try {
    test.chain->produce_blocks();
 } FC_LOG_AND_RETHROW() }
 
-BOOST_AUTO_TEST_CASE( blacklist_enumivo ) { try {
+BOOST_AUTO_TEST_CASE( blacklist_myeosio ) { try {
    whitelist_blacklist_tester<tester> tester1;
    tester1.init();
    tester1.chain->produce_blocks();
-   tester1.chain->set_code(N(enumivo), enu_token_wast);
+   tester1.chain->set_code(N(myeosio), enu_token_wast);
    tester1.chain->produce_blocks();
    tester1.shutdown();
-   tester1.contract_blacklist = {N(enumivo)};
+   tester1.contract_blacklist = {N(myeosio)};
    tester1.init(false);
 
    whitelist_blacklist_tester<tester> tester2;
@@ -420,7 +420,7 @@ BOOST_AUTO_TEST_CASE( blacklist_onerror ) { try {
    tester1.chain->produce_blocks();
    tester1.shutdown();
 
-   tester1.action_blacklist = {{N(enumivo), N(onerror)}};
+   tester1.action_blacklist = {{N(myeosio), N(onerror)}};
    tester1.init(false);
 
    tester1.chain->push_action( N(bob), N(defercall), N(alice), mvo()
@@ -431,7 +431,7 @@ BOOST_AUTO_TEST_CASE( blacklist_onerror ) { try {
    );
 
    BOOST_CHECK_EXCEPTION( tester1.chain->produce_blocks(), fc::exception,
-                          fc_exception_message_is("action 'enumivo::onerror' is on the action blacklist")
+                          fc_exception_message_is("action 'myeosio::onerror' is on the action blacklist")
                         );
 
 } FC_LOG_AND_RETHROW() }

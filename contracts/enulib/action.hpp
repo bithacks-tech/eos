@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include <enulib/action.h>
@@ -12,7 +12,7 @@
 #include <boost/preprocessor/tuple/enum.hpp>
 #include <boost/preprocessor/facilities/overload.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    /**
     * @defgroup actioncppapi Action C++ API
@@ -37,7 +37,7 @@ namespace enumivo {
     *    unsigned long long b; //8
     *    int  c; //4
     *
-    *    ENULIB_SERIALIZE( dummy_action, (a)(b)(c) )
+    *    MESLIB_SERIALIZE( dummy_action, (a)(b)(c) )
     *  };
     *  dummy_action msg = unpack_action_data<dummy_action>();
     *  @endcode
@@ -86,7 +86,7 @@ namespace enumivo {
          return std::tie( a.actor, a.permission ) == std::tie( b.actor, b.permission );
       }
 
-      ENULIB_SERIALIZE( permission_level, (actor)(permission) )
+      MESLIB_SERIALIZE( permission_level, (actor)(permission) )
    };
 
    void require_auth(const permission_level& level) {
@@ -162,7 +162,7 @@ namespace enumivo {
       action( vector<permission_level> auths, account_name a, action_name n, T&& value )
       :account(a), name(n), authorization(std::move(auths)), data(pack(std::forward<T>(value))) {}
 
-      ENULIB_SERIALIZE( action, (account)(name)(authorization)(data) )
+      MESLIB_SERIALIZE( action, (account)(name)(authorization)(data) )
 
       void send() const {
          auto serialize = pack(*this);
@@ -170,7 +170,7 @@ namespace enumivo {
       }
 
       void send_context_free() const {
-         enumivo_assert( authorization.size() == 0, "context free actions cannot have authorizations");
+         myeosio_assert( authorization.size() == 0, "context free actions cannot have authorizations");
          auto serialize = pack(*this);
          ::send_context_free_inline(serialize.data(), serialize.size());
       }
@@ -182,8 +182,8 @@ namespace enumivo {
        */
       template<typename T>
       T data_as() {
-         enumivo_assert( name == T::get_name(), "Invalid name" );
-         enumivo_assert( account == T::get_account(), "Invalid account" );
+         myeosio_assert( name == T::get_name(), "Invalid name" );
+         myeosio_assert( account == T::get_account(), "Invalid account" );
          return unpack<T>( &data[0], data.size() );
       }
 
@@ -217,13 +217,13 @@ namespace enumivo {
 
  ///@} actioncpp api
 
-} // namespace enumivo
+} // namespace myeosio
 
 #define INLINE_ACTION_SENDER3( CONTRACT_CLASS, FUNCTION_NAME, ACTION_NAME  )\
-::enumivo::inline_dispatcher<decltype(&CONTRACT_CLASS::FUNCTION_NAME), ACTION_NAME>::call
+::myeosio::inline_dispatcher<decltype(&CONTRACT_CLASS::FUNCTION_NAME), ACTION_NAME>::call
 
 #define INLINE_ACTION_SENDER2( CONTRACT_CLASS, NAME )\
-INLINE_ACTION_SENDER3( CONTRACT_CLASS, NAME, ::enumivo::string_to_name(#NAME) )
+INLINE_ACTION_SENDER3( CONTRACT_CLASS, NAME, ::myeosio::string_to_name(#NAME) )
 
 #define INLINE_ACTION_SENDER(...) BOOST_PP_OVERLOAD(INLINE_ACTION_SENDER,__VA_ARGS__)(__VA_ARGS__)
 
@@ -232,4 +232,4 @@ INLINE_ACTION_SENDER(std::decay_t<decltype(CONTRACT)>, NAME)( (CONTRACT).get_sel
 BOOST_PP_TUPLE_ENUM(BOOST_PP_VARIADIC_SIZE(__VA_ARGS__), BOOST_PP_VARIADIC_TO_TUPLE(__VA_ARGS__)) );
 
 
-#define ACTION( CODE, NAME ) struct NAME : ::enumivo::action_meta<CODE, ::enumivo::string_to_name(#NAME) >
+#define ACTION( CODE, NAME ) struct NAME : ::myeosio::action_meta<CODE, ::myeosio::string_to_name(#NAME) >

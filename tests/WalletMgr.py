@@ -12,28 +12,28 @@ from testUtils import Utils
 Wallet=namedtuple("Wallet", "name password host port")
 # pylint: disable=too-many-instance-attributes
 class WalletMgr(object):
-    __walletLogFile="test_enuwallet_output.log"
+    __walletLogFile="test_mykeosd_output.log"
     __walletDataDir="test_wallet_0"
 
     # pylint: disable=too-many-arguments
-    # enuwalletd [True|False] True=Launch wallet(enuwallet) process; False=Manage launch process externally.
-    def __init__(self, enuwalletd, enunodePort=8888, enunodeHost="localhost", port=8899, host="localhost"):
-        self.enuwalletd=enuwalletd
-        self.enunodePort=enunodePort
-        self.enunodeHost=enunodeHost
+    # mykeosdd [True|False] True=Launch wallet(mykeosd) process; False=Manage launch process externally.
+    def __init__(self, mykeosdd, myeosnodePort=8888, myeosnodeHost="localhost", port=8899, host="localhost"):
+        self.mykeosdd=mykeosdd
+        self.myeosnodePort=myeosnodePort
+        self.myeosnodeHost=myeosnodeHost
         self.port=port
         self.host=host
         self.wallets={}
         self.__walletPid=None
-        self.endpointArgs="--url http://%s:%d" % (self.enunodeHost, self.enunodePort)
+        self.endpointArgs="--url http://%s:%d" % (self.myeosnodeHost, self.myeosnodePort)
         self.walletEndpointArgs=""
-        if self.enuwalletd:
+        if self.mykeosdd:
             self.walletEndpointArgs += " --wallet-url http://%s:%d" % (self.host, self.port)
             self.endpointArgs += self.walletEndpointArgs
 
     def launch(self):
-        if not self.enuwalletd:
-            Utils.Print("ERROR: Wallet Manager wasn't configured to launch enuwallet")
+        if not self.mykeosdd:
+            Utils.Print("ERROR: Wallet Manager wasn't configured to launch mykeosd")
             return False
 
         cmd="%s --data-dir %s --config-dir %s --http-server-address=%s:%d --verbose-http-errors" % (
@@ -43,7 +43,7 @@ class WalletMgr(object):
             popen=subprocess.Popen(cmd.split(), stdout=sout, stderr=serr)
             self.__walletPid=popen.pid
 
-        # Give enuwallet time to warm up
+        # Give mykeosd time to warm up
         time.sleep(1)
         return True
 
@@ -179,7 +179,7 @@ class WalletMgr(object):
                 shutil.copyfileobj(f, sys.stdout)
 
     def killall(self, allInstances=False):
-        """Kill enuwallet instances. allInstances will kill all enuwallet instances running on the system."""
+        """Kill mykeosd instances. allInstances will kill all mykeosd instances running on the system."""
         if self.__walletPid:
             Utils.Print("Killing wallet manager process %d:" % (self.__walletPid))
             os.kill(self.__walletPid, signal.SIGKILL)

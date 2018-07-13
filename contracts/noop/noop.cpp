@@ -1,11 +1,11 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <enulib/enu.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    class noop: public contract {
       public:
@@ -20,4 +20,4 @@ namespace enumivo {
 
    ENUMIVO_ABI( noop, ( anyaction ) )
 
-} /// enumivo     
+} /// myeosio     

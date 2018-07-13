@@ -1,6 +1,6 @@
 #include "irreversible_block_storage.h"
 
-namespace enumivo {
+namespace myeosio {
 
 irreversible_block_storage::irreversible_block_storage(std::shared_ptr<database> db):
     m_db(db)

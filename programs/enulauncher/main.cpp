@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  *  @brief launch testnet nodes
  **/
 #include <string>
@@ -32,7 +32,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <net/if.h>
-#include <enumivo/chain/genesis_state.hpp>
+#include <myeosio/chain/genesis_state.hpp>
 
 #include "config.hpp"
 
@@ -121,7 +121,7 @@ public:
     : genesis("genesis.json"),
       ssh_identity (""),
       ssh_args (""),
-      enumivo_home(),
+      myeosio_home(),
       host_name("127.0.0.1"),
       public_name("localhost"),
       listen_addr("0.0.0.0"),
@@ -137,7 +137,7 @@ public:
   string           genesis;
   string           ssh_identity;
   string           ssh_args;
-  string           enumivo_home;
+  string           myeosio_home;
   string           host_name;
   string           public_name;
   string           listen_addr;
@@ -298,16 +298,16 @@ struct server_name_def {
   string ipaddr;
   string name;
   bool has_bios;
-  string enumivo_home;
+  string myeosio_home;
   uint16_t instances;
-  server_name_def () : ipaddr(), name(), has_bios(false), enumivo_home(), instances(1) {}
+  server_name_def () : ipaddr(), name(), has_bios(false), myeosio_home(), instances(1) {}
 };
 
 struct server_identities {
   vector<server_name_def> producer;
   vector<server_name_def> nonprod;
   vector<string> db;
-  string default_enumivo_home;
+  string default_myeosio_home;
   remote_deploy ssh;
 };
 
@@ -481,14 +481,14 @@ launcher_def::set_options (bpo::options_description &cfg) {
     ("shape,s",bpo::value<string>(&shape)->default_value("star"),"network topology, use \"star\" \"mesh\" or give a filename for custom")
     ("p2p-plugin", bpo::value<string>()->default_value("net"),"select a p2p plugin to use (either net or bnet). Defaults to net.")
     ("genesis,g",bpo::value<bfs::path>(&genesis)->default_value("./genesis.json"),"set the path to genesis.json")
-    ("skip-signature", bpo::bool_switch(&skip_transaction_signatures)->default_value(false), "enunode does not require transaction signatures.")
-    ("enunode", bpo::value<string>(&enudaemon_extra_args), "forward enunode command line argument(s) to each instance of enunode, enclose arg in quotes")
+    ("skip-signature", bpo::bool_switch(&skip_transaction_signatures)->default_value(false), "myeosnode does not require transaction signatures.")
+    ("myeosnode", bpo::value<string>(&enudaemon_extra_args), "forward myeosnode command line argument(s) to each instance of myeosnode, enclose arg in quotes")
     ("delay,d",bpo::value<int>(&start_delay)->default_value(0),"seconds delay before starting each node after the first")
     ("boot",bpo::bool_switch(&boot)->default_value(false),"After deploying the nodes and generating a boot script, invoke it.")
     ("nogen",bpo::bool_switch(&nogen)->default_value(false),"launch nodes without writing new config files")
     ("host-map",bpo::value<bfs::path>(&host_map_file)->default_value(""),"a file containing mapping specific nodes to hosts. Used to enhance the custom shape argument")
     ("servers",bpo::value<bfs::path>(&server_ident_file)->default_value(""),"a file containing ip addresses and names of individual servers to deploy as producers or non-producers ")
-    ("per-host",bpo::value<int>(&per_host)->default_value(0),"specifies how many enunode instances will run on a single host. Use 0 to indicate all on one.")
+    ("per-host",bpo::value<int>(&per_host)->default_value(0),"specifies how many myeosnode instances will run on a single host. Use 0 to indicate all on one.")
     ("network-name",bpo::value<string>(&network.name)->default_value("testnet_"),"network name prefix used in GELF logging source")
     ("enable-gelf-logging",bpo::value<bool>(&gelf_enabled)->default_value(true),"enable gelf logging appender in logging configuration file")
     ("gelf-endpoint",bpo::value<string>(&gelf_endpoint)->default_value("10.160.11.21:12201"),"hostname:port or ip:port of GELF endpoint")
@@ -570,7 +570,7 @@ launcher_def::initialize (const variables_map &vmap) {
     }
   }
 
-  config_dir_base = "etc/enumivo";
+  config_dir_base = "etc/myeosio";
   data_dir_base = "var/lib";
   next_node = 0;
   ++prod_nodes; // add one for the bios node
@@ -724,7 +724,7 @@ launcher_def::define_network () {
 
   if (per_host == 0) {
     host_def local_host;
-    local_host.enumivo_home = erd;
+    local_host.myeosio_home = erd;
     local_host.genesis = genesis.string();
     for (size_t i = 0; i < (total_nodes); i++) {
       enudaemon_def enudaemon;
@@ -770,9 +770,9 @@ launcher_def::define_network () {
           lhost->public_name = lhost->host_name;
           ph_count = 1;
         }
-        lhost->enumivo_home =
-          (local_id.contains (lhost->host_name) || servers.default_enumivo_home.empty()) ?
-          erd : servers.default_enumivo_home;
+        lhost->myeosio_home =
+          (local_id.contains (lhost->host_name) || servers.default_myeosio_home.empty()) ?
+          erd : servers.default_myeosio_home;
         host_ndx++;
       } // ph_count == 0
 
@@ -823,7 +823,7 @@ launcher_def::bind_nodes () {
          auto pubkey = kp.get_public_key();
          node.keys.emplace_back (move(kp));
          if (is_bios) {
-            string prodname = "enumivo";
+            string prodname = "myeosio";
             node.producers.push_back(prodname);
             producer_set.schedule.push_back({prodname,pubkey});
          }
@@ -896,8 +896,8 @@ launcher_def::deploy_config_files (tn_node_def &node) {
   bfs::path genesis_source = stage / instance.config_dir_name / "genesis.json";
 
   if (host->is_local()) {
-    bfs::path cfgdir = bfs::path(host->enumivo_home) / instance.config_dir_name;
-    bfs::path dd = bfs::path(host->enumivo_home) / instance.data_dir_name;
+    bfs::path cfgdir = bfs::path(host->myeosio_home) / instance.config_dir_name;
+    bfs::path dd = bfs::path(host->myeosio_home) / instance.data_dir_name;
 
     if (!bfs::exists (cfgdir)) {
        if (!bfs::create_directories (cfgdir, ec) && ec.value()) {
@@ -945,7 +945,7 @@ launcher_def::deploy_config_files (tn_node_def &node) {
   else {
     prep_remote_config_dir (instance, host);
 
-    bfs::path rfile = bfs::path (host->enumivo_home) / instance.config_dir_name / "config.ini";
+    bfs::path rfile = bfs::path (host->myeosio_home) / instance.config_dir_name / "config.ini";
     auto scp_cmd_line = compose_scp_command(*host, source, rfile);
 
     cerr << "cmdline = " << scp_cmd_line << endl;
@@ -955,7 +955,7 @@ launcher_def::deploy_config_files (tn_node_def &node) {
       exit(-1);
     }
 
-    rfile = bfs::path (host->enumivo_home) / instance.config_dir_name / "logging.json";
+    rfile = bfs::path (host->myeosio_home) / instance.config_dir_name / "logging.json";
 
     scp_cmd_line = compose_scp_command(*host, logging_source, rfile);
 
@@ -965,7 +965,7 @@ launcher_def::deploy_config_files (tn_node_def &node) {
       exit(-1);
     }
 
-    rfile = bfs::path (host->enumivo_home) / instance.config_dir_name / "genesis.json";
+    rfile = bfs::path (host->myeosio_home) / instance.config_dir_name / "genesis.json";
 
     scp_cmd_line = compose_scp_command(*host, genesis_source, rfile);
 
@@ -1080,18 +1080,18 @@ launcher_def::write_config_file (tn_node_def &node) {
     for (auto &p : node.producers) {
       cfg << "producer-name = " << p << "\n";
     }
-    cfg << "plugin = enumivo::producer_plugin\n";
+    cfg << "plugin = myeosio::producer_plugin\n";
   }
   if( instance.has_db ) {
-    cfg << "plugin = enumivo::mongo_db_plugin\n";
+    cfg << "plugin = myeosio::mongo_db_plugin\n";
   }
   if ( p2p == p2p_plugin::NET ) {
-    cfg << "plugin = enumivo::net_plugin\n";
+    cfg << "plugin = myeosio::net_plugin\n";
   } else {
-    cfg << "plugin = enumivo::bnet_plugin\n";
+    cfg << "plugin = myeosio::bnet_plugin\n";
   }
-  cfg << "plugin = enumivo::chain_api_plugin\n"
-      << "plugin = enumivo::history_api_plugin\n";
+  cfg << "plugin = myeosio::chain_api_plugin\n"
+      << "plugin = myeosio::history_api_plugin\n";
   cfg.close();
 }
 
@@ -1140,7 +1140,7 @@ launcher_def::init_genesis () {
    bfs::ifstream src(genesis_path);
    if (!src.good()) {
       cout << "generating default genesis file " << genesis_path << endl;
-      enumivo::chain::genesis_state default_genesis;
+      myeosio::chain::genesis_state default_genesis;
       fc::json::save_to_file( default_genesis, genesis_path, true );
       src.open(genesis_path);
    }
@@ -1150,7 +1150,7 @@ launcher_def::init_genesis () {
    while(getline(src,str)) {
       size_t pos = str.find(prefix);
       if (pos != string::npos) {
-         size_t cut = str.find("ENU",pos);
+         size_t cut = str.find("MES",pos);
          genesis_block.push_back(str.substr(0,cut) + bioskey + "\",");
       }
       else {
@@ -1186,7 +1186,7 @@ launcher_def::write_setprods_file() {
   }
    producer_set_def no_bios;
    for (auto &p : producer_set.schedule) {
-      if (p.producer_name != "enumivo")
+      if (p.producer_name != "myeosio")
          no_bios.schedule.push_back(p);
    }
   auto str = fc::json::to_pretty_string( no_bios, fc::json::stringify_large_ints_and_doubles );
@@ -1227,7 +1227,7 @@ launcher_def::write_bios_boot () {
          }
          else if (key == "cacmd") {
             for (auto &p : producer_set.schedule) {
-               if (p.producer_name == "enumivo") {
+               if (p.producer_name == "myeosio") {
                   continue;
                }
                brb << "cacmd " << p.producer_name
@@ -1412,16 +1412,16 @@ launcher_def::do_ssh (const string &cmd, const string &host_name) {
 
 void
 launcher_def::prep_remote_config_dir (enudaemon_def &node, host_def *host) {
-  bfs::path abs_config_dir = bfs::path(host->enumivo_home) / node.config_dir_name;
-  bfs::path abs_data_dir = bfs::path(host->enumivo_home) / node.data_dir_name;
+  bfs::path abs_config_dir = bfs::path(host->myeosio_home) / node.config_dir_name;
+  bfs::path abs_data_dir = bfs::path(host->myeosio_home) / node.data_dir_name;
 
   string acd = abs_config_dir.string();
   string add = abs_data_dir.string();
-  string cmd = "cd " + host->enumivo_home;
+  string cmd = "cd " + host->myeosio_home;
 
-  cmd = "cd " + host->enumivo_home;
+  cmd = "cd " + host->myeosio_home;
   if (!do_ssh(cmd, host->host_name)) {
-    cerr << "Unable to switch to path " << host->enumivo_home
+    cerr << "Unable to switch to path " << host->myeosio_home
          << " on host " <<  host->host_name << endl;
     exit (-1);
   }
@@ -1467,7 +1467,7 @@ launcher_def::launch (enudaemon_def &instance, string &gts) {
   bfs::path reerr_sl = dd / "stderr.txt";
   bfs::path reerr_base = bfs::path("stderr." + launch_time + ".txt");
   bfs::path reerr = dd / reerr_base;
-  bfs::path pidf  = dd / "enunode.pid";
+  bfs::path pidf  = dd / "myeosnode.pid";
   host_def* host;
   try {
      host = deploy_config_files (*instance.node);
@@ -1479,7 +1479,7 @@ launcher_def::launch (enudaemon_def &instance, string &gts) {
   node_rt_info info;
   info.remote = !host->is_local();
 
-  string enudaemoncmd = "programs/enunode/enunode ";
+  string enudaemoncmd = "programs/myeosnode/myeosnode ";
   if (skip_transaction_signatures) {
     enudaemoncmd += "--skip-transaction-signatures ";
   }
@@ -1487,7 +1487,7 @@ launcher_def::launch (enudaemon_def &instance, string &gts) {
     if (instance.name == "bios") {
        // Strip the mongo-related options out of the bios node so
        // the plugins don't conflict between 00 and bios.
-       regex r("--plugin +enumivo::mongo_db_plugin");
+       regex r("--plugin +myeosio::mongo_db_plugin");
        string args = std::regex_replace (enudaemon_extra_args,r,"");
        regex r2("--mongodb-uri +[^ ]+");
        args = std::regex_replace (args,r2,"");
@@ -1511,7 +1511,7 @@ launcher_def::launch (enudaemon_def &instance, string &gts) {
 
   if (!host->is_local()) {
     string cmdl ("cd ");
-    cmdl += host->enumivo_home + "; nohup " + enudaemoncmd + " > "
+    cmdl += host->myeosio_home + "; nohup " + enudaemoncmd + " > "
       + reout.string() + " 2> " + reerr.string() + "& echo $! > " + pidf.string()
       + "; rm -f " + reerr_sl.string()
       + "; ln -s " + reerr_base.string() + " " + reerr_sl.string();
@@ -1521,7 +1521,7 @@ launcher_def::launch (enudaemon_def &instance, string &gts) {
       exit (-1);
     }
 
-    string cmd = "cd " + host->enumivo_home + "; kill -15 $(cat " + pidf.string() + ")";
+    string cmd = "cd " + host->myeosio_home + "; kill -15 $(cat " + pidf.string() + ")";
     format_ssh (cmd, host->host_name, info.kill_cmd);
   }
   else {
@@ -1649,10 +1649,10 @@ launcher_def::bounce (const string& node_numbers) {
       const host_def& host = node_pair.first;
       const enudaemon_def& node = node_pair.second;
       string node_num = node.name.substr( node.name.length() - 2 );
-      string cmd = "cd " + host.enumivo_home + "; "
-                 + "export ENUMIVO_HOME=" + host.enumivo_home + string("; ")
+      string cmd = "cd " + host.myeosio_home + "; "
+                 + "export ENUMIVO_HOME=" + host.myeosio_home + string("; ")
                  + "export ENUMIVO_TN_NODE=" + node_num + "; "
-                 + "./scripts/enumivo_tn_bounce.sh";
+                 + "./scripts/myeosio_tn_bounce.sh";
       cout << "Bouncing " << node.name << endl;
       if (!do_ssh(cmd, host.host_name)) {
          cerr << "Unable to bounce " << node.name << endl;
@@ -1668,11 +1668,11 @@ launcher_def::down (const string& node_numbers) {
       const host_def& host = node_pair.first;
       const enudaemon_def& node = node_pair.second;
       string node_num = node.name.substr( node.name.length() - 2 );
-      string cmd = "cd " + host.enumivo_home + "; "
-                 + "export ENUMIVO_HOME=" + host.enumivo_home + "; "
+      string cmd = "cd " + host.myeosio_home + "; "
+                 + "export ENUMIVO_HOME=" + host.myeosio_home + "; "
                  + "export ENUMIVO_TN_NODE=" + node_num + "; "
          + "export ENUMIVO_TN_RESTART_CONFIG_DIR=" + node.config_dir_name + "; "
-                 + "./scripts/enumivo_tn_down.sh";
+                 + "./scripts/myeosio_tn_down.sh";
       cout << "Taking down " << node.name << endl;
       if (!do_ssh(cmd, host.host_name)) {
          cerr << "Unable to down " << node.name << endl;
@@ -1688,9 +1688,9 @@ launcher_def::roll (const string& host_names) {
    for (string host_name: hosts) {
       cout << "Rolling " << host_name << endl;
       auto host = find_host_by_name_or_address(host_name);
-      string cmd = "cd " + host->enumivo_home + "; "
-                 + "export ENUMIVO_HOME=" + host->enumivo_home + "; "
-                 + "./scripts/enumivo_tn_roll.sh";
+      string cmd = "cd " + host->myeosio_home + "; "
+                 + "export ENUMIVO_HOME=" + host->myeosio_home + "; "
+                 + "./scripts/myeosio_tn_roll.sh";
       if (!do_ssh(cmd, host_name)) {
          cerr << "Unable to roll " << host << endl;
          exit (-1);
@@ -1844,9 +1844,9 @@ int main (int argc, char *argv[]) {
     ("launch,l",bpo::value<string>(), "select a subset of nodes to launch. Currently may be \"all\", \"none\", or \"local\". If not set, the default is to launch all unless an output file is named, in which case it starts none.")
     ("output,o",bpo::value<bfs::path>(&top.output),"save a copy of the generated topology in this file")
     ("kill,k", bpo::value<string>(&kill_arg),"The launcher retrieves the previously started process ids and issues a kill to each.")
-    ("down", bpo::value<string>(&down_nodes),"comma-separated list of node numbers that will be taken down using the enumivo_tn_down.sh script")
-    ("bounce", bpo::value<string>(&bounce_nodes),"comma-separated list of node numbers that will be restarted using the enumivo_tn_bounce.sh script")
-    ("roll", bpo::value<string>(&roll_nodes),"comma-separated list of host names where the nodes should be rolled to a new version using the enumivo_tn_roll.sh script")
+    ("down", bpo::value<string>(&down_nodes),"comma-separated list of node numbers that will be taken down using the myeosio_tn_down.sh script")
+    ("bounce", bpo::value<string>(&bounce_nodes),"comma-separated list of node numbers that will be restarted using the myeosio_tn_bounce.sh script")
+    ("roll", bpo::value<string>(&roll_nodes),"comma-separated list of host names where the nodes should be rolled to a new version using the myeosio_tn_roll.sh script")
     ("version,v", "print version information")
     ("help,h","print this list")
     ("config-dir", bpo::value<bfs::path>(), "Directory containing configuration files such as config.ini")
@@ -1865,7 +1865,7 @@ int main (int argc, char *argv[]) {
       return 0;
     }
     if (vmap.count("version") > 0) {
-      cout << enumivo::launcher::config::version_str << endl;
+      cout << myeosio::launcher::config::version_str << endl;
       return 0;
     }
 
@@ -1959,7 +1959,7 @@ FC_REFLECT( producer_set_def,
             (schedule))
 
 FC_REFLECT( host_def,
-            (genesis)(ssh_identity)(ssh_args)(enumivo_home)
+            (genesis)(ssh_identity)(ssh_args)(myeosio_home)
             (host_name)(public_name)
             (base_p2p_port)(base_http_port)(def_file_size)
             (instances) )
@@ -1972,9 +1972,9 @@ FC_REFLECT( tn_node_def, (name)(keys)(peers)(producers) )
 
 FC_REFLECT( testnet_def, (name)(ssh_helper)(nodes) )
 
-FC_REFLECT( server_name_def, (ipaddr) (name) (has_bios) (enumivo_home) (instances) )
+FC_REFLECT( server_name_def, (ipaddr) (name) (has_bios) (myeosio_home) (instances) )
 
-FC_REFLECT( server_identities, (producer) (nonprod) (db) (default_enumivo_home) (ssh) )
+FC_REFLECT( server_identities, (producer) (nonprod) (db) (default_myeosio_home) (ssh) )
 
 FC_REFLECT( node_rt_info, (remote)(pid_file)(kill_cmd) )
 

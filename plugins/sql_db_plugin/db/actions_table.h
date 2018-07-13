@@ -1,7 +1,7 @@
 #ifndef ACTIONS_TABLE_H
 #define ACTIONS_TABLE_H
 
-namespace enumivo {
+namespace myeosio {
 
 class actions_table
 {

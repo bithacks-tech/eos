@@ -1,24 +1,24 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/chain_plugin/chain_plugin.hpp>
-#include <enumivo/chain/fork_database.hpp>
-#include <enumivo/chain/block_log.hpp>
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/authorization_manager.hpp>
-#include <enumivo/chain/producer_object.hpp>
-#include <enumivo/chain/config.hpp>
-#include <enumivo/chain/types.hpp>
-#include <enumivo/chain/wasm_interface.hpp>
-#include <enumivo/chain/resource_limits.hpp>
-#include <enumivo/chain/reversible_block_object.hpp>
+#include <myeosio/chain_plugin/chain_plugin.hpp>
+#include <myeosio/chain/fork_database.hpp>
+#include <myeosio/chain/block_log.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/authorization_manager.hpp>
+#include <myeosio/chain/producer_object.hpp>
+#include <myeosio/chain/config.hpp>
+#include <myeosio/chain/types.hpp>
+#include <myeosio/chain/wasm_interface.hpp>
+#include <myeosio/chain/resource_limits.hpp>
+#include <myeosio/chain/reversible_block_object.hpp>
 
-#include <enumivo/chain/enumivo_contract.hpp>
+#include <myeosio/chain/myeosio_contract.hpp>
 
-#include <enumivo/utilities/key_conversion.hpp>
-#include <enumivo/utilities/common.hpp>
-#include <enumivo/chain/wast_to_wasm.hpp>
+#include <myeosio/utilities/key_conversion.hpp>
+#include <myeosio/utilities/common.hpp>
+#include <myeosio/chain/wast_to_wasm.hpp>
 
 #include <boost/signals2/connection.hpp>
 #include <boost/algorithm/string.hpp>
@@ -28,12 +28,12 @@
 #include <fc/variant.hpp>
 #include <signal.h>
 
-namespace enumivo {
+namespace myeosio {
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::chain::config;
-using namespace enumivo::chain::plugin_interface;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::chain::config;
+using namespace myeosio::chain::plugin_interface;
 using vm_type = wasm_interface::vm_type;
 using fc::flat_map;
 
@@ -127,7 +127,7 @@ void chain_plugin::set_program_options(options_description& cli, options_descrip
          ("blocks-dir", bpo::value<bfs::path>()->default_value("blocks"),
           "the location of the blocks directory (absolute path or relative to application data dir)")
          ("checkpoint", bpo::value<vector<string>>()->composing(), "Pairs of [BLOCK_NUM,BLOCK_ID] that should be enforced as checkpoints.")
-         ("wasm-runtime", bpo::value<enumivo::chain::wasm_interface::vm_type>()->value_name("wavm/binaryen"), "Override default WASM runtime")
+         ("wasm-runtime", bpo::value<myeosio::chain::wasm_interface::vm_type>()->value_name("wavm/binaryen"), "Override default WASM runtime")
          ("abi-serializer-max-time-ms", bpo::value<uint32_t>(), "Override default maximum ABI serialization time allowed in ms")
          ("chain-state-db-size-mb", bpo::value<uint64_t>()->default_value(config::default_state_size / (1024  * 1024)), "Maximum size (in MB) of the chain state database")
          ("reversible-blocks-db-size-mb", bpo::value<uint64_t>()->default_value(config::default_reversible_cache_size / (1024  * 1024)), "Maximum size (in MB) of the reversible blocks database")
@@ -212,7 +212,7 @@ void chain_plugin::plugin_initialize(const variables_map& options) {
       genesis_state gs; // Check if ENUMIVO_ROOT_KEY is bad
    } catch( const fc::exception& ) {
       elog( "ENUMIVO_ROOT_KEY ('${root_key}') is invalid. Recompile with a valid public key.",
-            ("root_key", genesis_state::enumivo_root_key) );
+            ("root_key", genesis_state::myeosio_root_key) );
       throw;
    }
 
@@ -309,7 +309,7 @@ void chain_plugin::plugin_initialize(const variables_map& options) {
          ilog( "Saved genesis JSON to '${path}'", ("path", p.generic_string()) );
       }
 
-      ENU_THROW( extract_genesis_state_exception, "extracted genesis state from blocks.log" );
+      MES_THROW( extract_genesis_state_exception, "extracted genesis state from blocks.log" );
    }
 
    if( options.at("delete-all-blocks").as<bool>() ) {
@@ -357,7 +357,7 @@ void chain_plugin::plugin_initialize(const variables_map& options) {
       } else {
          ilog("Exiting after fixing reversible blocks database...");
       }
-      ENU_THROW( fixed_reversible_db_exception, "fixed corrupted reversible blocks database" );
+      MES_THROW( fixed_reversible_db_exception, "fixed corrupted reversible blocks database" );
    } else if( options.at("truncate-at-block").as<uint32_t>() > 0 ) {
       wlog("The --truncate-at-block option can only be used with --fix-reversible-blocks without a replay or with --hard-replay-blockchain.");
    }
@@ -599,7 +599,7 @@ const string read_only::KEYi64 = "i64";
 read_only::get_info_results read_only::get_info(const read_only::get_info_params&) const {
    const auto& rm = db.get_resource_limits_manager();
    return {
-      enumivo::utilities::common::itoh(static_cast<uint32_t>(app().version())),
+      myeosio::utilities::common::itoh(static_cast<uint32_t>(app().version())),
       db.get_chain_id(),
       db.head_block_num(),
       db.last_irreversible_block_num(),
@@ -629,11 +629,11 @@ uint64_t convert_to_type(const string& str, const string& desc) {
          value = s.value;
       } catch( ... ) {
          try {
-            auto symb = enumivo::chain::symbol::from_string(str);
+            auto symb = myeosio::chain::symbol::from_string(str);
             value = symb.value();
          } catch( ... ) {
             try {
-               value = ( enumivo::chain::string_to_symbol( 0, str.c_str() ) >> 8 );
+               value = ( myeosio::chain::string_to_symbol( 0, str.c_str() ) >> 8 );
             } catch( ... ) {
                FC_ASSERT( false, "Could not convert ${desc} string '${str}' to any of the following: "
                                  "uint64_t, valid name, or valid symbol (with or without the precision)",
@@ -648,7 +648,7 @@ uint64_t convert_to_type(const string& str, const string& desc) {
 abi_def get_abi( const controller& db, const name& account ) {
    const auto &d = db.db();
    const account_object *code_accnt = d.find<account_object, by_name>(account);
-   ENU_ASSERT(code_accnt != nullptr, chain::account_query_exception, "Fail to retrieve account for ${account}", ("account", account) );
+   MES_ASSERT(code_accnt != nullptr, chain::account_query_exception, "Fail to retrieve account for ${account}", ("account", account) );
    abi_def abi;
    abi_serializer::to_abi(code_accnt->abi, abi);
    return abi;
@@ -660,34 +660,34 @@ string get_table_type( const abi_def& abi, const name& table_name ) {
          return t.index_type;
       }
    }
-   ENU_ASSERT( false, chain::contract_table_query_exception, "Table ${table} is not specified in the ABI", ("table",table_name) );
+   MES_ASSERT( false, chain::contract_table_query_exception, "Table ${table} is not specified in the ABI", ("table",table_name) );
 }
 
 read_only::get_table_rows_result read_only::get_table_rows( const read_only::get_table_rows_params& p )const {
-   const abi_def abi = enumivo::chain_apis::get_abi( db, p.code );
+   const abi_def abi = myeosio::chain_apis::get_abi( db, p.code );
    auto table_type = get_table_type( abi, p.table );
 
    if( table_type == KEYi64 ) {
       return get_table_rows_ex<key_value_index, by_scope_primary>(p,abi);
    }
 
-   ENU_ASSERT( false, chain::contract_table_query_exception,  "Invalid table type ${type}", ("type",table_type)("abi",abi));
+   MES_ASSERT( false, chain::contract_table_query_exception,  "Invalid table type ${type}", ("type",table_type)("abi",abi));
 }
 
 vector<asset> read_only::get_currency_balance( const read_only::get_currency_balance_params& p )const {
 
-   const abi_def abi = enumivo::chain_apis::get_abi( db, p.code );
+   const abi_def abi = myeosio::chain_apis::get_abi( db, p.code );
    auto table_type = get_table_type( abi, "accounts" );
 
    vector<asset> results;
    walk_table<key_value_index, by_scope_primary>(p.code, p.account, N(accounts), [&](const key_value_object& obj){
-      ENU_ASSERT( obj.value.size() >= sizeof(asset), chain::asset_type_exception, "Invalid data on table");
+      MES_ASSERT( obj.value.size() >= sizeof(asset), chain::asset_type_exception, "Invalid data on table");
 
       asset cursor;
       fc::datastream<const char *> ds(obj.value.data(), obj.value.size());
       fc::raw::unpack(ds, cursor);
 
-      ENU_ASSERT( cursor.get_symbol().valid(), chain::asset_type_exception, "Invalid asset");
+      MES_ASSERT( cursor.get_symbol().valid(), chain::asset_type_exception, "Invalid asset");
 
       if( !p.symbol || boost::iequals(cursor.symbol_name(), *p.symbol) ) {
         results.emplace_back(cursor);
@@ -703,13 +703,13 @@ vector<asset> read_only::get_currency_balance( const read_only::get_currency_bal
 fc::variant read_only::get_currency_stats( const read_only::get_currency_stats_params& p )const {
    fc::mutable_variant_object results;
 
-   const abi_def abi = enumivo::chain_apis::get_abi( db, p.code );
+   const abi_def abi = myeosio::chain_apis::get_abi( db, p.code );
    auto table_type = get_table_type( abi, "stat" );
 
-   uint64_t scope = ( enumivo::chain::string_to_symbol( 0, boost::algorithm::to_upper_copy(p.symbol).c_str() ) >> 8 );
+   uint64_t scope = ( myeosio::chain::string_to_symbol( 0, boost::algorithm::to_upper_copy(p.symbol).c_str() ) >> 8 );
 
    walk_table<key_value_index, by_scope_primary>(p.code, scope, N(stat), [&](const key_value_object& obj){
-      ENU_ASSERT( obj.value.size() >= sizeof(read_only::get_currency_stats_result), chain::asset_type_exception, "Invalid data on table");
+      MES_ASSERT( obj.value.size() >= sizeof(read_only::get_currency_stats_result), chain::asset_type_exception, "Invalid data on table");
 
       fc::datastream<const char *> ds(obj.value.data(), obj.value.size());
       read_only::get_currency_stats_result result;
@@ -733,14 +733,14 @@ static float64_t to_softfloat64( double d ) {
 
 static fc::variant get_global_row( const database& db, const abi_def& abi, const abi_serializer& abis ) {
    const auto table_type = get_table_type(abi, N(global));
-   ENU_ASSERT(table_type == read_only::KEYi64, chain::contract_table_query_exception, "Invalid table type ${type} for table global", ("type",table_type));
+   MES_ASSERT(table_type == read_only::KEYi64, chain::contract_table_query_exception, "Invalid table type ${type} for table global", ("type",table_type));
 
-   const auto* const table_id = db.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple(N(enumivo), N(enumivo), N(global)));
-   ENU_ASSERT(table_id, chain::contract_table_query_exception, "Missing table global");
+   const auto* const table_id = db.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple(N(myeosio), N(myeosio), N(global)));
+   MES_ASSERT(table_id, chain::contract_table_query_exception, "Missing table global");
 
    const auto& kv_index = db.get_index<key_value_index, by_scope_primary>();
    const auto it = kv_index.find(boost::make_tuple(table_id->id, N(global)));
-   ENU_ASSERT(it != kv_index.end(), chain::contract_table_query_exception, "Missing row in table global");
+   MES_ASSERT(it != kv_index.end(), chain::contract_table_query_exception, "Missing row in table global");
 
    vector<char> data;
    read_only::copy_inline_row(*it, data);
@@ -748,18 +748,18 @@ static fc::variant get_global_row( const database& db, const abi_def& abi, const
 }
 
 read_only::get_producers_result read_only::get_producers( const read_only::get_producers_params& p ) const {
-   const abi_def abi = enumivo::chain_apis::get_abi(db, N(enumivo));
+   const abi_def abi = myeosio::chain_apis::get_abi(db, N(myeosio));
    const auto table_type = get_table_type(abi, N(producers));
    const abi_serializer abis{ abi };
-   ENU_ASSERT(table_type == KEYi64, chain::contract_table_query_exception, "Invalid table type ${type} for table producers", ("type",table_type));
+   MES_ASSERT(table_type == KEYi64, chain::contract_table_query_exception, "Invalid table type ${type} for table producers", ("type",table_type));
 
    const auto& d = db.db();
    const auto lower = name{p.lower_bound};
 
    static const uint8_t secondary_index_num = 0;
-   const auto* const table_id = d.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple(N(enumivo), N(enumivo), N(producers)));
-   const auto* const secondary_table_id = d.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple(N(enumivo), N(enumivo), N(producers) | secondary_index_num));
-   ENU_ASSERT(table_id && secondary_table_id, chain::contract_table_query_exception, "Missing producers table");
+   const auto* const table_id = d.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple(N(myeosio), N(myeosio), N(producers)));
+   const auto* const secondary_table_id = d.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple(N(myeosio), N(myeosio), N(producers) | secondary_index_num));
+   MES_ASSERT(table_id && secondary_table_id, chain::contract_table_query_exception, "Missing producers table");
 
    const auto& kv_index = d.get_index<key_value_index, by_scope_primary>();
    const auto& secondary_index = d.get_index<index_double_index>().indices();
@@ -820,16 +820,16 @@ auto make_resolver(const Api *api) {
 
 fc::variant read_only::get_block(const read_only::get_block_params& params) const {
    signed_block_ptr block;
-   ENU_ASSERT(!params.block_num_or_id.empty() && params.block_num_or_id.size() <= 64, chain::block_id_type_exception, "Invalid Block number or ID, must be greater than 0 and less than 64 characters" );
+   MES_ASSERT(!params.block_num_or_id.empty() && params.block_num_or_id.size() <= 64, chain::block_id_type_exception, "Invalid Block number or ID, must be greater than 0 and less than 64 characters" );
    try {
       block = db.fetch_block_by_id(fc::variant(params.block_num_or_id).as<block_id_type>());
       if (!block) {
          block = db.fetch_block_by_number(fc::to_uint64(params.block_num_or_id));
       }
 
-   } ENU_RETHROW_EXCEPTIONS(chain::block_id_type_exception, "Invalid block ID: ${block_num_or_id}", ("block_num_or_id", params.block_num_or_id))
+   } MES_RETHROW_EXCEPTIONS(chain::block_id_type_exception, "Invalid block ID: ${block_num_or_id}", ("block_num_or_id", params.block_num_or_id))
 
-   ENU_ASSERT( block, unknown_block_exception, "Could not find block: ${block}", ("block", params.block_num_or_id));
+   MES_ASSERT( block, unknown_block_exception, "Could not find block: ${block}", ("block", params.block_num_or_id));
 
    fc::variant pretty_output;
    abi_serializer::to_variant(*block, pretty_output, make_resolver(this));
@@ -855,10 +855,10 @@ fc::variant read_only::get_block_header_state(const get_block_header_state_param
    } else {
       try {
          b = db.fetch_block_state_by_id(fc::variant(params.block_num_or_id).as<block_id_type>());
-      } ENU_RETHROW_EXCEPTIONS(chain::block_id_type_exception, "Invalid block ID: ${block_num_or_id}", ("block_num_or_id", params.block_num_or_id))
+      } MES_RETHROW_EXCEPTIONS(chain::block_id_type_exception, "Invalid block ID: ${block_num_or_id}", ("block_num_or_id", params.block_num_or_id))
    }
 
-   ENU_ASSERT( b, unknown_block_exception, "Could not find reversible block: ${block}", ("block", params.block_num_or_id));
+   MES_ASSERT( b, unknown_block_exception, "Could not find reversible block: ${block}", ("block", params.block_num_or_id));
 
    fc::variant vo;
    fc::to_variant( static_cast<const block_header_state&>(*b), vo );
@@ -881,7 +881,7 @@ void read_write::push_transaction(const read_write::push_transaction_params& par
       auto resolver = make_resolver(this);
       try {
          abi_serializer::from_variant(params, *pretty_input, resolver);
-      } ENU_RETHROW_EXCEPTIONS(chain::packed_transaction_type_exception, "Invalid packed transaction")
+      } MES_RETHROW_EXCEPTIONS(chain::packed_transaction_type_exception, "Invalid packed transaction")
 
       app().get_method<incoming::methods::transaction_async>()(pretty_input, true, [this, next](const fc::static_variant<fc::exception_ptr, transaction_trace_ptr>& result) -> void{
          if (result.contains<fc::exception_ptr>()) {
@@ -1018,8 +1018,8 @@ read_only::get_account_results read_only::get_account( const get_account_params&
       ++perm;
    }
 
-   const auto& code_account = db.db().get<account_object,by_name>( N(enumivo) );
-   //const abi_def abi = get_abi( db, N(enumivo) );
+   const auto& code_account = db.db().get<account_object,by_name>( N(myeosio) );
+   //const abi_def abi = get_abi( db, N(myeosio) );
    abi_def abi;
    if( abi_serializer::to_abi(code_account.abi, abi) ) {
       abi_serializer abis( abi );
@@ -1100,20 +1100,20 @@ static variant action_abi_to_variant( const abi_def& abi, type_name action_type 
 read_only::abi_json_to_bin_result read_only::abi_json_to_bin( const read_only::abi_json_to_bin_params& params )const try {
    abi_json_to_bin_result result;
    const auto code_account = db.db().find<account_object,by_name>( params.code );
-   ENU_ASSERT(code_account != nullptr, contract_query_exception, "Contract can't be found ${contract}", ("contract", params.code));
+   MES_ASSERT(code_account != nullptr, contract_query_exception, "Contract can't be found ${contract}", ("contract", params.code));
 
    abi_def abi;
    if( abi_serializer::to_abi(code_account->abi, abi) ) {
       abi_serializer abis( abi );
       auto action_type = abis.get_action_type(params.action);
-      ENU_ASSERT(!action_type.empty(), action_validate_exception, "Unknown action ${action} in contract ${contract}", ("action", params.action)("contract", params.code));
+      MES_ASSERT(!action_type.empty(), action_validate_exception, "Unknown action ${action} in contract ${contract}", ("action", params.action)("contract", params.code));
       try {
          result.binargs = abis.variant_to_binary(action_type, params.args);
-      } ENU_RETHROW_EXCEPTIONS(chain::invalid_action_args_exception,
+      } MES_RETHROW_EXCEPTIONS(chain::invalid_action_args_exception,
                                 "'${args}' is invalid args for action '${action}' code '${code}'. expected '${proto}'",
                                 ("args", params.args)("action", params.action)("code", params.code)("proto", action_abi_to_variant(abi, action_type)))
    } else {
-      ENU_ASSERT(false, abi_not_found_exception, "No ABI found for ${contract}", ("contract", params.code));
+      MES_ASSERT(false, abi_not_found_exception, "No ABI found for ${contract}", ("contract", params.code));
    }
    return result;
 } FC_CAPTURE_AND_RETHROW( (params.code)(params.action)(params.args) )
@@ -1126,7 +1126,7 @@ read_only::abi_bin_to_json_result read_only::abi_bin_to_json( const read_only::a
       abi_serializer abis( abi );
       result.args = abis.binary_to_variant( abis.get_action_type( params.action ), params.binargs );
    } else {
-      ENU_ASSERT(false, abi_not_found_exception, "No ABI found for ${contract}", ("contract", params.code));
+      MES_ASSERT(false, abi_not_found_exception, "No ABI found for ${contract}", ("contract", params.code));
    }
    return result;
 }
@@ -1136,7 +1136,7 @@ read_only::get_required_keys_result read_only::get_required_keys( const get_requ
    auto resolver = make_resolver(this);
    try {
       abi_serializer::from_variant(params.transaction, pretty_input, resolver);
-   } ENU_RETHROW_EXCEPTIONS(chain::transaction_type_exception, "Invalid transaction")
+   } MES_RETHROW_EXCEPTIONS(chain::transaction_type_exception, "Invalid transaction")
 
    auto required_keys_set = db.get_authorization_manager().get_required_keys(pretty_input, params.available_keys);
    get_required_keys_result result;
@@ -1146,4 +1146,4 @@ read_only::get_required_keys_result read_only::get_required_keys( const get_requ
 
 
 } // namespace chain_apis
-} // namespace enumivo
+} // namespace myeosio

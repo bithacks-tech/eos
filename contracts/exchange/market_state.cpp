@@ -1,7 +1,7 @@
 #include <exchange/market_state.hpp>
 #include <boost/math/special_functions/relative_difference.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    market_state::market_state( account_name this_contract, symbol_type market_symbol, exchange_accounts& acnts )
    :marketid( market_symbol.name() ),
@@ -13,7 +13,7 @@ namespace enumivo {
     _accounts(acnts),
     market_state_itr( market_table.find(marketid) )
    {
-      enumivo_assert( market_state_itr != market_table.end(), "unknown market" );
+      myeosio_assert( market_state_itr != market_table.end(), "unknown market" );
       exstate = *market_state_itr;
    }
 
@@ -31,7 +31,7 @@ namespace enumivo {
          return;
 
       auto receipt = exstate.convert( pos->collateral, pos->borrowed.get_extended_symbol() );
-      enumivo_assert( receipt.amount >= pos->borrowed.amount, "programmer error: insufficient collateral to cover" );/// VERY BAD, SHOULD NOT HAPPEN
+      myeosio_assert( receipt.amount >= pos->borrowed.amount, "programmer error: insufficient collateral to cover" );/// VERY BAD, SHOULD NOT HAPPEN
       auto change_debt = receipt - pos->borrowed;
 
       auto change_collat = exstate.convert( change_debt, pos->collateral.get_extended_symbol() );
@@ -65,11 +65,11 @@ namespace enumivo {
          double new_shares = exstate.quote.peer_margin.lend( quantity.amount );
          adjust_lend_shares( lender, quote_loans, new_shares );
       }
-      else enumivo_assert( false, "unable to lend to this market" );
+      else myeosio_assert( false, "unable to lend to this market" );
    }
 
    void market_state::unlend( account_name lender, double ishares, const extended_symbol& sym ) {
-      enumivo_assert( ishares > 0, "cannot unlend negative balance" );
+      myeosio_assert( ishares > 0, "cannot unlend negative balance" );
       adjust_lend_shares( lender, base_loans, -ishares );
 
       print( "sym: ", sym );
@@ -82,7 +82,7 @@ namespace enumivo {
          extended_asset unlent  = exstate.quote.peer_margin.unlend( ishares );
          _accounts.adjust_balance( lender, unlent );
       }
-      else enumivo_assert( false, "unable to lend to this market" );
+      else myeosio_assert( false, "unable to lend to this market" );
    }
 
 
@@ -93,12 +93,12 @@ namespace enumivo {
          l.emplace( lender, [&]( auto& obj ) {
             obj.owner = lender;
             obj.interest_shares = delta;
-            enumivo_assert( delta >= 0, "underflow" );
+            myeosio_assert( delta >= 0, "underflow" );
          });
       } else {
          l.modify( existing, 0, [&]( auto& obj ) {
             obj.interest_shares += delta;
-            enumivo_assert( obj.interest_shares >= 0, "underflow" );
+            myeosio_assert( obj.interest_shares >= 0, "underflow" );
          });
       }
    }
@@ -109,7 +109,7 @@ namespace enumivo {
       } else if( cover_amount.get_extended_symbol() == exstate.quote.balance.get_extended_symbol() ) {
          cover_margin( borrower, quote_margins, exstate.quote, cover_amount );
       } else {
-         enumivo_assert( false, "invalid debt asset" );
+         myeosio_assert( false, "invalid debt asset" );
       }
    }
 
@@ -122,13 +122,13 @@ namespace enumivo {
                                     const extended_asset& cover_amount )
    {
       auto existing = m.find( borrower );
-      enumivo_assert( existing != m.end(), "no known margin position" );
-      enumivo_assert( existing->borrowed.amount >= cover_amount.amount, "attempt to cover more than user has" );
+      myeosio_assert( existing != m.end(), "no known margin position" );
+      myeosio_assert( existing->borrowed.amount >= cover_amount.amount, "attempt to cover more than user has" );
 
       auto tmp = exstate;
       auto estcol  = tmp.convert( cover_amount, existing->collateral.get_extended_symbol() );
       auto debpaid = exstate.convert( estcol, cover_amount.get_extended_symbol() );
-      enumivo_assert( debpaid.amount >= cover_amount.amount, "unable to cover debt" );
+      myeosio_assert( debpaid.amount >= cover_amount.amount, "unable to cover debt" );
 
       auto refundcover = debpaid - cover_amount;
 
@@ -165,7 +165,7 @@ namespace enumivo {
       } else if( delta_debt.get_extended_symbol() == exstate.quote.balance.get_extended_symbol() ) {
          adjust_margin( borrower, quote_margins, exstate.quote, delta_debt, delta_col );
       } else {
-         enumivo_assert( false, "invalid debt asset" );
+         myeosio_assert( false, "invalid debt asset" );
       }
    }
 
@@ -174,8 +174,8 @@ namespace enumivo {
    {
       auto existing = m.find( borrower );
       if( existing == m.end() ) {
-         enumivo_assert( delta_debt.amount > 0, "cannot borrow neg" );
-         enumivo_assert( delta_col.amount > 0, "cannot have neg collat" );
+         myeosio_assert( delta_debt.amount > 0, "cannot borrow neg" );
+         myeosio_assert( delta_col.amount > 0, "cannot have neg collat" );
 
          existing = m.emplace( borrower, [&]( auto& obj ) {
             obj.owner      = borrower;
@@ -185,7 +185,7 @@ namespace enumivo {
          });
       } else {
          if( existing->borrowed.amount == -delta_debt.amount ) {
-            enumivo_assert( existing->collateral.amount == -delta_col.amount, "user failed to claim all collateral" );
+            myeosio_assert( existing->collateral.amount == -delta_col.amount, "user failed to claim all collateral" );
 
             m.erase( existing );
             existing = m.begin();
@@ -199,13 +199,13 @@ namespace enumivo {
       }
 
       c.peer_margin.total_lent += delta_debt;
-      enumivo_assert( c.peer_margin.total_lent.amount <= c.peer_margin.total_lendable.amount, "insufficient funds availalbe to borrow" );
+      myeosio_assert( c.peer_margin.total_lent.amount <= c.peer_margin.total_lendable.amount, "insufficient funds availalbe to borrow" );
 
       if( existing != m.end() ) {
          if( existing->call_price < c.peer_margin.least_collateralized )
             c.peer_margin.least_collateralized = existing->call_price;
 
-         enumivo_assert( !exstate.requires_margin_call( c ), "this update would trigger a margin call" );
+         myeosio_assert( !exstate.requires_margin_call( c ), "this update would trigger a margin call" );
       } else {
          c.peer_margin.least_collateralized = std::numeric_limits<double>::max();
       }

@@ -1,6 +1,6 @@
 #include <enulib/enu.hpp>
 
-class simpletoken : public enumivo::contract {
+class simpletoken : public myeosio::contract {
    public:
       simpletoken( account_name self )
       :contract(self),_accounts( _self, _self){}
@@ -9,7 +9,7 @@ class simpletoken : public enumivo::contract {
          require_auth( from );
 
          const auto& fromacnt = _accounts.get( from );
-         enumivo_assert( fromacnt.balance >= quantity, "overdrawn balance" );
+         myeosio_assert( fromacnt.balance >= quantity, "overdrawn balance" );
          _accounts.modify( fromacnt, from, [&]( auto& a ){ a.balance -= quantity; } );
 
          add_balance( from, to, quantity );
@@ -28,7 +28,7 @@ class simpletoken : public enumivo::contract {
          uint64_t primary_key()const { return owner; }
       };
 
-      enumivo::multi_index<N(accounts), account> _accounts;
+      myeosio::multi_index<N(accounts), account> _accounts;
 
       void add_balance( account_name payer, account_name to, uint64_t q ) {
          auto toitr = _accounts.find( to );
@@ -40,7 +40,7 @@ class simpletoken : public enumivo::contract {
          } else {
            _accounts.modify( toitr, 0, [&]( auto& a ) {
               a.balance += q;
-              enumivo_assert( a.balance >= q, "overflow detected" );
+              myeosio_assert( a.balance >= q, "overflow detected" );
            });
          }
       }

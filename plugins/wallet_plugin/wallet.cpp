@@ -1,8 +1,8 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/wallet_plugin/wallet.hpp>
+#include <myeosio/wallet_plugin/wallet.hpp>
 
 #include <algorithm>
 #include <cctype>
@@ -27,11 +27,11 @@
 #ifndef WIN32
 # include <sys/types.h>
 # include <sys/stat.h>
-#include <enumivo/chain/exceptions.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
 #endif
 
-namespace enumivo { namespace wallet {
+namespace myeosio { namespace wallet {
 
 namespace detail {
 
@@ -150,7 +150,7 @@ public:
    bool import_key(string wif_key)
    {
       private_key_type priv(wif_key);
-      enumivo::chain::public_key_type wif_pub_key = priv.get_public_key();
+      myeosio::chain::public_key_type wif_pub_key = priv.get_public_key();
 
       auto itr = _keys.find(wif_pub_key);
       if( itr == _keys.end() ) {
@@ -262,11 +262,11 @@ public:
    const string _default_key_type = "K1";
 };
 
-} } } // enumivo::wallet::detail
+} } } // myeosio::wallet::detail
 
 
 
-namespace enumivo { namespace wallet {
+namespace myeosio { namespace wallet {
 
 soft_wallet::soft_wallet(const wallet_data& initial_data)
    : my(new detail::soft_wallet_impl(*this, initial_data))
@@ -362,7 +362,7 @@ void soft_wallet::unlock(string password)
    FC_ASSERT(pk.checksum == pw);
    my->_keys = std::move(pk.keys);
    my->_checksum = pk.checksum;
-} ENU_RETHROW_EXCEPTIONS(chain::wallet_invalid_password_exception,
+} MES_RETHROW_EXCEPTIONS(chain::wallet_invalid_password_exception,
                           "Invalid password for wallet: \"${wallet_name}\"", ("wallet_name", get_wallet_filename())) }
 
 void soft_wallet::check_password(string password)
@@ -372,7 +372,7 @@ void soft_wallet::check_password(string password)
    vector<char> decrypted = fc::aes_decrypt(pw, my->_wallet.cipher_keys);
    auto pk = fc::raw::unpack<plain_keys>(decrypted);
    FC_ASSERT(pk.checksum == pw);
-} ENU_RETHROW_EXCEPTIONS(chain::wallet_invalid_password_exception,
+} MES_RETHROW_EXCEPTIONS(chain::wallet_invalid_password_exception,
                           "Invalid password for wallet: \"${wallet_name}\"", ("wallet_name", get_wallet_filename())) }
 
 void soft_wallet::set_password( string password )
@@ -418,5 +418,5 @@ void soft_wallet::set_wallet_filename(string wallet_filename)
    my->_wallet_filename = wallet_filename;
 }
 
-} } // enumivo::wallet
+} } // myeosio::wallet
 

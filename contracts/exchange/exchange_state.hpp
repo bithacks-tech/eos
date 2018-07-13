@@ -2,7 +2,7 @@
 
 #include <enulib/asset.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    typedef double real_type;
 
@@ -39,13 +39,13 @@ namespace enumivo {
          total_lendable.amount -= result.amount;
          interest_shares -= ishares;
 
-         enumivo_assert( interest_shares >= 0, "underflow" );
-         enumivo_assert( total_lendable.amount >= 0, "underflow" );
+         myeosio_assert( interest_shares >= 0, "underflow" );
+         myeosio_assert( total_lendable.amount >= 0, "underflow" );
 
          return result;
       }
 
-      ENULIB_SERIALIZE( margin_state, (total_lendable)(total_lent)(least_collateralized)(interest_shares) )
+      MESLIB_SERIALIZE( margin_state, (total_lendable)(total_lent)(least_collateralized)(interest_shares) )
    };
 
    /**
@@ -64,7 +64,7 @@ namespace enumivo {
 
          margin_state   peer_margin; /// peer_connector collateral lending balance
 
-         ENULIB_SERIALIZE( connector, (balance)(weight)(peer_margin) )
+         MESLIB_SERIALIZE( connector, (balance)(weight)(peer_margin) )
       };
 
       connector base;
@@ -79,9 +79,9 @@ namespace enumivo {
       bool requires_margin_call( const exchange_state::connector& con )const;
       bool requires_margin_call()const;
 
-      ENULIB_SERIALIZE( exchange_state, (manager)(supply)(fee)(base)(quote) )
+      MESLIB_SERIALIZE( exchange_state, (manager)(supply)(fee)(base)(quote) )
    };
 
-   typedef enumivo::multi_index<N(markets), exchange_state> markets;
+   typedef myeosio::multi_index<N(markets), exchange_state> markets;
 
-} /// namespace enumivo
+} /// namespace myeosio

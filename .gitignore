@@ -45,17 +45,17 @@ libraries/wasm-jit/Source/Programs/Disassemble
 libraries/wasm-jit/Source/Programs/Test
 libraries/wasm-jit/Source/Programs/wavm
 
-programs/enucli/enucli
+programs/mycleos/mycleos
 programs/js_operation_serializer/js_operation_serializer
 programs/data-dir
 programs/enugenabi/enugenabi
-programs/enucli/config.hpp
+programs/mycleos/config.hpp
 programs/enuapplesedemo/enuapplesedemo
 programs/enulauncher/config.hpp
 programs/enulauncher/enulauncher
-programs/enuwallet/enuwallet
-programs/enunode/config.hpp
-programs/enunode/enunode
+programs/mykeosd/mykeosd
+programs/myeosnode/config.hpp
+programs/myeosnode/myeosnode
 
 scripts/tn_init.sh
 
@@ -76,7 +76,7 @@ witness_node_data_dir
 build/*
 build-debug/*
 
-etc/enumivo/node_*
+etc/myeosio/node_*
 var/lib/node_*
 .vscode
 .idea/

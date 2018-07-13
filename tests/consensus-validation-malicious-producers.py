@@ -98,12 +98,12 @@ p2p-server-address = localhost:9876
 allowed-connection = any
 p2p-peer-address = localhost:9877
 required-participation = true
-private-key = ["ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+private-key = ["MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 producer-name = initu
-plugin = enumivo::producer_plugin
-plugin = enumivo::chain_api_plugin
-plugin = enumivo::account_history_plugin
-plugin = enumivo::account_history_api_plugin"""
+plugin = myeosio::producer_plugin
+plugin = myeosio::chain_api_plugin
+plugin = myeosio::account_history_plugin
+plugin = myeosio::account_history_api_plugin"""
 
 
 config01="""genesis-json = ./genesis.json
@@ -118,12 +118,12 @@ p2p-server-address = localhost:9877
 allowed-connection = any
 p2p-peer-address = localhost:9876
 required-participation = true
-private-key = ["ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+private-key = ["MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 producer-name = defproducerb
-plugin = enumivo::producer_plugin
-plugin = enumivo::chain_api_plugin
-plugin = enumivo::account_history_plugin
-plugin = enumivo::account_history_api_plugin"""
+plugin = myeosio::producer_plugin
+plugin = myeosio::chain_api_plugin
+plugin = myeosio::account_history_plugin
+plugin = myeosio::account_history_api_plugin"""
 
 
 producers="""producer-name = defproducerd
@@ -180,7 +180,7 @@ def stageScenario(stagedNodeInfos):
     os.makedirs(stagingDir)
     count=0
     for stagedNodeInfo in stagedNodeInfos:
-        configPath=os.path.join(stagingDir, "etc/enumivo/node_%02d" % (count))
+        configPath=os.path.join(stagingDir, "etc/myeosio/node_%02d" % (count))
         os.makedirs(configPath)
         with open(os.path.join(configPath, "config.ini"), "w") as textFile:
             print(stagedNodeInfo.config,file=textFile)
@@ -207,7 +207,7 @@ parser.add_argument("-t", "--tests", type=str, help="1|2|3 1=run no malicious pr
 parser.add_argument("-w", type=int, help="system wait time", default=testUtils.Utils.systemWaitTimeout)
 parser.add_argument("-v", help="verbose logging", action='store_true')
 parser.add_argument("--dump-error-details",
-                    help="Upon error print etc/enumivo/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
+                    help="Upon error print etc/myeosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
                     action='store_true')
 parser.add_argument("--keep-logs", help="Don't delete var/lib/node_* folders upon test completion",
                     action='store_true')
@@ -236,7 +236,7 @@ testUtils.Utils.iAmNotNoon()
 def myTest(transWillEnterBlock):
     testSuccessful=False
 
-    cluster=testUtils.Cluster(enuwalletd=True, staging=True)
+    cluster=testUtils.Cluster(mykeosdd=True, staging=True)
     walletMgr=testUtils.WalletMgr(True)
 
     try:
@@ -261,9 +261,9 @@ def myTest(transWillEnterBlock):
         currencyAccount=accounts[0]
         currencyAccount.name="currency0000"
 
-        Print("Stand up enuwalletd")
+        Print("Stand up mykeosdd")
         if walletMgr.launch() is False:
-            error("Failed to stand up enuwalletd.")
+            error("Failed to stand up mykeosdd.")
             return False
 
         testWalletName="test"

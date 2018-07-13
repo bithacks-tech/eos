@@ -1,5 +1,5 @@
 {
-  "version": "enumivo::abi/1.0",
+  "version": "myeosio::abi/1.0",
   "types": [],
   "structs": [{
       "name": "trigger",

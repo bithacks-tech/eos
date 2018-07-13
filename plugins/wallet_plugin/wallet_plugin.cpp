@@ -1,9 +1,9 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/wallet_plugin/wallet_plugin.hpp>
-#include <enumivo/wallet_plugin/wallet_manager.hpp>
+#include <myeosio/wallet_plugin/wallet_plugin.hpp>
+#include <myeosio/wallet_plugin/wallet_manager.hpp>
 
 #include <boost/filesystem/path.hpp>
 #include <chrono>
@@ -12,7 +12,7 @@
 
 namespace fc { class variant; }
 
-namespace enumivo {
+namespace myeosio {
 
 static appbase::abstract_plugin& _wallet_plugin = app().register_plugin<wallet_plugin>();
 
@@ -51,4 +51,4 @@ void wallet_plugin::plugin_initialize(const variables_map& options) {
       wallet_manager_ptr->set_timeout(t);
    }
 }
-} // namespace enumivo
+} // namespace myeosio

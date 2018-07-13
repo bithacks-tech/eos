@@ -1,4 +1,4 @@
-#include <enumivo/chain/fork_database.hpp>
+#include <myeosio/chain/fork_database.hpp>
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>
@@ -9,7 +9,7 @@
 #include <fc/io/fstream.hpp>
 #include <fstream>
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
    using boost::multi_index_container;
    using namespace boost::multi_index;
 
@@ -343,4 +343,4 @@ namespace enumivo { namespace chain {
       }
    }
 
-} } /// enumivo::chain
+} } /// myeosio::chain

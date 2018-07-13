@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <utility>
 #include <vector>
@@ -13,18 +13,18 @@
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #pragma clang diagnostic ignored "-Wsign-compare"
 
-class test_ram_limit : public enumivo::contract {
+class test_ram_limit : public myeosio::contract {
    public:
       const uint32_t FIVE_MINUTES = 5*60;
 
       test_ram_limit(account_name self)
-      :enumivo::contract(self)
+      :myeosio::contract(self)
       {}
 
       //@abi action
       void setentry(account_name payer, uint64_t from, uint64_t to, uint64_t size) {
          const auto self = get_self();
-         enumivo::print("test_ram_limit::setentry ", enumivo::name{self}, "\n");
+         myeosio::print("test_ram_limit::setentry ", myeosio::name{self}, "\n");
          test_table table(self, self);
          for (int key = from; key <=to; ++key) {
             auto itr = table.find(key);
@@ -44,11 +44,11 @@ class test_ram_limit : public enumivo::contract {
       //@abi action
       void rmentry(uint64_t from, uint64_t to) {
          const auto self = get_self();
-         enumivo::print("test_ram_limit::rmentry ", enumivo::name{self}, "\n");
+         myeosio::print("test_ram_limit::rmentry ", myeosio::name{self}, "\n");
          test_table table(self, self);
          for (int key = from; key <=to; ++key) {
             auto itr = table.find(key);
-            enumivo_assert (itr != table.end(), "could not find test_table entry");
+            myeosio_assert (itr != table.end(), "could not find test_table entry");
             table.erase(itr);
          }
       }
@@ -56,13 +56,13 @@ class test_ram_limit : public enumivo::contract {
       //@abi action
       void printentry(uint64_t from, uint64_t to) {
          const auto self = get_self();
-         enumivo::print("test_ram_limit::printout ", enumivo::name{self}, ":");
+         myeosio::print("test_ram_limit::printout ", myeosio::name{self}, ":");
          test_table table(self, self);
          for (int key = from; key <=to; ++key) {
             auto itr = table.find(key);
-            enumivo::print("\nkey=", key);
-            enumivo_assert (itr != table.end(), "could not find test_table entry");
-            enumivo::print(" size=", itr->data.size());
+            myeosio::print("\nkey=", key);
+            myeosio_assert (itr != table.end(), "could not find test_table entry");
+            myeosio::print(" size=", itr->data.size());
          }
       }
 
@@ -73,9 +73,9 @@ class test_ram_limit : public enumivo::contract {
 
          uint64_t primary_key()const { return key; }
 
-         ENULIB_SERIALIZE( test, (key)(data) )
+         MESLIB_SERIALIZE( test, (key)(data) )
       };
-      typedef enumivo::multi_index< N(test.table), test> test_table;
+      typedef myeosio::multi_index< N(test.table), test> test_table;
 };
 
 #pragma clang diagnostic pop

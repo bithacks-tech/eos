@@ -1,13 +1,13 @@
 #list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libraries/fc/GitVersionGen" )
 #include( GetGitRevisionDescription )
-#get_git_head_revision(GIT_REFSPEC ENU_GIT_REVISION_SHA)
-#get_git_unix_timestamp(ENU_GIT_REVISION_UNIX_TIMESTAMP)
-#git_describe(ENU_GIT_REVISION_DESCRIPTION --tags)
-if(NOT ENU_GIT_REVISION_DESCRIPTION)
-    set(ENU_GIT_REVISION_DESCRIPTION "unknown")
-endif(NOT ENU_GIT_REVISION_DESCRIPTION)
+#get_git_head_revision(GIT_REFSPEC MES_GIT_REVISION_SHA)
+#get_git_unix_timestamp(MES_GIT_REVISION_UNIX_TIMESTAMP)
+#git_describe(MES_GIT_REVISION_DESCRIPTION --tags)
+if(NOT MES_GIT_REVISION_DESCRIPTION)
+    set(MES_GIT_REVISION_DESCRIPTION "unknown")
+endif(NOT MES_GIT_REVISION_DESCRIPTION)
 
-file(GLOB HEADERS "include/enumivo/utilities/*.hpp")
+file(GLOB HEADERS "include/myeosio/utilities/*.hpp")
 
 set(sources
    key_conversion.cpp

@@ -30,7 +30,7 @@ def main():
 
 def monitor_exchange():
     action_num = get_last_action() + 1
-    results = enucli('get actions exchange {} 0 -j'.format(action_num))
+    results = mycleos('get actions exchange {} 0 -j'.format(action_num))
 
     results = json.loads(results.stdout)
     action_list = results['actions']
@@ -62,9 +62,9 @@ def update_balance(action, to):
 
 
 def transfer(to, quantity):
-    if quantity[:-4] != ' ENU':
-        quantity += ' ENU'
-    results = enucli('transfer exchange {} "{}" {} -j'.format(to, quantity, KEY_TO_INTERNAL_ACCOUNT))
+    if quantity[:-4] != ' MES':
+        quantity += ' MES'
+    results = mycleos('transfer exchange {} "{}" {} -j'.format(to, quantity, KEY_TO_INTERNAL_ACCOUNT))
     transaction_info = json.loads(str(results.stdout, 'utf-8'))
     transaction_id = transaction_info['transaction_id']
 
@@ -99,7 +99,7 @@ def is_valid_deposit(action):
             memo == KEY_TO_INTERNAL_ACCOUNT and
             valid_user and
             from_user == DEMO_USER and
-            token == 'ENU'):
+            token == 'MES'):
         return True
 
     print('Invalid deposit')
@@ -127,18 +127,18 @@ def is_valid_withdrawal(action):
             valid_user and
             to_user == DEMO_USER and
             transaction_id in get_transactions() and
-            token == 'ENU'):
+            token == 'MES'):
         return True
 
     print('Invalid withdrawal')
     return False
 
-def enucli(args):
+def mycleos(args):
     if isinstance(args, list):
-        command = ['./enucli']
+        command = ['./mycleos']
         command.extend(args)
     else:
-        command = './enucli ' + args
+        command = './mycleos ' + args
 
     results = subprocess.run(command, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True, check=True)
     return results

@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include <enulib/types.h>
@@ -10,7 +10,7 @@ extern "C" {
  *
  *  checksum calc_hash;
  *  sha256( data, length, &calc_hash );
- *  enumivo_assert( calc_hash == hash, "invalid hash" );
+ *  myeosio_assert( calc_hash == hash, "invalid hash" );
  *
  *  This method is optimized to a NO-OP when in fast evaluation mode
  */

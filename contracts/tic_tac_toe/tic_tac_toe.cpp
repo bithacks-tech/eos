@@ -1,10 +1,10 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include "tic_tac_toe.hpp"
 
-using namespace enumivo;
+using namespace myeosio;
 namespace tic_tac_toe {
 struct impl {
    /**
@@ -90,12 +90,12 @@ struct impl {
     */
    void on(const create& c) {
       require_auth(c.host);
-      enumivo_assert(c.challenger != c.host, "challenger shouldn't be the same as host");
+      myeosio_assert(c.challenger != c.host, "challenger shouldn't be the same as host");
 
       // Check if game already exists
       games existing_host_games(code_account, c.host);
       auto itr = existing_host_games.find( c.challenger );
-      enumivo_assert(itr == existing_host_games.end(), "game already exists");
+      myeosio_assert(itr == existing_host_games.end(), "game already exists");
 
       existing_host_games.emplace(c.host, [&]( auto& g ) {
          g.challenger = c.challenger;
@@ -114,10 +114,10 @@ struct impl {
       // Check if game exists
       games existing_host_games(code_account, r.host);
       auto itr = existing_host_games.find( r.challenger );
-      enumivo_assert(itr != existing_host_games.end(), "game doesn't exists");
+      myeosio_assert(itr != existing_host_games.end(), "game doesn't exists");
 
       // Check if this game belongs to the action sender
-      enumivo_assert(r.by == itr->host || r.by == itr->challenger, "this is not your game!");
+      myeosio_assert(r.by == itr->host || r.by == itr->challenger, "this is not your game!");
 
       // Reset game
       existing_host_games.modify(itr, itr->host, []( auto& g ) {
@@ -135,7 +135,7 @@ struct impl {
       // Check if game exists
       games existing_host_games(code_account, c.host);
       auto itr = existing_host_games.find( c.challenger );
-      enumivo_assert(itr != existing_host_games.end(), "game doesn't exists");
+      myeosio_assert(itr != existing_host_games.end(), "game doesn't exists");
 
       // Remove game
       existing_host_games.erase(itr);
@@ -151,18 +151,18 @@ struct impl {
       // Check if game exists
       games existing_host_games(code_account, m.host);
       auto itr = existing_host_games.find( m.challenger );
-      enumivo_assert(itr != existing_host_games.end(), "game doesn't exists");
+      myeosio_assert(itr != existing_host_games.end(), "game doesn't exists");
 
       // Check if this game hasn't ended yet
-      enumivo_assert(itr->winner == N(none), "the game has ended!");
+      myeosio_assert(itr->winner == N(none), "the game has ended!");
       // Check if this game belongs to the action sender
-      enumivo_assert(m.by == itr->host || m.by == itr->challenger, "this is not your game!");
+      myeosio_assert(m.by == itr->host || m.by == itr->challenger, "this is not your game!");
       // Check if this is the  action sender's turn
-      enumivo_assert(m.by == itr->turn, "it's not your turn yet!");
+      myeosio_assert(m.by == itr->turn, "it's not your turn yet!");
 
 
       // Check if user makes a valid movement
-      enumivo_assert(is_valid_movement(m.mvt, *itr), "not a valid movement!");
+      myeosio_assert(is_valid_movement(m.mvt, *itr), "not a valid movement!");
 
       // Fill the cell, 1 for host, 2 for challenger
       const uint8_t cell_value = itr->turn == itr->host ? 1 : 2;
@@ -181,13 +181,13 @@ struct impl {
 
       if (code == code_account) {
          if (action == N(create)) {
-            impl::on(enumivo::unpack_action_data<tic_tac_toe::create>());
+            impl::on(myeosio::unpack_action_data<tic_tac_toe::create>());
          } else if (action == N(restart)) {
-            impl::on(enumivo::unpack_action_data<tic_tac_toe::restart>());
+            impl::on(myeosio::unpack_action_data<tic_tac_toe::restart>());
          } else if (action == N(close)) {
-            impl::on(enumivo::unpack_action_data<tic_tac_toe::close>());
+            impl::on(myeosio::unpack_action_data<tic_tac_toe::close>());
          } else if (action == N(move)) {
-            impl::on(enumivo::unpack_action_data<tic_tac_toe::move>());
+            impl::on(myeosio::unpack_action_data<tic_tac_toe::move>());
          }
       }
    }

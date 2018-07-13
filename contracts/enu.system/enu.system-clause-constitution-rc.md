@@ -1,1 +1,1 @@
-Until the community comes together and creates a constitution, the elected block producers act as representatives of the ENU holders to govern Enumivo.
+Until the community comes together and creates a constitution, the elected block producers act as representatives of the MES holders to govern MyEOSIO.

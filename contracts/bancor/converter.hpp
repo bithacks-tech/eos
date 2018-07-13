@@ -16,8 +16,8 @@ namespace bancor {
          };
 
          struct converter_args {
-            enumivo::account_name    to_currency_account;
-            enumivo::symbol_name     to_currency_symbol;
+            myeosio::account_name    to_currency_account;
+            myeosio::symbol_name     to_currency_symbol;
             uint64_t               min_return_currency;
          };
 
@@ -82,7 +82,7 @@ namespace bancor {
                save_and_send( trans.from, state, output, args.min_return );
             } 
             else {
-               enumivo_assert( false, "invalid to currency" );
+               myeosio_assert( false, "invalid to currency" );
             }
          }
 
@@ -118,7 +118,7 @@ namespace bancor {
          template<typename CurrencyType>
          static void start_convert( const typename CurrencyType::transfer_memo& trans ) {
             auto args = unpack<converter_args>( trans.memo );
-            enumivo_assert( args.to_currency_type != trans.quantity.token_type(), "cannot convert to self" );
+            myeosio_assert( args.to_currency_type != trans.quantity.token_type(), "cannot convert to self" );
 
             auto state = read_converter_state();
             on_convert( trans, args, state );
@@ -148,7 +148,7 @@ namespace bancor {
             if( trans.to == converter_account ) {
                start_convert( trans );
             } else {
-               enumivo_assert( trans.from == converter_account, 
+               myeosio_assert( trans.from == converter_account, 
                        "received unexpected notification of transfer" );
             }
          }
@@ -159,7 +159,7 @@ namespace bancor {
                            converter_currency::issue,
                            first_currency::transfer,
                            second_currency::transfer ) {
-               enumivo_assert( false, "received unexpected action" );
+               myeosio_assert( false, "received unexpected action" );
             }
          }
    }; /// converter_contract

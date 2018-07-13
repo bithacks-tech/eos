@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include <enulib/system.h>
@@ -19,7 +19,7 @@ extern "C" {
     * @brief Define API for querying action properties
     *
     *
-    * A Enumivo action has the following abstract structure:
+    * A MyEOSIO action has the following abstract structure:
     *
     * ```
     *   struct action {

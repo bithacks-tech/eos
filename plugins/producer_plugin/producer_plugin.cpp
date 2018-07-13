@@ -1,12 +1,12 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/producer_plugin/producer_plugin.hpp>
-#include <enumivo/chain/producer_object.hpp>
-#include <enumivo/chain/plugin_interface.hpp>
-#include <enumivo/chain/global_property_object.hpp>
-#include <enumivo/chain/transaction_object.hpp>
+#include <myeosio/producer_plugin/producer_plugin.hpp>
+#include <myeosio/chain/producer_object.hpp>
+#include <myeosio/chain/plugin_interface.hpp>
+#include <myeosio/chain/global_property_object.hpp>
+#include <myeosio/chain/transaction_object.hpp>
 
 #include <fc/io/json.hpp>
 #include <fc/smart_ref_impl.hpp>
@@ -47,12 +47,12 @@ namespace fc {
 const fc::string logger_name("producer_plugin");
 fc::logger _log;
 
-namespace enumivo {
+namespace myeosio {
 
 static appbase::abstract_plugin& _producer_plugin = app().register_plugin<producer_plugin>();
 
-using namespace enumivo::chain;
-using namespace enumivo::chain::plugin_interface;
+using namespace myeosio::chain;
+using namespace myeosio::chain::plugin_interface;
 
 namespace {
    bool failure_is_subjective(const fc::exception& e, bool deadline_is_subjective) {
@@ -119,7 +119,7 @@ class producer_plugin_impl : public std::enable_shared_from_this<producer_plugin
       boost::program_options::variables_map _options;
       bool     _production_enabled                 = false;
       bool     _pause_production                   = false;
-      uint32_t _production_skip_flags              = 0; //enumivo::chain::skip_nothing;
+      uint32_t _production_skip_flags              = 0; //myeosio::chain::skip_nothing;
 
       using signature_provider_type = std::function<chain::signature_type(chain::digest_type)>;
       std::map<chain::public_key_type, signature_provider_type> _signature_providers;
@@ -132,7 +132,7 @@ class producer_plugin_impl : public std::enable_shared_from_this<producer_plugin
       int32_t                                                   _max_transaction_time_ms;
       fc::microseconds                                          _max_irreversible_block_age_us;
       fc::time_point                                            _irreversible_block_time;
-      fc::microseconds                                          _enuwallet_provider_timeout_us;
+      fc::microseconds                                          _mykeosd_provider_timeout_us;
 
       time_point _last_signed_block_time;
       time_point _start_time = fc::time_point::now();
@@ -371,13 +371,13 @@ class producer_plugin_impl : public std::enable_shared_from_this<producer_plugin
       start_block_result start_block();
 };
 
-void new_chain_banner(const enumivo::chain::controller& db)
+void new_chain_banner(const myeosio::chain::controller& db)
 {
    std::cerr << "\n"
       "*********************************\n"
       "*                               *\n"
       "*   ------- NEW CHAIN -------   *\n"
-      "*   -  Welcome to Enumivo!  -   *\n"
+      "*   -  Welcome to MyEOSIO!  -   *\n"
       "*   -------------------------   *\n"
       "*                               *\n"
       "*********************************\n"
@@ -423,13 +423,13 @@ void producer_plugin::set_program_options(
          ("signature-provider", boost::program_options::value<vector<string>>()->composing()->multitoken()->default_value({std::string(default_priv_key.get_public_key()) + "=KEY:" + std::string(default_priv_key)}, std::string(default_priv_key.get_public_key()) + "=KEY:" + std::string(default_priv_key)),
           "Key=Value pairs in the form <public-key>=<provider-spec>\n"
           "Where:\n"
-          "   <public-key>    \tis a string form of a vaild Enumivo public key\n\n"
+          "   <public-key>    \tis a string form of a vaild MyEOSIO public key\n\n"
           "   <provider-spec> \tis a string in the form <provider-type>:<data>\n\n"
-          "   <provider-type> \tis KEY, or ENUWALLET\n\n"
-          "   KEY:<data>      \tis a string form of a valid Enumivo private key which maps to the provided public key\n\n"
-          "   ENUWALLET:<data>    \tis the URL where enuwallet is available and the approptiate wallet(s) are unlocked")
-         ("enuwallet-provider-timeout", boost::program_options::value<int32_t>()->default_value(5),
-          "Limits the maximum time (in milliseconds) that is allowd for sending blocks to a enuwallet provider for signing")
+          "   <provider-type> \tis KEY, or MESWALLET\n\n"
+          "   KEY:<data>      \tis a string form of a valid MyEOSIO private key which maps to the provided public key\n\n"
+          "   MESWALLET:<data>    \tis the URL where mykeosd is available and the approptiate wallet(s) are unlocked")
+         ("mykeosd-provider-timeout", boost::program_options::value<int32_t>()->default_value(5),
+          "Limits the maximum time (in milliseconds) that is allowd for sending blocks to a mykeosd provider for signing")
          ;
    config_file_options.add(producer_options);
 }
@@ -474,17 +474,17 @@ make_key_signature_provider(const private_key_type& key) {
 }
 
 static producer_plugin_impl::signature_provider_type
-make_enuwallet_signature_provider(const std::shared_ptr<producer_plugin_impl>& impl, const string& url_str, const public_key_type pubkey) {
-   auto enuwallet_url = fc::url(url_str);
+make_mykeosd_signature_provider(const std::shared_ptr<producer_plugin_impl>& impl, const string& url_str, const public_key_type pubkey) {
+   auto mykeosd_url = fc::url(url_str);
    std::weak_ptr<producer_plugin_impl> weak_impl = impl;
 
-   return [weak_impl, enuwallet_url, pubkey]( const chain::digest_type& digest ) {
+   return [weak_impl, mykeosd_url, pubkey]( const chain::digest_type& digest ) {
       auto impl = weak_impl.lock();
       if (impl) {
          fc::variant params;
          fc::to_variant(std::make_pair(digest, pubkey), params);
-         auto deadline = impl->_enuwallet_provider_timeout_us.count() >= 0 ? fc::time_point::now() + impl->_enuwallet_provider_timeout_us : fc::time_point::maximum();
-         return app().get_plugin<http_client_plugin>().get_client().post_sync(enuwallet_url, params, deadline).as<chain::signature_type>();
+         auto deadline = impl->_mykeosd_provider_timeout_us.count() >= 0 ? fc::time_point::now() + impl->_mykeosd_provider_timeout_us : fc::time_point::maximum();
+         return app().get_plugin<http_client_plugin>().get_client().post_sync(mykeosd_url, params, deadline).as<chain::signature_type>();
       } else {
          return signature_type();
       }
@@ -530,8 +530,8 @@ void producer_plugin::plugin_initialize(const boost::program_options::variables_
 
             if (spec_type_str == "KEY") {
                my->_signature_providers[pubkey] = make_key_signature_provider(private_key_type(spec_data));
-            } else if (spec_type_str == "ENUWALLET") {
-               my->_signature_providers[pubkey] = make_enuwallet_signature_provider(my, spec_data, pubkey);
+            } else if (spec_type_str == "MESWALLET") {
+               my->_signature_providers[pubkey] = make_mykeosd_signature_provider(my, spec_data, pubkey);
             }
 
          } catch (...) {
@@ -540,7 +540,7 @@ void producer_plugin::plugin_initialize(const boost::program_options::variables_
       }
    }
 
-   my->_enuwallet_provider_timeout_us = fc::milliseconds(options.at("enuwallet-provider-timeout").as<int32_t>());
+   my->_mykeosd_provider_timeout_us = fc::milliseconds(options.at("mykeosd-provider-timeout").as<int32_t>());
 
    my->_max_transaction_time_ms = options.at("max-transaction-time").as<int32_t>();
 
@@ -595,7 +595,7 @@ void producer_plugin::plugin_startup()
          if (chain.head_block_num() == 0) {
             new_chain_banner(chain);
          }
-         //_production_skip_flags |= enumivo::chain::skip_undo_history_check;
+         //_production_skip_flags |= myeosio::chain::skip_undo_history_check;
       }
    }
 
@@ -1074,4 +1074,4 @@ void producer_plugin_impl::produce_block() {
 
 }
 
-} // namespace enumivo
+} // namespace myeosio

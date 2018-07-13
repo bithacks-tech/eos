@@ -1,13 +1,13 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/mongo_db_plugin/mongo_db_plugin.hpp>
-#include <enumivo/chain/enumivo_contract.hpp>
-#include <enumivo/chain/config.hpp>
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/transaction.hpp>
-#include <enumivo/chain/types.hpp>
+#include <myeosio/mongo_db_plugin/mongo_db_plugin.hpp>
+#include <myeosio/chain/myeosio_contract.hpp>
+#include <myeosio/chain/config.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/transaction.hpp>
+#include <myeosio/chain/types.hpp>
 
 #include <fc/io/json.hpp>
 #include <fc/variant.hpp>
@@ -28,7 +28,7 @@
 
 namespace fc { class variant; }
 
-namespace enumivo {
+namespace myeosio {
 
 using chain::account_name;
 using chain::action_name;
@@ -249,7 +249,7 @@ namespace {
         }
         abi_serializer abis;
         if (msg.account == chain::config::system_account_name) {
-           abi = chain::enumivo_contract_abi(abi);
+           abi = chain::myeosio_contract_abi(abi);
         }
         abis.set_abi(abi);
         auto v = abis.binary_to_variant(abis.get_action_type(msg.name), msg.data);
@@ -259,8 +259,8 @@ namespace {
            msg_doc.append(kvp("data", value));
            return;
         } catch (std::exception& e) {
-           elog("Unable to convert ENU JSON to MongoDB JSON: ${e}", ("e", e.what()));
-           elog("  ENU JSON: ${j}", ("j", json));
+           elog("Unable to convert MES JSON to MongoDB JSON: ${e}", ("e", e.what()));
+           elog("  MES JSON: ${j}", ("j", json));
         }
      } catch (fc::exception& e) {
         elog("Unable to convert action.data to ABI: ${s} :: ${n}, what: ${e}", ("s", msg.account)("n", msg.name)("e", e.to_string()));
@@ -635,8 +635,8 @@ void mongo_db_plugin_impl::update_account(const chain::action& msg) {
             std::chrono::microseconds{fc::time_point::now().time_since_epoch().count()});
 
       abi_serializer abis;
-      auto enumivo_account = find_account(accounts, msg.account);
-      auto abi = fc::json::from_string(bsoncxx::to_json(enumivo_account.view()["abi"].get_document())).as<abi_def>();
+      auto myeosio_account = find_account(accounts, msg.account);
+      auto abi = fc::json::from_string(bsoncxx::to_json(myeosio_account.view()["abi"].get_document())).as<abi_def>();
       abis.set_abi(abi);
       auto transfer = abis.binary_to_variant(abis.get_action_type(msg.name), msg.data);
       auto from_name = transfer["from"].as<name>().to_string();
@@ -790,10 +790,10 @@ void mongo_db_plugin::set_program_options(options_description& cli, options_desc
 {
    cfg.add_options()
          ("mongodb-queue-size,q", bpo::value<uint>()->default_value(256),
-         "The queue size between enunode and MongoDB plugin thread.")
+         "The queue size between myeosnode and MongoDB plugin thread.")
          ("mongodb-uri,m", bpo::value<std::string>(),
          "MongoDB URI connection string, see: https://docs.mongodb.com/master/reference/connection-string/."
-               " If not specified then plugin is disabled. Default database 'ENU' is used if not specified in URI.")
+               " If not specified then plugin is disabled. Default database 'MES' is used if not specified in URI.")
          ;
 }
 
@@ -822,7 +822,7 @@ void mongo_db_plugin::plugin_initialize(const variables_map& options)
       mongocxx::uri uri = mongocxx::uri{uri_str};
       my->db_name = uri.database();
       if (my->db_name.empty())
-         my->db_name = "ENU";
+         my->db_name = "MES";
       my->mongo_conn = mongocxx::client{uri};
 
       // add callback to chain_controller config
@@ -838,7 +838,7 @@ void mongo_db_plugin::plugin_initialize(const variables_map& options)
       }
       my->init();
    } else {
-      wlog("enumivo::mongo_db_plugin configured, but no --mongodb-uri specified.");
+      wlog("myeosio::mongo_db_plugin configured, but no --mongodb-uri specified.");
       wlog("mongo_db_plugin disabled.");
    }
 }
@@ -860,4 +860,4 @@ void mongo_db_plugin::plugin_shutdown()
    my.reset();
 }
 
-} // namespace enumivo
+} // namespace myeosio

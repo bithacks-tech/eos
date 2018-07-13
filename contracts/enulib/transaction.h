@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include <enulib/types.h>
@@ -11,7 +11,7 @@ extern "C" {
     * @ingroup contractdev
     * @brief Define API for sending transactions and inline messages
     *
-    * A Enumivo transaction has the following abstract structure:
+    * A MyEOSIO transaction has the following abstract structure:
     *
     * ```
     *   struct transaction {

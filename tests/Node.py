@@ -15,7 +15,7 @@ class Node(object):
 
     # pylint: disable=too-many-instance-attributes
     # pylint: disable=too-many-arguments
-    def __init__(self, host, port, pid=None, cmd=None, enableMongo=False, mongoHost="localhost", mongoPort=27017, mongoDb="ENUtest"):
+    def __init__(self, host, port, pid=None, cmd=None, enableMongo=False, mongoHost="localhost", mongoPort=27017, mongoDb="MEStest"):
         self.host=host
         self.port=port
         self.pid=pid
@@ -620,7 +620,7 @@ class Node(object):
 
     @staticmethod
     def currencyStrToInt(balanceStr):
-        """Converts currency string of form "12.3456 ENU" to int 123456"""
+        """Converts currency string of form "12.3456 MES" to int 123456"""
         assert(isinstance(balanceStr, str))
         balanceStr=balanceStr.split()[0]
         #balance=int(decimal.Decimal(balanceStr[1:])*10000)
@@ -630,7 +630,7 @@ class Node(object):
 
     @staticmethod
     def currencyIntToStr(balance, symbol):
-        """Converts currency int of form 123456 to string "12.3456 ENU" where ENU is symbol string"""
+        """Converts currency int of form 123456 to string "12.3456 MES" where MES is symbol string"""
         assert(isinstance(balance, int))
         assert(isinstance(symbol, str))
         balanceStr="%.04f %s" % (balance/10000.0, symbol)
@@ -638,7 +638,7 @@ class Node(object):
         return balanceStr
 
     def validateFunds(self, initialBalances, transferAmount, source, accounts):
-        """Validate each account has the expected ENU balance. Validate cumulative balance matches expectedTotal."""
+        """Validate each account has the expected MES balance. Validate cumulative balance matches expectedTotal."""
         assert(source)
         assert(isinstance(source, Account))
         assert(accounts)
@@ -693,7 +693,7 @@ class Node(object):
             Utils.Print("ERROR: Exception during accounts by key retrieval. %s" % (msg))
             return None
 
-    # Get actions mapped to an account (enucli get actions)
+    # Get actions mapped to an account (mycleos get actions)
     def getActions(self, account, pos=-1, offset=-1):
         assert(isinstance(account, Account))
         assert(isinstance(pos, int))
@@ -734,7 +734,7 @@ class Node(object):
         return servants
 
     def getAccountEnuBalanceStr(self, scope):
-        """Returns ENU currency0000 account balance from enucli get table command. Returned balance is string following syntax "98.0311 ENU". """
+        """Returns MES currency0000 account balance from mycleos get table command. Returned balance is string following syntax "98.0311 MES". """
         assert isinstance(scope, str)
         if not self.enableMongo:
             amount=self.getTableAccountBalance("enu.token", scope)
@@ -754,7 +754,7 @@ class Node(object):
         return None
 
     def getAccountEnuBalance(self, scope):
-        """Returns ENU currency0000 account balance from enucli get table command. Returned balance is an integer e.g. 980311. """
+        """Returns MES currency0000 account balance from mycleos get table command. Returned balance is an integer e.g. 980311. """
         balanceStr=self.getAccountEnuBalanceStr(scope)
         balance=Node.currencyStrToInt(balanceStr)
         return balance
@@ -900,7 +900,7 @@ class Node(object):
         return False if info is None else True
 
     def getHeadBlockNum(self):
-        """returns head block number(string) as returned by enucli get info."""
+        """returns head block number(string) as returned by mycleos get info."""
         if not self.enableMongo:
             info=self.getInfo()
             if info is not None:

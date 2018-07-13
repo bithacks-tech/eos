@@ -1,12 +1,12 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <enumivo/chain/genesis_state.hpp>
+#include <myeosio/chain/genesis_state.hpp>
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
-const string genesis_state::enumivo_root_key = "${ENUMIVO_ROOT_KEY}";
+const string genesis_state::myeosio_root_key = "${ENUMIVO_ROOT_KEY}";
 
-} } // namespace enumivo::chain
+} } // namespace myeosio::chain

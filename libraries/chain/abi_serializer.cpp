@@ -1,20 +1,20 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/chain/abi_serializer.hpp>
-#include <enumivo/chain/contract_types.hpp>
-#include <enumivo/chain/authority.hpp>
-#include <enumivo/chain/chain_config.hpp>
-#include <enumivo/chain/transaction.hpp>
-#include <enumivo/chain/asset.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
+#include <myeosio/chain/contract_types.hpp>
+#include <myeosio/chain/authority.hpp>
+#include <myeosio/chain/chain_config.hpp>
+#include <myeosio/chain/transaction.hpp>
+#include <myeosio/chain/asset.hpp>
 #include <fc/io/raw.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fc/io/varint.hpp>
 
 using namespace boost;
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
    const size_t abi_serializer::max_recursion_depth;
    fc::microseconds abi_serializer::max_serialization_time = fc::microseconds(15*1000); // 15 ms

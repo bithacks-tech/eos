@@ -1,27 +1,27 @@
-#include <enumivo/chain/name.hpp>
+#include <myeosio/chain/name.hpp>
 #include <fc/variant.hpp>
 #include <boost/algorithm/string.hpp>
 #include <fc/exception/exception.hpp>
-#include <enumivo/chain/exceptions.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
-namespace enumivo { namespace chain { 
+namespace myeosio { namespace chain { 
 
    void name::set( const char* str ) {
       const auto len = strnlen(str, 14);
 
       //////////////////////////////////////////////////////////////////////////////////
-      //the code below is exlusive for enumivo to treat enumivo.prods as a special case
+      //the code below is exlusive for myeosio to treat myeosio.prods as a special case
       //as suggested by @fishhan
-      if (string(str) == "enumivo.prods"){
+      if (string(str) == "myeosio.prods"){
         value = string_to_name(str);
         return; //allow special account
       }
-      ENU_ASSERT(string_to_name("enumivo.prods") != string_to_name(str), name_type_exception, "Name will collide with enumivo.prods (${name}) ", ("name", string(str)));
+      MES_ASSERT(string_to_name("myeosio.prods") != string_to_name(str), name_type_exception, "Name will collide with myeosio.prods (${name}) ", ("name", string(str)));
       //////////////////////////////////////////////////////////////////////////////////
 
-      ENU_ASSERT(len <= 13, name_type_exception, "Name is longer than 13 characters (${name}) ", ("name", string(str)));
+      MES_ASSERT(len <= 13, name_type_exception, "Name is longer than 13 characters (${name}) ", ("name", string(str)));
       value = string_to_name(str);
-      ENU_ASSERT(to_string() == string(str), name_type_exception,
+      MES_ASSERT(to_string() == string(str), name_type_exception,
                  "Name not properly normalized (name: ${name}, normalized: ${normalized}) ",
                  ("name", string(str))("normalized", to_string()));
    }
@@ -31,9 +31,9 @@ namespace enumivo { namespace chain {
       static const char* charmap = ".12345abcdefghijklmnopqrstuvwxyz";
 
       //////////////////////////////////////////////////////////////////////////////////
-      //the code below is exlusive for enumivo to treat enumivo.prods as a special case
-      if (value == string_to_name("enumivo.prods")){
-        return "enumivo.prods";
+      //the code below is exlusive for myeosio to treat myeosio.prods as a special case
+      if (value == string_to_name("myeosio.prods")){
+        return "myeosio.prods";
       }
       //////////////////////////////////////////////////////////////////////////////////
 
@@ -50,9 +50,9 @@ namespace enumivo { namespace chain {
       return str;
    }
 
-} } /// enumivo::chain
+} } /// myeosio::chain
 
 namespace fc {
-  void to_variant(const enumivo::chain::name& c, fc::variant& v) { v = std::string(c); }
-  void from_variant(const fc::variant& v, enumivo::chain::name& check) { check = v.get_string(); }
+  void to_variant(const myeosio::chain::name& c, fc::variant& v) { v = std::string(c); }
+  void from_variant(const fc::variant& v, myeosio::chain::name& check) { check = v.get_string(); }
 } // fc

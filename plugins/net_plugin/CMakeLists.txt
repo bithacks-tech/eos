@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/enumivo/net_plugin/*.hpp" )
+file(GLOB HEADERS "include/myeosio/net_plugin/*.hpp" )
 add_library( net_plugin
              net_plugin.cpp
              ${HEADERS} )

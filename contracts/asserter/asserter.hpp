@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <enulib/enu.hpp>
@@ -10,6 +10,6 @@ namespace asserter {
       int8_t      condition;
       std::string message;
 
-      ENULIB_SERIALIZE( assertdef, (condition)(message) )
+      MESLIB_SERIALIZE( assertdef, (condition)(message) )
    };
 }

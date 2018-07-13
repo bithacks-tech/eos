@@ -1,8 +1,8 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester_network.hpp>
-#include <enumivo/chain/producer_object.hpp>
-#include <enumivo/chain/global_property_object.hpp>
-#include <enumivo/chain/generated_transaction_object.hpp>
+#include <myeosio/testing/tester_network.hpp>
+#include <myeosio/chain/producer_object.hpp>
+#include <myeosio/chain/global_property_object.hpp>
+#include <myeosio/chain/generated_transaction_object.hpp>
 #include <enu.system/enu.system.wast.hpp>
 #include <enu.system/enu.system.abi.hpp>
 #include <enu.token/enu.token.wast.hpp>
@@ -14,9 +14,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 
 
 BOOST_AUTO_TEST_SUITE(delay_tests)

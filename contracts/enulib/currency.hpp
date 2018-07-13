@@ -3,7 +3,7 @@
 #include <enulib/asset.hpp>
 #include <enulib/multi_index.hpp>
 
-namespace enumivo {
+namespace myeosio {
    using std::string;
    using std::array;
 
@@ -26,7 +26,7 @@ namespace enumivo {
             uint8_t                issuer_can_whitelist  = true;
 
             /*(issuer_agreement_hash)*/
-            ENULIB_SERIALIZE( create, (issuer)(maximum_supply)(issuer_can_freeze)(issuer_can_recall)(issuer_can_whitelist) )
+            MESLIB_SERIALIZE( create, (issuer)(maximum_supply)(issuer_can_freeze)(issuer_can_recall)(issuer_can_whitelist) )
          };
 
          struct transfer
@@ -36,7 +36,7 @@ namespace enumivo {
             asset        quantity;
             string       memo;
 
-            ENULIB_SERIALIZE( transfer, (from)(to)(quantity)(memo) )
+            MESLIB_SERIALIZE( transfer, (from)(to)(quantity)(memo) )
          };
 
          struct issue {
@@ -44,14 +44,14 @@ namespace enumivo {
             asset        quantity;
             string       memo;
 
-            ENULIB_SERIALIZE( issue, (to)(quantity)(memo) )
+            MESLIB_SERIALIZE( issue, (to)(quantity)(memo) )
          };
 
          struct fee_schedule {
             uint64_t primary_key()const { return 0; }
 
             array<extended_asset,7> fee_per_length;
-            ENULIB_SERIALIZE( fee_schedule, (fee_per_length) )
+            MESLIB_SERIALIZE( fee_schedule, (fee_per_length) )
          };
 
          struct account {
@@ -61,7 +61,7 @@ namespace enumivo {
 
             uint64_t primary_key()const { return balance.symbol.name(); }
 
-            ENULIB_SERIALIZE( account, (balance)(frozen)(whitelist) )
+            MESLIB_SERIALIZE( account, (balance)(frozen)(whitelist) )
          };
 
          struct currency_stats {
@@ -76,11 +76,11 @@ namespace enumivo {
 
             uint64_t primary_key()const { return supply.symbol.name(); }
 
-            ENULIB_SERIALIZE( currency_stats, (supply)(max_supply)(issuer)(can_freeze)(can_recall)(can_whitelist)(is_frozen)(enforce_whitelist) )
+            MESLIB_SERIALIZE( currency_stats, (supply)(max_supply)(issuer)(can_freeze)(can_recall)(can_whitelist)(is_frozen)(enforce_whitelist) )
          };
 
-         typedef enumivo::multi_index<N(accounts), account> accounts;
-         typedef enumivo::multi_index<N(stat), currency_stats> stats;
+         typedef myeosio::multi_index<N(accounts), account> accounts;
+         typedef myeosio::multi_index<N(stat), currency_stats> stats;
 
 
          asset get_balance( account_name owner, symbol_name symbol )const {
@@ -130,11 +130,11 @@ namespace enumivo {
            */
           void create_currency( const create& c ) {
             auto sym = c.maximum_supply.symbol;
-            enumivo_assert( sym.is_valid(), "invalid symbol name" );
+            myeosio_assert( sym.is_valid(), "invalid symbol name" );
 
              stats statstable( _contract, sym.name() );
              auto existing = statstable.find( sym.name() );
-             enumivo_assert( existing == statstable.end(), "token with symbol already exists" );
+             myeosio_assert( existing == statstable.end(), "token with symbol already exists" );
 
              statstable.emplace( c.issuer, [&]( auto& s ) {
                 s.supply.symbol = c.maximum_supply.symbol;
@@ -153,7 +153,7 @@ namespace enumivo {
 
              statstable.modify( st, 0, [&]( auto& s ) {
                 s.supply.amount += i.quantity.amount;
-                enumivo_assert( s.supply.amount >= 0, "underflow" );
+                myeosio_assert( s.supply.amount >= 0, "underflow" );
              });
 
              add_balance( st.issuer, i.quantity, st, st.issuer );
@@ -178,8 +178,8 @@ namespace enumivo {
              const auto& st = statstable.get( sym );
 
              require_auth( st.issuer );
-             enumivo_assert( i.quantity.is_valid(), "invalid quantity" );
-             enumivo_assert( i.quantity.amount > 0, "must issue positive quantity" );
+             myeosio_assert( i.quantity.is_valid(), "invalid quantity" );
+             myeosio_assert( i.quantity.amount > 0, "must issue positive quantity" );
 
              statstable.modify( st, 0, [&]( auto& s ) {
                 s.supply.amount += i.quantity.amount;
@@ -201,8 +201,8 @@ namespace enumivo {
 
              require_recipient( t.to );
 
-             enumivo_assert( t.quantity.is_valid(), "invalid quantity" );
-             enumivo_assert( t.quantity.amount > 0, "must transfer positive quantity" );
+             myeosio_assert( t.quantity.is_valid(), "invalid quantity" );
+             myeosio_assert( t.quantity.amount > 0, "must transfer positive quantity" );
              sub_balance( t.from, t.quantity, st );
              add_balance( t.to, t.quantity, st, t.from );
           }
@@ -213,16 +213,16 @@ namespace enumivo {
              accounts from_acnts( _contract, owner );
 
              const auto& from = from_acnts.get( value.symbol.name() );
-             enumivo_assert( from.balance.amount >= value.amount, "overdrawn balance" );
+             myeosio_assert( from.balance.amount >= value.amount, "overdrawn balance" );
 
              if( has_auth( owner ) ) {
-                enumivo_assert( !st.can_freeze || !from.frozen, "account is frozen by issuer" );
-                enumivo_assert( !st.can_freeze || !st.is_frozen, "all transfers are frozen by issuer" );
-                enumivo_assert( !st.enforce_whitelist || from.whitelist, "account is not white listed" );
+                myeosio_assert( !st.can_freeze || !from.frozen, "account is frozen by issuer" );
+                myeosio_assert( !st.can_freeze || !st.is_frozen, "all transfers are frozen by issuer" );
+                myeosio_assert( !st.enforce_whitelist || from.whitelist, "account is not white listed" );
              } else if( has_auth( st.issuer ) ) {
-                enumivo_assert( st.can_recall, "issuer may not recall token" );
+                myeosio_assert( st.can_recall, "issuer may not recall token" );
              } else {
-                enumivo_assert( false, "insufficient authority" );
+                myeosio_assert( false, "insufficient authority" );
              }
 
              from_acnts.modify( from, owner, [&]( auto& a ) {
@@ -235,12 +235,12 @@ namespace enumivo {
              accounts to_acnts( _contract, owner );
              auto to = to_acnts.find( value.symbol.name() );
              if( to == to_acnts.end() ) {
-                enumivo_assert( !st.enforce_whitelist, "can only transfer to white listed accounts" );
+                myeosio_assert( !st.enforce_whitelist, "can only transfer to white listed accounts" );
                 to_acnts.emplace( ram_payer, [&]( auto& a ){
                   a.balance = value;
                 });
              } else {
-                enumivo_assert( !st.enforce_whitelist || to->whitelist, "receiver requires whitelist by issuer" );
+                myeosio_assert( !st.enforce_whitelist || to->whitelist, "receiver requires whitelist by issuer" );
                 to_acnts.modify( to, 0, [&]( auto& a ) {
                   a.balance.amount += value.amount;
                 });

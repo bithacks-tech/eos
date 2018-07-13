@@ -1,27 +1,27 @@
-#include <enumivo/chain/controller.hpp>
-#include <enumivo/chain/transaction_context.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/transaction_context.hpp>
 
-#include <enumivo/chain/block_log.hpp>
-#include <enumivo/chain/fork_database.hpp>
+#include <myeosio/chain/block_log.hpp>
+#include <myeosio/chain/fork_database.hpp>
 
-#include <enumivo/chain/account_object.hpp>
-#include <enumivo/chain/block_summary_object.hpp>
-#include <enumivo/chain/global_property_object.hpp>
-#include <enumivo/chain/contract_table_objects.hpp>
-#include <enumivo/chain/generated_transaction_object.hpp>
-#include <enumivo/chain/transaction_object.hpp>
-#include <enumivo/chain/reversible_block_object.hpp>
+#include <myeosio/chain/account_object.hpp>
+#include <myeosio/chain/block_summary_object.hpp>
+#include <myeosio/chain/global_property_object.hpp>
+#include <myeosio/chain/contract_table_objects.hpp>
+#include <myeosio/chain/generated_transaction_object.hpp>
+#include <myeosio/chain/transaction_object.hpp>
+#include <myeosio/chain/reversible_block_object.hpp>
 
-#include <enumivo/chain/authorization_manager.hpp>
-#include <enumivo/chain/resource_limits.hpp>
+#include <myeosio/chain/authorization_manager.hpp>
+#include <myeosio/chain/resource_limits.hpp>
 
 #include <chainbase/chainbase.hpp>
 #include <fc/io/json.hpp>
 #include <fc/scoped_exit.hpp>
 
-#include <enumivo/chain/enumivo_contract.hpp>
+#include <myeosio/chain/myeosio_contract.hpp>
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
 using resource_limits::resource_limits_manager;
 
@@ -110,20 +110,20 @@ struct controller_impl {
 #define SET_APP_HANDLER( receiver, contract, action) \
    set_apply_handler( #receiver, #contract, #action, &BOOST_PP_CAT(apply_, BOOST_PP_CAT(contract, BOOST_PP_CAT(_,action) ) ) )
 
-   SET_APP_HANDLER( enumivo, enumivo, newaccount );
-   SET_APP_HANDLER( enumivo, enumivo, setcode );
-   SET_APP_HANDLER( enumivo, enumivo, setabi );
-   SET_APP_HANDLER( enumivo, enumivo, updateauth );
-   SET_APP_HANDLER( enumivo, enumivo, deleteauth );
-   SET_APP_HANDLER( enumivo, enumivo, linkauth );
-   SET_APP_HANDLER( enumivo, enumivo, unlinkauth );
+   SET_APP_HANDLER( myeosio, myeosio, newaccount );
+   SET_APP_HANDLER( myeosio, myeosio, setcode );
+   SET_APP_HANDLER( myeosio, myeosio, setabi );
+   SET_APP_HANDLER( myeosio, myeosio, updateauth );
+   SET_APP_HANDLER( myeosio, myeosio, deleteauth );
+   SET_APP_HANDLER( myeosio, myeosio, linkauth );
+   SET_APP_HANDLER( myeosio, myeosio, unlinkauth );
 /*
-   SET_APP_HANDLER( enumivo, enumivo, postrecovery );
-   SET_APP_HANDLER( enumivo, enumivo, passrecovery );
-   SET_APP_HANDLER( enumivo, enumivo, vetorecovery );
+   SET_APP_HANDLER( myeosio, myeosio, postrecovery );
+   SET_APP_HANDLER( myeosio, myeosio, passrecovery );
+   SET_APP_HANDLER( myeosio, myeosio, vetorecovery );
 */
 
-   SET_APP_HANDLER( enumivo, enumivo, canceldelay );
+   SET_APP_HANDLER( myeosio, myeosio, canceldelay );
 
    fork_db.irreversible.connect( [&]( auto b ) {
                                  on_irreversible(b);
@@ -303,7 +303,7 @@ struct controller_impl {
     */
    void initialize_fork_db() {
       wlog( " Initializing new blockchain with genesis state                  " );
-      producer_schedule_type initial_schedule{ 0, {{N(enumivo), conf.genesis.initial_key}} };
+      producer_schedule_type initial_schedule{ 0, {{N(myeosio), conf.genesis.initial_key}} };
 
       block_header_state genheader;
       genheader.active_schedule       = initial_schedule;
@@ -329,7 +329,7 @@ struct controller_impl {
          a.privileged = is_privileged;
 
          if( name == config::system_account_name ) {
-            a.set_abi(enumivo_contract_abi(abi_def()));
+            a.set_abi(myeosio_contract_abi(abi_def()));
          }
       });
       db.create<account_sequence_object>([&](auto & a) {
@@ -812,7 +812,7 @@ struct controller_impl {
             } else if( receipt.trx.contains<transaction_id_type>() ) {
                trace = push_scheduled_transaction( receipt.trx.get<transaction_id_type>(), fc::time_point::maximum(), receipt.cpu_usage_us );
             } else {
-               ENU_ASSERT( false, block_validate_exception, "encountered unexpected receipt type" );
+               MES_ASSERT( false, block_validate_exception, "encountered unexpected receipt type" );
             }
 
             bool transaction_failed =  trace && trace->except;
@@ -822,16 +822,16 @@ struct controller_impl {
                throw *trace->except;
             }
 
-            ENU_ASSERT( pending->_pending_block_state->block->transactions.size() > 0,
+            MES_ASSERT( pending->_pending_block_state->block->transactions.size() > 0,
                         block_validate_exception, "expected a receipt",
                         ("block", *b)("expected_receipt", receipt)
                       );
-            ENU_ASSERT( pending->_pending_block_state->block->transactions.size() == num_pending_receipts + 1,
+            MES_ASSERT( pending->_pending_block_state->block->transactions.size() == num_pending_receipts + 1,
                         block_validate_exception, "expected receipt was not added",
                         ("block", *b)("expected_receipt", receipt)
                       );
             const transaction_receipt_header& r = pending->_pending_block_state->block->transactions.back();
-            ENU_ASSERT( r == static_cast<const transaction_receipt_header&>(receipt),
+            MES_ASSERT( r == static_cast<const transaction_receipt_header&>(receipt),
                         block_validate_exception, "receipt does not match",
                         ("producer_receipt", receipt)("validator_receipt", pending->_pending_block_state->block->transactions.back()) );
          }
@@ -994,10 +994,10 @@ struct controller_impl {
       resource_limits.process_account_limit_updates();
       const auto& chain_config = self.get_global_properties().configuration;
       uint32_t max_virtual_mult = 1000;
-      uint64_t CPU_TARGET = ENU_PERCENT(chain_config.max_block_cpu_usage, chain_config.target_block_cpu_usage_pct);
+      uint64_t CPU_TARGET = MES_PERCENT(chain_config.max_block_cpu_usage, chain_config.target_block_cpu_usage_pct);
       resource_limits.set_block_parameters(
          { CPU_TARGET, chain_config.max_block_cpu_usage, config::block_cpu_usage_average_window_ms / config::block_interval_ms, max_virtual_mult, {99, 100}, {1000, 999}},
-         {ENU_PERCENT(chain_config.max_block_net_usage, chain_config.target_block_net_usage_pct), chain_config.max_block_net_usage, config::block_size_average_window_ms / config::block_interval_ms, max_virtual_mult, {99, 100}, {1000, 999}}
+         {MES_PERCENT(chain_config.max_block_net_usage, chain_config.target_block_net_usage_pct), chain_config.max_block_net_usage, config::block_size_average_window_ms / config::block_interval_ms, max_virtual_mult, {99, 100}, {1000, 999}}
       );
       resource_limits.process_block_usage(pending->_pending_block_state->block_num);
 
@@ -1074,7 +1074,7 @@ struct controller_impl {
          set_difference( actors.begin(), actors.end(),
                          conf.actor_whitelist.begin(), conf.actor_whitelist.end(),
                          std::back_inserter(excluded) );
-         ENU_ASSERT( excluded.size() == 0, actor_whitelist_exception,
+         MES_ASSERT( excluded.size() == 0, actor_whitelist_exception,
                      "authorizing actor(s) in transaction are not on the actor whitelist: ${actors}",
                      ("actors", excluded)
                    );
@@ -1085,7 +1085,7 @@ struct controller_impl {
                            conf.actor_blacklist.begin(), conf.actor_blacklist.end(),
                            std::back_inserter(blacklisted)
                          );
-         ENU_ASSERT( blacklisted.size() == 0, actor_blacklist_exception,
+         MES_ASSERT( blacklisted.size() == 0, actor_blacklist_exception,
                      "authorizing actor(s) in transaction are on the actor blacklist: ${actors}",
                      ("actors", blacklisted)
                    );
@@ -1094,12 +1094,12 @@ struct controller_impl {
 
    void check_contract_list( account_name code )const {
       if( conf.contract_whitelist.size() > 0 ) {
-         ENU_ASSERT( conf.contract_whitelist.find( code ) != conf.contract_whitelist.end(),
+         MES_ASSERT( conf.contract_whitelist.find( code ) != conf.contract_whitelist.end(),
                      contract_whitelist_exception,
                      "account '${code}' is not on the contract whitelist", ("code", code)
                    );
       } else if( conf.contract_blacklist.size() > 0 ) {
-         ENU_ASSERT( conf.contract_blacklist.find( code ) == conf.contract_blacklist.end(),
+         MES_ASSERT( conf.contract_blacklist.find( code ) == conf.contract_blacklist.end(),
                      contract_blacklist_exception,
                      "account '${code}' is on the contract blacklist", ("code", code)
                    );
@@ -1108,7 +1108,7 @@ struct controller_impl {
 
    void check_action_list( account_name code, action_name action )const {
       if( conf.action_blacklist.size() > 0 ) {
-         ENU_ASSERT( conf.action_blacklist.find( std::make_pair(code, action) ) == conf.action_blacklist.end(),
+         MES_ASSERT( conf.action_blacklist.find( std::make_pair(code, action) ) == conf.action_blacklist.end(),
                      action_blacklist_exception,
                      "action '${code}::${action}' is on the action blacklist",
                      ("code", code)("action", action)
@@ -1118,7 +1118,7 @@ struct controller_impl {
 
    void check_key_list( const public_key_type& key )const {
       if( conf.key_blacklist.size() > 0 ) {
-         ENU_ASSERT( conf.key_blacklist.find( key ) == conf.key_blacklist.end(),
+         MES_ASSERT( conf.key_blacklist.find( key ) == conf.key_blacklist.end(),
                      key_blacklist_exception,
                      "public key '${key}' is on the key blacklist",
                      ("key", key)
@@ -1135,7 +1135,7 @@ struct controller_impl {
       const auto& tapos_block_summary = db.get<block_summary_object>((uint16_t)trx.ref_block_num);
 
       //Verify TaPoS block summary has correct ID prefix, and that this block's time is not past the expiration
-      ENU_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
+      MES_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
                  "Transaction's reference block did not match. Is this transaction from a different fork?",
                  ("tapos_summary", tapos_block_summary));
    }
@@ -1330,7 +1330,7 @@ block_id_type controller::get_block_id_for_num( uint32_t block_num )const { try 
 
    auto signed_blk = my->blog.read_block_by_num(block_num);
 
-   ENU_ASSERT( BOOST_LIKELY( signed_blk != nullptr ), unknown_block_exception,
+   MES_ASSERT( BOOST_LIKELY( signed_blk != nullptr ), unknown_block_exception,
                "Could not find block: ${block}", ("block", block_num) );
 
    return signed_blk->id();
@@ -1485,38 +1485,38 @@ bool controller::is_producing_block()const {
 void controller::validate_referenced_accounts( const transaction& trx )const {
    for( const auto& a : trx.context_free_actions ) {
       auto* code = my->db.find<account_object, by_name>(a.account);
-      ENU_ASSERT( code != nullptr, transaction_exception,
+      MES_ASSERT( code != nullptr, transaction_exception,
                   "action's code account '${account}' does not exist", ("account", a.account) );
-      ENU_ASSERT( a.authorization.size() == 0, transaction_exception,
+      MES_ASSERT( a.authorization.size() == 0, transaction_exception,
                   "context-free actions cannot have authorizations" );
    }
    bool one_auth = false;
    for( const auto& a : trx.actions ) {
       auto* code = my->db.find<account_object, by_name>(a.account);
-      ENU_ASSERT( code != nullptr, transaction_exception,
+      MES_ASSERT( code != nullptr, transaction_exception,
                   "action's code account '${account}' does not exist", ("account", a.account) );
       for( const auto& auth : a.authorization ) {
          one_auth = true;
          auto* actor = my->db.find<account_object, by_name>(auth.actor);
-         ENU_ASSERT( actor  != nullptr, transaction_exception,
+         MES_ASSERT( actor  != nullptr, transaction_exception,
                      "action's authorizing actor '${account}' does not exist", ("account", auth.actor) );
-         ENU_ASSERT( my->authorization.find_permission(auth) != nullptr, transaction_exception,
+         MES_ASSERT( my->authorization.find_permission(auth) != nullptr, transaction_exception,
                      "action's authorizations include a non-existent permission: {permission}",
                      ("permission", auth) );
       }
    }
-   ENU_ASSERT( one_auth, tx_no_auths, "transaction must have at least one authorization" );
+   MES_ASSERT( one_auth, tx_no_auths, "transaction must have at least one authorization" );
 }
 
 void controller::validate_expiration( const transaction& trx )const { try {
    const auto& chain_configuration = get_global_properties().configuration;
 
-   ENU_ASSERT( time_point(trx.expiration) >= pending_block_time(),
+   MES_ASSERT( time_point(trx.expiration) >= pending_block_time(),
                expired_tx_exception,
                "transaction has expired, "
                "expiration is ${trx.expiration} and pending block time is ${pending_block_time}",
                ("trx.expiration",trx.expiration)("pending_block_time",pending_block_time()));
-   ENU_ASSERT( time_point(trx.expiration) <= pending_block_time() + fc::seconds(chain_configuration.max_transaction_lifetime),
+   MES_ASSERT( time_point(trx.expiration) <= pending_block_time() + fc::seconds(chain_configuration.max_transaction_lifetime),
                tx_exp_too_far_exception,
                "Transaction expiration is too far in the future relative to the reference time of ${reference_time}, "
                "expiration is ${trx.expiration} and the maximum transaction lifetime is ${max_til_exp} seconds",
@@ -1528,7 +1528,7 @@ void controller::validate_tapos( const transaction& trx )const { try {
    const auto& tapos_block_summary = db().get<block_summary_object>((uint16_t)trx.ref_block_num);
 
    //Verify TaPoS block summary has correct ID prefix, and that this block's time is not past the expiration
-   ENU_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
+   MES_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
               "Transaction's reference block did not match. Is this transaction from a different fork?",
               ("tapos_summary", tapos_block_summary));
 } FC_CAPTURE_AND_RETHROW() }
@@ -1538,4 +1538,4 @@ bool controller::is_known_unexpired_transaction( const transaction_id_type& id) 
 }
 
 
-} } /// enumivo::chain
+} } /// myeosio::chain

@@ -3,8 +3,8 @@
 #include <boost/test/unit_test.hpp>
 #pragma GCC diagnostic pop
 #include <boost/algorithm/string/predicate.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
 
 #include <tic_tac_toe/tic_tac_toe.wast.hpp>
 #include <tic_tac_toe/tic_tac_toe.abi.hpp>
@@ -25,9 +25,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 
 const static uint32_t board_len = 9;
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE( tic_tac_toe_game ) try {
          ("host", "player1")
          ("by", "player1")
          ("mvt", mvt)
-      ), enumivo_assert_message_exception, enumivo_assert_message_starts_with("it's not your turn yet"));
+      ), myeosio_assert_message_exception, myeosio_assert_message_starts_with("it's not your turn yet"));
 
    mvt = mutable_variant_object()
            ("row", 1)
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE( tic_tac_toe_game ) try {
          ("host", "player1")
          ("by", "player2")
          ("mvt", mvt)
-      ), enumivo_assert_message_exception, enumivo_assert_message_starts_with("not a valid movement"));
+      ), myeosio_assert_message_exception, myeosio_assert_message_starts_with("not a valid movement"));
 
    mvt = mutable_variant_object()
            ("row", 0)
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE( tic_tac_toe_game ) try {
          ("host", "player1")
          ("by", "player2")
          ("mvt", mvt)
-      ), enumivo_assert_message_exception, enumivo_assert_message_starts_with("the game has ended"));
+      ), myeosio_assert_message_exception, myeosio_assert_message_starts_with("the game has ended"));
 
    game current;
    chain.get_table_entry(current, N(tic.tac.toe), N(player1), N(games), N(player2));
@@ -181,13 +181,13 @@ BOOST_AUTO_TEST_CASE( tic_tac_toe_game ) try {
          ("host", "player1")
          ("by", "player2")
          ("mvt", mvt)
-      ), enumivo_assert_message_exception, enumivo_assert_message_starts_with("game doesn't exists"));
+      ), myeosio_assert_message_exception, myeosio_assert_message_starts_with("game doesn't exists"));
 
    BOOST_CHECK_EXCEPTION(chain.push_action(N(tic.tac.toe), N(restart), N(player2), mutable_variant_object()
          ("challenger", "player2")
          ("host", "player1")
          ("by", "player2")
-      ), enumivo_assert_message_exception, enumivo_assert_message_starts_with("game doesn't exists"));
+      ), myeosio_assert_message_exception, myeosio_assert_message_starts_with("game doesn't exists"));
 
    chain.push_action(N(tic.tac.toe), N(create), N(player2), mutable_variant_object()
            ("challenger", "player1")
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE( tic_tac_toe_game ) try {
          ("host", "player2")
          ("by", "player2")
          ("mvt", mvt)
-      ), enumivo_assert_message_exception, enumivo_assert_message_starts_with("it's not your turn yet"));
+      ), myeosio_assert_message_exception, myeosio_assert_message_starts_with("it's not your turn yet"));
 } FC_LOG_AND_RETHROW()
 
 BOOST_AUTO_TEST_SUITE_END()

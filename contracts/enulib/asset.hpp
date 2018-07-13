@@ -6,7 +6,7 @@
 #include <tuple>
 #include <limits>
 
-namespace enumivo {
+namespace myeosio {
 
    struct asset {
       int64_t      amount;
@@ -17,8 +17,8 @@ namespace enumivo {
       explicit asset( int64_t a = 0, symbol_type s = CORE_SYMBOL )
       :amount(a),symbol{s}
       {
-         enumivo_assert( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
-         enumivo_assert( symbol.is_valid(),        "invalid symbol name" );
+         myeosio_assert( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
+         myeosio_assert( symbol.is_valid(),        "invalid symbol name" );
       }
 
       bool is_amount_within_range()const { return -max_amount <= amount && amount <= max_amount; }
@@ -26,7 +26,7 @@ namespace enumivo {
 
       void set_amount( int64_t a ) {
          amount = a;
-         enumivo_assert( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
+         myeosio_assert( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
       }
 
       asset operator-()const {
@@ -36,18 +36,18 @@ namespace enumivo {
       }
 
       asset& operator-=( const asset& a ) {
-         enumivo_assert( a.symbol == symbol, "attempt to subtract asset with different symbol" );
+         myeosio_assert( a.symbol == symbol, "attempt to subtract asset with different symbol" );
          amount -= a.amount;
-         enumivo_assert( -max_amount <= amount, "subtraction underflow" );
-         enumivo_assert( amount <= max_amount,  "subtraction overflow" );
+         myeosio_assert( -max_amount <= amount, "subtraction underflow" );
+         myeosio_assert( amount <= max_amount,  "subtraction overflow" );
          return *this;
       }
 
       asset& operator+=( const asset& a ) {
-         enumivo_assert( a.symbol == symbol, "attempt to add asset with different symbol" );
+         myeosio_assert( a.symbol == symbol, "attempt to add asset with different symbol" );
          amount += a.amount;
-         enumivo_assert( -max_amount <= amount, "addition underflow" );
-         enumivo_assert( amount <= max_amount,  "addition overflow" );
+         myeosio_assert( -max_amount <= amount, "addition underflow" );
+         myeosio_assert( amount <= max_amount,  "addition overflow" );
          return *this;
       }
 
@@ -64,9 +64,9 @@ namespace enumivo {
       }
 
       asset& operator*=( int64_t a ) {
-         enumivo_assert( a == 0 || (amount * a) / a == amount, "multiplication overflow or underflow" );
-         enumivo_assert( -max_amount <= amount, "multiplication underflow" );
-         enumivo_assert( amount <= max_amount,  "multiplication overflow" );
+         myeosio_assert( a == 0 || (amount * a) / a == amount, "multiplication overflow or underflow" );
+         myeosio_assert( -max_amount <= amount, "multiplication underflow" );
+         myeosio_assert( amount <= max_amount,  "multiplication overflow" );
          amount *= a;
          return *this;
       }
@@ -95,12 +95,12 @@ namespace enumivo {
       }
 
       friend int64_t operator/( const asset& a, const asset& b ) {
-         enumivo_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
+         myeosio_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
          return a.amount / b.amount;
       }
 
       friend bool operator==( const asset& a, const asset& b ) {
-         enumivo_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
+         myeosio_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
          return a.amount == b.amount;
       }
 
@@ -109,22 +109,22 @@ namespace enumivo {
       }
 
       friend bool operator<( const asset& a, const asset& b ) {
-         enumivo_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
+         myeosio_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
          return a.amount < b.amount;
       }
 
       friend bool operator<=( const asset& a, const asset& b ) {
-         enumivo_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
+         myeosio_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
          return a.amount <= b.amount;
       }
 
       friend bool operator>( const asset& a, const asset& b ) {
-         enumivo_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
+         myeosio_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
          return a.amount > b.amount;
       }
 
       friend bool operator>=( const asset& a, const asset& b ) {
-         enumivo_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
+         myeosio_assert( a.symbol == b.symbol, "comparison of assets with different symbols is not allowed" );
          return a.amount >= b.amount;
       }
 
@@ -151,7 +151,7 @@ namespace enumivo {
          symbol.print(false);
       }
 
-      ENULIB_SERIALIZE( asset, (amount)(symbol) )
+      MESLIB_SERIALIZE( asset, (amount)(symbol) )
    };
 
    struct extended_asset : public asset {
@@ -173,19 +173,19 @@ namespace enumivo {
       }
 
       friend extended_asset operator - ( const extended_asset& a, const extended_asset& b ) {
-         enumivo_assert( a.contract == b.contract, "type mismatch" );
+         myeosio_assert( a.contract == b.contract, "type mismatch" );
          asset r = static_cast<const asset&>(a) - static_cast<const asset&>(b);
          return {r, a.contract};
       }
 
       friend extended_asset operator + ( const extended_asset& a, const extended_asset& b ) {
-         enumivo_assert( a.contract == b.contract, "type mismatch" );
+         myeosio_assert( a.contract == b.contract, "type mismatch" );
          asset r = static_cast<const asset&>(a) + static_cast<const asset&>(b);
          return {r, a.contract};
       }
 
-      ENULIB_SERIALIZE( extended_asset, (amount)(symbol)(contract) )
+      MESLIB_SERIALIZE( extended_asset, (amount)(symbol)(contract) )
    };
 
 
-} /// namespace enumivo
+} /// namespace myeosio
