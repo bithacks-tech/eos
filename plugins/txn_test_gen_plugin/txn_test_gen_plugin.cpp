@@ -1,11 +1,11 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/txn_test_gen_plugin/txn_test_gen_plugin.hpp>
-#include <enumivo/chain_plugin/chain_plugin.hpp>
-#include <enumivo/chain/wast_to_wasm.hpp>
-#include <enumivo/utilities/key_conversion.hpp>
+#include <myeosio/txn_test_gen_plugin/txn_test_gen_plugin.hpp>
+#include <myeosio/chain_plugin/chain_plugin.hpp>
+#include <myeosio/chain/wast_to_wasm.hpp>
+#include <myeosio/utilities/key_conversion.hpp>
 
 #include <fc/variant.hpp>
 #include <fc/io/json.hpp>
@@ -26,17 +26,17 @@
 #include <enu.token/enu.token.wast.hpp>
 #include <enu.token/enu.token.abi.hpp>
 
-namespace enumivo { namespace detail {
+namespace myeosio { namespace detail {
   struct txn_test_gen_empty {};
 }}
 
-FC_REFLECT(enumivo::detail::txn_test_gen_empty, );
+FC_REFLECT(myeosio::detail::txn_test_gen_empty, );
 
-namespace enumivo {
+namespace myeosio {
 
 static appbase::abstract_plugin& _txn_test_gen_plugin = app().register_plugin<txn_test_gen_plugin>();
 
-using namespace enumivo::chain;
+using namespace myeosio::chain;
 
 #define CALL(api_name, api_handle, call_name, INVOKE, http_response_code) \
 {std::string("/v1/" #api_name "/" #call_name), \
@@ -53,16 +53,16 @@ using namespace enumivo::chain;
 #define INVOKE_V_R_R_R(api_handle, call_name, in_param0, in_param1, in_param2) \
      const auto& vs = fc::json::json::from_string(body).as<fc::variants>(); \
      api_handle->call_name(vs.at(0).as<in_param0>(), vs.at(1).as<in_param1>(), vs.at(2).as<in_param2>()); \
-     enumivo::detail::txn_test_gen_empty result;
+     myeosio::detail::txn_test_gen_empty result;
 
 #define INVOKE_V_R_R(api_handle, call_name, in_param0, in_param1) \
      const auto& vs = fc::json::json::from_string(body).as<fc::variants>(); \
      api_handle->call_name(vs.at(0).as<in_param0>(), vs.at(1).as<in_param1>()); \
-     enumivo::detail::txn_test_gen_empty result;
+     myeosio::detail::txn_test_gen_empty result;
 
 #define INVOKE_V_V(api_handle, call_name) \
      api_handle->call_name(); \
-     enumivo::detail::txn_test_gen_empty result;
+     myeosio::detail::txn_test_gen_empty result;
 
 #define CALL_ASYNC(api_name, api_handle, call_name, INVOKE, http_response_code) \
 {std::string("/v1/" #api_name "/" #call_name), \
@@ -76,7 +76,7 @@ using namespace enumivo::chain;
                http_plugin::handle_exception(#api_name, #call_name, body, cb);\
             }\
          } else {\
-            cb(http_response_code, fc::json::to_string(enumivo::detail::txn_test_gen_empty())); \
+            cb(http_response_code, fc::json::to_string(myeosio::detail::txn_test_gen_empty())); \
          }\
       };\
       INVOKE \
@@ -137,22 +137,22 @@ struct txn_test_gen_plugin_impl {
 
             //create "A" account
             {
-            auto owner_auth   = enumivo::chain::authority{1, {{txn_text_receiver_A_pub_key, 1}}, {}};
-            auto active_auth  = enumivo::chain::authority{1, {{txn_text_receiver_A_pub_key, 1}}, {}};
+            auto owner_auth   = myeosio::chain::authority{1, {{txn_text_receiver_A_pub_key, 1}}, {}};
+            auto active_auth  = myeosio::chain::authority{1, {{txn_text_receiver_A_pub_key, 1}}, {}};
 
             trx.actions.emplace_back(vector<chain::permission_level>{{creator,"active"}}, newaccount{creator, newaccountA, owner_auth, active_auth});
             }
             //create "B" account
             {
-            auto owner_auth   = enumivo::chain::authority{1, {{txn_text_receiver_B_pub_key, 1}}, {}};
-            auto active_auth  = enumivo::chain::authority{1, {{txn_text_receiver_B_pub_key, 1}}, {}};
+            auto owner_auth   = myeosio::chain::authority{1, {{txn_text_receiver_B_pub_key, 1}}, {}};
+            auto active_auth  = myeosio::chain::authority{1, {{txn_text_receiver_B_pub_key, 1}}, {}};
 
             trx.actions.emplace_back(vector<chain::permission_level>{{creator,"active"}}, newaccount{creator, newaccountB, owner_auth, active_auth});
             }
             //create "txn.test.t" account
             {
-            auto owner_auth   = enumivo::chain::authority{1, {{txn_text_receiver_C_pub_key, 1}}, {}};
-            auto active_auth  = enumivo::chain::authority{1, {{txn_text_receiver_C_pub_key, 1}}, {}};
+            auto owner_auth   = myeosio::chain::authority{1, {{txn_text_receiver_C_pub_key, 1}}, {}};
+            auto active_auth  = myeosio::chain::authority{1, {{txn_text_receiver_C_pub_key, 1}}, {}};
 
             trx.actions.emplace_back(vector<chain::permission_level>{{creator,"active"}}, newaccount{creator, newaccountC, owner_auth, active_auth});
             }
@@ -291,7 +291,7 @@ struct txn_test_gen_plugin_impl {
          fc::crypto::private_key b_priv_key = fc::crypto::private_key::regenerate(fc::sha256(std::string(64, 'b')));
 
          static uint64_t nonce = static_cast<uint64_t>(fc::time_point::now().sec_since_epoch()) << 32;
-         abi_serializer enumivo_serializer(cc.db().find<account_object, by_name>(config::system_account_name)->get_abi());
+         abi_serializer myeosio_serializer(cc.db().find<account_object, by_name>(config::system_account_name)->get_abi());
 
          uint32_t reference_block_num = cc.last_irreversible_block_num();
          if (txn_reference_block_lag >= 0) {

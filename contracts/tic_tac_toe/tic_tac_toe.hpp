@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <enulib/enu.hpp>
 
@@ -79,7 +79,7 @@ namespace tic_tac_toe {
 
       auto primary_key() const { return challenger; }
 
-      ENULIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board) )
+      MESLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board) )
    };
 
    /**
@@ -89,7 +89,7 @@ namespace tic_tac_toe {
       account_name   challenger;
       account_name   host;
 
-      ENULIB_SERIALIZE( create, (challenger)(host) )
+      MESLIB_SERIALIZE( create, (challenger)(host) )
    };
 
    /**
@@ -100,7 +100,7 @@ namespace tic_tac_toe {
       account_name   host;
       account_name   by; // the account who wants to restart the game
 
-      ENULIB_SERIALIZE( restart, (challenger)(host)(by) )
+      MESLIB_SERIALIZE( restart, (challenger)(host)(by) )
    };
 
    /**
@@ -110,7 +110,7 @@ namespace tic_tac_toe {
       account_name   challenger;
       account_name   host;
 
-      ENULIB_SERIALIZE( close, (challenger)(host) )
+      MESLIB_SERIALIZE( close, (challenger)(host) )
    };
 
    /**
@@ -120,7 +120,7 @@ namespace tic_tac_toe {
       uint32_t    row;
       uint32_t    column;
 
-      ENULIB_SERIALIZE( movement, (row)(column) )
+      MESLIB_SERIALIZE( movement, (row)(column) )
    };
 
    /**
@@ -132,12 +132,12 @@ namespace tic_tac_toe {
       account_name   by; // the account who wants to make the move
       movement       mvt;
 
-      ENULIB_SERIALIZE( move, (challenger)(host)(by)(mvt) )
+      MESLIB_SERIALIZE( move, (challenger)(host)(by)(mvt) )
    };
 
    /**
     * @brief table definition, used to store existing games and their current state
     */
-   typedef enumivo::multi_index< games_account, game> games;
+   typedef myeosio::multi_index< games_account, game> games;
 }
 /// @}

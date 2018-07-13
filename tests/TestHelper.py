@@ -39,7 +39,7 @@ class TestHelper(object):
             parser.add_argument("--kill-sig", type=str, choices=[Utils.SigKillTag, Utils.SigTermTag], help="kill signal.",
                     default=Utils.SigKillTag)
         if "--kill-count" in includeArgs:
-            parser.add_argument("--kill-count", type=int, help="enunode instances to kill", default=-1)
+            parser.add_argument("--kill-count", type=int, help="myeosnode instances to kill", default=-1)
         if "--p2p-plugin" in includeArgs:
             parser.add_argument("--p2p-plugin", choices=["net", "bnet"], help="select a p2p plugin to use. Defaults to net.", default="net")
         if "--seed" in includeArgs:
@@ -61,7 +61,7 @@ class TestHelper(object):
             parser.add_argument("--mongodb", help="Configure a MongoDb instance", action='store_true')
         if "--dump-error-details" in includeArgs:
             parser.add_argument("--dump-error-details",
-                                     help="Upon error print etc/enumivo/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
+                                     help="Upon error print etc/myeosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
                                      action='store_true')
         if "--dont-launch" in includeArgs:
             parser.add_argument("--dont-launch", help="Don't launch own node. Assume node is already running.",
@@ -76,7 +76,7 @@ class TestHelper(object):
         if "--only-bios" in includeArgs:
             parser.add_argument("--only-bios", help="Limit testing to bios node.", action='store_true')
         if "--clean-run" in includeArgs:
-            parser.add_argument("--clean-run", help="Kill all enunode and enuwallet instances", action='store_true')
+            parser.add_argument("--clean-run", help="Kill all myeosnode and mykeosd instances", action='store_true')
 
         args = parser.parse_args()
         return args

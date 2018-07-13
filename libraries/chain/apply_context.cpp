@@ -1,19 +1,19 @@
 #include <algorithm>
-#include <enumivo/chain/apply_context.hpp>
-#include <enumivo/chain/controller.hpp>
-#include <enumivo/chain/transaction_context.hpp>
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/wasm_interface.hpp>
-#include <enumivo/chain/generated_transaction_object.hpp>
-#include <enumivo/chain/authorization_manager.hpp>
-#include <enumivo/chain/resource_limits.hpp>
-#include <enumivo/chain/account_object.hpp>
-#include <enumivo/chain/global_property_object.hpp>
+#include <myeosio/chain/apply_context.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/transaction_context.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/wasm_interface.hpp>
+#include <myeosio/chain/generated_transaction_object.hpp>
+#include <myeosio/chain/authorization_manager.hpp>
+#include <myeosio/chain/resource_limits.hpp>
+#include <myeosio/chain/account_object.hpp>
+#include <myeosio/chain/global_property_object.hpp>
 #include <boost/container/flat_set.hpp>
 
 using boost::container::flat_set;
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
 static inline void print_debug(account_name receiver, const action_trace& ar) {
    if (!ar.console.empty()) {
@@ -102,7 +102,7 @@ void apply_context::exec()
    }
 
    if( _cfa_inline_actions.size() > 0 || _inline_actions.size() > 0 ) {
-      ENU_ASSERT( recurse_depth < control.get_global_properties().configuration.max_inline_action_depth,
+      MES_ASSERT( recurse_depth < control.get_global_properties().configuration.max_inline_action_depth,
                   transaction_exception, "inline action recursion depth reached" );
    }
 
@@ -129,7 +129,7 @@ void apply_context::require_authorization( const account_name& account ) {
         return;
      }
    }
-   ENU_ASSERT( false, missing_auth_exception, "missing authority of ${account}", ("account",account));
+   MES_ASSERT( false, missing_auth_exception, "missing authority of ${account}", ("account",account));
 }
 
 bool apply_context::has_authorization( const account_name& account )const {
@@ -148,7 +148,7 @@ void apply_context::require_authorization(const account_name& account,
            return;
         }
      }
-  ENU_ASSERT( false, missing_auth_exception, "missing authority of ${account}/${permission}",
+  MES_ASSERT( false, missing_auth_exception, "missing authority of ${account}/${permission}",
               ("account",account)("permission",permission) );
 }
 
@@ -183,14 +183,14 @@ void apply_context::require_recipient( account_name recipient ) {
  */
 void apply_context::execute_inline( action&& a ) {
    auto* code = control.db().find<account_object, by_name>(a.account);
-   ENU_ASSERT( code != nullptr, action_validate_exception,
+   MES_ASSERT( code != nullptr, action_validate_exception,
                "inline action's code account ${account} does not exist", ("account", a.account) );
 
    for( const auto& auth : a.authorization ) {
       auto* actor = control.db().find<account_object, by_name>(auth.actor);
-      ENU_ASSERT( actor != nullptr, action_validate_exception,
+      MES_ASSERT( actor != nullptr, action_validate_exception,
                   "inline action's authorizing actor ${account} does not exist", ("account", auth.actor) );
-      ENU_ASSERT( control.get_authorization_manager().find_permission(auth) != nullptr, action_validate_exception,
+      MES_ASSERT( control.get_authorization_manager().find_permission(auth) != nullptr, action_validate_exception,
                   "inline action's authorizations include a non-existent permission: {permission}",
                   ("permission", auth) );
    }
@@ -200,7 +200,7 @@ void apply_context::execute_inline( action&& a ) {
       control.get_authorization_manager()
              .check_authorization( {a},
                                    {},
-                                   {{receiver, config::enumivo_code_name}},
+                                   {{receiver, config::myeosio_code_name}},
                                    control.pending_block_time() - trx_context.published,
                                    std::bind(&transaction_context::checktime, &this->trx_context),
                                    false
@@ -216,10 +216,10 @@ void apply_context::execute_inline( action&& a ) {
 
 void apply_context::execute_context_free_inline( action&& a ) {
    auto* code = control.db().find<account_object, by_name>(a.account);
-   ENU_ASSERT( code != nullptr, action_validate_exception,
+   MES_ASSERT( code != nullptr, action_validate_exception,
                "inline action's code account ${account} does not exist", ("account", a.account) );
 
-   ENU_ASSERT( a.authorization.size() == 0, action_validate_exception,
+   MES_ASSERT( a.authorization.size() == 0, action_validate_exception,
                "context-free actions cannot have authorizations" );
 
    _cfa_inline_actions.emplace_back( move(a) );
@@ -258,7 +258,7 @@ void apply_context::schedule_deferred_transaction( const uint128_t& sender_id, a
          control.get_authorization_manager()
                 .check_authorization( trx.actions,
                                       {},
-                                      {{receiver, config::enumivo_code_name}},
+                                      {{receiver, config::myeosio_code_name}},
                                       delay,
                                       std::bind(&transaction_context::checktime, &this->trx_context),
                                       false
@@ -269,10 +269,10 @@ void apply_context::schedule_deferred_transaction( const uint128_t& sender_id, a
    uint32_t trx_size = 0;
    auto& d = control.db();
    if ( auto ptr = d.find<generated_transaction_object,by_sender_id>(boost::make_tuple(receiver, sender_id)) ) {
-      ENU_ASSERT( replace_existing, deferred_tx_duplicate, "deferred transaction with the same sender_id and payer already exists" );
+      MES_ASSERT( replace_existing, deferred_tx_duplicate, "deferred transaction with the same sender_id and payer already exists" );
 
       // TODO: Remove the following subjective check when the deferred trx replacement RAM bug has been fixed with a hard fork.
-      ENU_ASSERT( !control.is_producing_block(), subjective_block_production_exception,
+      MES_ASSERT( !control.is_producing_block(), subjective_block_production_exception,
                   "Replacing a deferred transaction is temporarily disabled." );
 
       // TODO: The logic of the next line needs to be incorporated into the next hard fork.
@@ -632,4 +632,4 @@ uint64_t apply_context::next_auth_sequence( account_name actor ) {
 }
 
 
-} } /// enumivo::chain
+} } /// myeosio::chain

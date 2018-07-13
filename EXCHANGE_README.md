@@ -2,19 +2,19 @@ Exchange Deposit & Withdraw Documentation
 -----------------------------------------
 
 This document is targeted toward exchanges who wish to automate deposit
-and withdraw of standard-conforming Enumivo token contracts. The blockchain's
+and withdraw of standard-conforming MyEOSIO token contracts. The blockchain's
 native token conforms to the standard. 
 
 
 Configuring Enunode
 ------------------
-This tutorial uses the `enucli` commandline tool to query a local `enunode` server
-which should be connected to an enumivo blockchain. `enunode` will need to be configured
+This tutorial uses the `mycleos` commandline tool to query a local `myeosnode` server
+which should be connected to an myeosio blockchain. `myeosnode` will need to be configured
 with the following plugins:
 
-  1. enumivo::wallet_api_plugin 
-  2. enumivo::history_api_plugin
-  3. enumivo::chain_api_plugin
+  1. myeosio::wallet_api_plugin 
+  2. myeosio::history_api_plugin
+  3. myeosio::chain_api_plugin
 
 By default the history plugin will log the history of all accounts, but this is not
 the recomended configuration as it will consume tens of gigabytes of RAM in the
@@ -23,7 +23,7 @@ plugin to only log activity relevant to your account(s).  This can be achieved w
 the following config param placed in your config.ini or passed on the commandline.
 
 ```
-  $ enunode --filter_on_accounts youraccount
+  $ myeosnode --filter_on_accounts youraccount
 ```
 
 Replaying the Blockchain
@@ -33,42 +33,42 @@ If you have already synced the blockchain without the history plugin, then you m
 replay the blockchain to pickup any historical activity.
 
 ```
- $ enunode --replay --filter_on_accounts youraccount 
+ $ myeosnode --replay --filter_on_accounts youraccount 
 ```
 
-You only need to replay once, subsequent runs of enunode should not use the replay flag or
+You only need to replay once, subsequent runs of myeosnode should not use the replay flag or
 your startup times will be unnecessiarlly long. 
 
 
 Accepting Deposits
 -----------
-When designing this tutorial we assume that an exchange will poll `enunode` for incoming
+When designing this tutorial we assume that an exchange will poll `myeosnode` for incoming
 transactions and will want to know when a transfer is considered irreversible or final. 
 
-With enumivo based chains, finality of a transaction occurs once 2/3+1 of block producers have
+With myeosio based chains, finality of a transaction occurs once 2/3+1 of block producers have
 either directly or indirectly confirmed the block. This could take from less than a second to
-a couple of minutes, but either way enunode will keep you posted on the status.
+a couple of minutes, but either way myeosnode will keep you posted on the status.
 
 ## Initial Condition
 ```
-./enucli get currency balance enu.token scott ENU
-900.0000 ENU
+./mycleos get currency balance enu.token scott MES
+900.0000 MES
 ```
 
 We will now deposit some funds to exchange:
 
 ```
-./enucli transfer scott exchange "1.0000 ENU"
+./mycleos transfer scott exchange "1.0000 MES"
 executed transaction: 5ec797175dd24612acd8fc5a8685fa44caa8646cec0a87b12568db22a3df02fb  256 bytes  8k cycles
-#   enu.token <= enu.token::transfer        {"from":"scott","to":"exchange","quantity":"1.0000 ENU","memo":""}
+#   enu.token <= enu.token::transfer        {"from":"scott","to":"exchange","quantity":"1.0000 MES","memo":""}
 >> transfer
-#         scott <= enu.token::transfer        {"from":"scott","to":"exchange","quantity":"1.0000 ENU","memo":""}
-#      exchange <= enu.token::transfer        {"from":"scott","to":"exchange","quantity":"1.0000 ENU","memo":""}
+#         scott <= enu.token::transfer        {"from":"scott","to":"exchange","quantity":"1.0000 MES","memo":""}
+#      exchange <= enu.token::transfer        {"from":"scott","to":"exchange","quantity":"1.0000 MES","memo":""}
 warning: transaction executed locally, but may not be confirmed by the network yet
 ```
 
 This output indicates that the action "enu.token::transfer" was delivered to 3 accounts/contracts, (enu.token, scott, and exchange). 
-The enumivo token standard requires that both the sender and receiver account/contract be notified of all transfer actions so those
+The myeosio token standard requires that both the sender and receiver account/contract be notified of all transfer actions so those
 accounts can run custom logic.  At this time neither `scott` nor `exchange` has any contact set, but the transaction log
 still notes that they were notified.  
 
@@ -80,21 +80,21 @@ irreversible transactions are printed in "green" while unconfirmed transactions 
 can tell whether a transaction is confirmed or not by the first character, '#' for irreversible and '?' for potentially reversable.
 
 ```
-./enucli get actions exchange
+./mycleos get actions exchange
 #  seq  when                              contract::action => receiver      trx id...   args
 ================================================================================================================
-#    0   2018-04-29T01:09:45.000     enu.token::transfer => exchange      5ec79717... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
+#    0   2018-04-29T01:09:45.000     enu.token::transfer => exchange      5ec79717... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
 ```
 
 Do a few more transfers:
 
 ```
-./enucli get actions exchange
+./mycleos get actions exchange
 #  seq  when                              contract::action => receiver      trx id...   args
 ================================================================================================================
-#    0   2018-04-29T01:09:45.000     enu.token::transfer => exchange      5ec79717... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
-#    1   2018-04-29T01:16:25.000     enu.token::transfer => exchange      2269828c... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
-?    2   2018-04-29T01:19:54.000     enu.token::transfer => exchange      213f3797... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
+#    0   2018-04-29T01:09:45.000     enu.token::transfer => exchange      5ec79717... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
+#    1   2018-04-29T01:16:25.000     enu.token::transfer => exchange      2269828c... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
+?    2   2018-04-29T01:19:54.000     enu.token::transfer => exchange      213f3797... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
 ```
 
 The last transfer is still pending, waiting on irreversibility. 
@@ -102,11 +102,11 @@ The last transfer is still pending, waiting on irreversibility.
 
 The "seq" column represents the index of actions for your specific account, it will always increment as new relevant actions are added.
 
-The `enucli get actions` command allows you some control over which actions are fetched, you can view the help for this command with `-h` 
+The `mycleos get actions` command allows you some control over which actions are fetched, you can view the help for this command with `-h` 
 
 ```
-./enucli get actions -h
-Usage: ./enucli get actions [OPTIONS] account_name [pos] [offset]
+./mycleos get actions -h
+Usage: ./mycleos get actions [OPTIONS] account_name [pos] [offset]
 
 Positionals:
   account_name TEXT           name of account to query on
@@ -123,10 +123,10 @@ Positionals:
 To get only the last action you would do the following...
 
 ```
-./enucli get actions exchange -1 -1
+./mycleos get actions exchange -1 -1
 #  seq  when                              contract::action => receiver      trx id...   args
 ================================================================================================================
-#    2   2018-04-29T01:19:54.000     enu.token::transfer => exchange      213f3797... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
+#    2   2018-04-29T01:19:54.000     enu.token::transfer => exchange      213f3797... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
 ```
 
 This says go to the last sequence number (indicated by pos = -1) and then fetch "1" item prior to it (offset = -1). This should
@@ -141,30 +141,30 @@ microservice will need to track the seq number of the "last processed seq".  For
 
 We pass pos=1 and offset=0 to get the range [1,1+0] or [1,1].
 ```
-./enucli get actions exchange 1 0
+./mycleos get actions exchange 1 0
 #  seq  when                              contract::action => receiver      trx id...   args
 ================================================================================================================
-#    1   2018-04-29T01:16:25.000     enu.token::transfer => exchange      2269828c... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
+#    1   2018-04-29T01:16:25.000     enu.token::transfer => exchange      2269828c... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
 ```
 
 We can call this in a loop procesing each confirmed action (those starting with #) until we either run out of items or
 we find an unconfirmed action (starting with ?).
 
 ```
-./enucli get actions exchange 3 0
+./mycleos get actions exchange 3 0
 #  seq  when                              contract::action => receiver      trx id...   args
 ================================================================================================================
 ```
 
 ### Machine Readable Account History (JSON)
 
-So far this tutorial has focused on using `enucli` to fetch and display the history, but enucli is merely a light-weight
-wrapper around a json-rpc interface.  `enucli` can dump the raw json returned from the json-rpc request or you can make
+So far this tutorial has focused on using `mycleos` to fetch and display the history, but mycleos is merely a light-weight
+wrapper around a json-rpc interface.  `mycleos` can dump the raw json returned from the json-rpc request or you can make
 your own json-rpc request.
 
 Here is the JSON returned when querying sequence 2.
 ```
-./enucli get actions exchange 2 0 -j
+./mycleos get actions exchange 2 0 -j
 {
   "actions": [{
       "global_action_seq": 32856,
@@ -194,7 +194,7 @@ Here is the JSON returned when querying sequence 2.
           "data": {
             "from": "scott",
             "to": "exchange",
-            "quantity": "1.0000 ENU",
+            "quantity": "1.0000 MES",
             "memo": ""
           },
           "hex_data": "00000000809c29c20000008a4dd35057102700000000000004454f530000000000"
@@ -219,7 +219,7 @@ You can identify irreversible deposits by the following:
 ```
     actions[0].action_trace.act.account == "enu.token" &&
     actions[0].action_trace.act.name == "transfer" &&
-    actions[0].action_trace.act.data.quantity == "X.0000 ENU" &&
+    actions[0].action_trace.act.data.quantity == "X.0000 MES" &&
     actions[0].action_trace.to == "exchange" && 
     actions[0].action_trace.memo == "KEY TO IDENTIFY INTERNAL ACCOUNT" && 
     actions[0].action_trace.receipt.receiver == "exchange"  &&
@@ -242,34 +242,34 @@ then you may process "false deposits".
 
 ### Validating Balance
 
-Now that we have received 3 deposits we should see that the exchange has a balance of 3.0000 ENU.
+Now that we have received 3 deposits we should see that the exchange has a balance of 3.0000 MES.
 
 ```
-./enucli get currency balance enu.token exchange ENU
-3.0000 ENU
+./mycleos get currency balance enu.token exchange MES
+3.0000 MES
 ```
 
 # Processing Withdraws
 
-(note, while generating this tutorial scott deposited another 1.0000 ENU (seq 3) for total exchange balance of 4.0000 ENU.)
+(note, while generating this tutorial scott deposited another 1.0000 MES (seq 3) for total exchange balance of 4.0000 MES.)
 
-When a user requests a withdraw from your exchange they will need to provide you with their enumivo account name and
-the amount to be withdrawn.  You can then run the enucli command which will interact with the "unlocked" wallet 
-running on `enunode` which should only enable localhost connections. More advanced usage would have a separate
-key-server (`enuwallet`), but that will be covered later.
+When a user requests a withdraw from your exchange they will need to provide you with their myeosio account name and
+the amount to be withdrawn.  You can then run the mycleos command which will interact with the "unlocked" wallet 
+running on `myeosnode` which should only enable localhost connections. More advanced usage would have a separate
+key-server (`mykeosd`), but that will be covered later.
 
-Lets assume scott wants to withdraw `1.0000 ENU`:
+Lets assume scott wants to withdraw `1.0000 MES`:
 ```
-./enucli transfer exchange scott  "1.0000 ENU"
+./mycleos transfer exchange scott  "1.0000 MES"
 executed transaction: 93e785202e7502bb1383ad10e786cc20f7dd738d3fd3da38712b3fb38fb9af26  256 bytes  8k cycles
-#   enu.token <= enu.token::transfer        {"from":"exchange","to":"scott","quantity":"1.0000 ENU","memo":""}
+#   enu.token <= enu.token::transfer        {"from":"exchange","to":"scott","quantity":"1.0000 MES","memo":""}
 >> transfer
-#      exchange <= enu.token::transfer        {"from":"exchange","to":"scott","quantity":"1.0000 ENU","memo":""}
-#         scott <= enu.token::transfer        {"from":"exchange","to":"scott","quantity":"1.0000 ENU","memo":""}
+#      exchange <= enu.token::transfer        {"from":"exchange","to":"scott","quantity":"1.0000 MES","memo":""}
+#         scott <= enu.token::transfer        {"from":"exchange","to":"scott","quantity":"1.0000 MES","memo":""}
 warning: transaction executed locally, but may not be confirmed by the network yet
 ```
 
-At this stage your local `enunode` client accepted the transaction and likely broadcast it to the broader network. 
+At this stage your local `myeosnode` client accepted the transaction and likely broadcast it to the broader network. 
 
 Now we can get the history and see that there are "3" new actions listed all with trx id `93e78520...` which is what
 our transfer command returned to us. Because `exchange` authorized the transaction it is informed of all accounts which
@@ -278,16 +278,16 @@ sender ('exchange') processed it and so did the receiver ('scott') and all 3 con
 state transitions based upon the action.
 
 ```
-./enucli get actions exchange -1 -8
+./mycleos get actions exchange -1 -8
 #  seq  when                              contract::action => receiver      trx id...   args
 ================================================================================================================
-#    0   2018-04-29T01:09:45.000     enu.token::transfer => exchange      5ec79717... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
-#    1   2018-04-29T01:16:25.000     enu.token::transfer => exchange      2269828c... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
-#    2   2018-04-29T01:19:54.000     enu.token::transfer => exchange      213f3797... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
-#    3   2018-04-29T01:53:57.000     enu.token::transfer => exchange      8b7766ac... {"from":"scott","to":"exchange","quantity":"1.0000 ENU","mem...
-#    4   2018-04-29T01:54:17.500     enu.token::transfer => enu.token   93e78520... {"from":"exchange","to":"scott","quantity":"1.0000 ENU","mem...
-#    5   2018-04-29T01:54:17.500     enu.token::transfer => exchange      93e78520... {"from":"exchange","to":"scott","quantity":"1.0000 ENU","mem...
-#    6   2018-04-29T01:54:17.500     enu.token::transfer => scott         93e78520... {"from":"exchange","to":"scott","quantity":"1.0000 ENU","mem...
+#    0   2018-04-29T01:09:45.000     enu.token::transfer => exchange      5ec79717... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
+#    1   2018-04-29T01:16:25.000     enu.token::transfer => exchange      2269828c... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
+#    2   2018-04-29T01:19:54.000     enu.token::transfer => exchange      213f3797... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
+#    3   2018-04-29T01:53:57.000     enu.token::transfer => exchange      8b7766ac... {"from":"scott","to":"exchange","quantity":"1.0000 MES","mem...
+#    4   2018-04-29T01:54:17.500     enu.token::transfer => enu.token   93e78520... {"from":"exchange","to":"scott","quantity":"1.0000 MES","mem...
+#    5   2018-04-29T01:54:17.500     enu.token::transfer => exchange      93e78520... {"from":"exchange","to":"scott","quantity":"1.0000 MES","mem...
+#    6   2018-04-29T01:54:17.500     enu.token::transfer => scott         93e78520... {"from":"exchange","to":"scott","quantity":"1.0000 MES","mem...
 ```
 
 By processing the history we can also be informed when our transaction was confirmed. In practice it may be useful to embed an exchange-specify memo
@@ -302,10 +302,10 @@ the transaction to expire. Every transaction has an "expiration" after which the
 moved past the expiration time you can safely mark your attempted withdaw as failed and not worry about it "floating around the ether" to be applied
 when you least expect.
 
-By default enucli sets an expiration window of just 2 minutes.  This is long enough to allow all 21 producers an opportunity to include the transaction.
+By default mycleos sets an expiration window of just 2 minutes.  This is long enough to allow all 21 producers an opportunity to include the transaction.
 
 ```
- ./enucli transfer exchange scott  "1.0000 ENU" -j -d
+ ./mycleos transfer exchange scott  "1.0000 MES" -j -d
 {
   "expiration": "2018-04-29T01:58:12",
   "ref_block_num": 37282,
@@ -318,9 +318,9 @@ By default enucli sets an expiration window of just 2 minutes.  This is long eno
 
 ```
 
-Your microservice can query the last irreversible block number and the head block time using enucli. 
+Your microservice can query the last irreversible block number and the head block time using mycleos. 
 ```
-./enucli get info
+./mycleos get info
 {
   "server_version": "0812f84d",
   "head_block_num": 39313,

@@ -36,7 +36,7 @@ Utils.Debug=debug
 testSuccessful=False
 
 random.seed(seed) # Use a fixed seed for repeatability.
-cluster=Cluster(enuwalletd=True)
+cluster=Cluster(mykeosdd=True)
 walletMgr=WalletMgr(True)
 
 try:
@@ -67,16 +67,16 @@ try:
         if not cluster.waitOnClusterBlockNumSync(3):
             errorExit("Cluster never stabilized")
 
-    Print("Stand up ENU wallet enuwallet")
+    Print("Stand up MES wallet mykeosd")
     walletMgr.killall(allInstances=killAll)
     walletMgr.cleanup()
     if walletMgr.launch() is False:
-        errorExit("Failed to stand up enuwallet.")
+        errorExit("Failed to stand up mykeosd.")
 
     accountsCount=total_nodes
     walletName="MyWallet-%d" % (random.randrange(10000))
     Print("Creating wallet %s if one doesn't already exist." % walletName)
-    wallet=walletMgr.create(walletName, [cluster.enumivoAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
+    wallet=walletMgr.create(walletName, [cluster.myeosioAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
     if wallet is None:
         errorExit("Failed to create wallet %s" % (walletName))
 
@@ -86,10 +86,10 @@ try:
 
     defproduceraAccount=cluster.defproduceraAccount
     defproducerbAccount=cluster.defproducerbAccount
-    enumivoAccount=cluster.enumivoAccount
+    myeosioAccount=cluster.myeosioAccount
 
     Print("Create accounts.")
-    if not cluster.createAccounts(enumivoAccount):
+    if not cluster.createAccounts(myeosioAccount):
         errorExit("Accounts creation failed.")
 
     Print("Spread funds and validate")

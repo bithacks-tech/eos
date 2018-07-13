@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
@@ -9,11 +9,11 @@
 
 #include <string>
 
-namespace enumivosystem {
+namespace myeosiosystem {
    class system_contract;
 }
 
-namespace enumivo {
+namespace myeosio {
 
    using std::string;
 
@@ -51,8 +51,8 @@ namespace enumivo {
             uint64_t primary_key()const { return supply.symbol.name(); }
          };
 
-         typedef enumivo::multi_index<N(accounts), account> accounts;
-         typedef enumivo::multi_index<N(stat), currency_stats> stats;
+         typedef myeosio::multi_index<N(accounts), account> accounts;
+         typedef myeosio::multi_index<N(stat), currency_stats> stats;
 
          void sub_balance( account_name owner, asset value );
          void add_balance( account_name owner, asset value, account_name ram_payer );
@@ -80,4 +80,4 @@ namespace enumivo {
       return ac.balance;
    }
 
-} /// namespace enumivo
+} /// namespace myeosio

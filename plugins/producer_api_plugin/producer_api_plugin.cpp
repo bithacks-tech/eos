@@ -1,28 +1,28 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/producer_api_plugin/producer_api_plugin.hpp>
-#include <enumivo/chain/exceptions.hpp>
+#include <myeosio/producer_api_plugin/producer_api_plugin.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
 #include <fc/variant.hpp>
 #include <fc/io/json.hpp>
 
 #include <chrono>
 
-namespace enumivo { namespace detail {
+namespace myeosio { namespace detail {
   struct producer_api_plugin_response {
      std::string result;
   };
 }}
 
-FC_REFLECT(enumivo::detail::producer_api_plugin_response, (result));
+FC_REFLECT(myeosio::detail::producer_api_plugin_response, (result));
 
-namespace enumivo {
+namespace myeosio {
 
 static appbase::abstract_plugin& _producer_api_plugin = app().register_plugin<producer_api_plugin>();
 
-using namespace enumivo;
+using namespace myeosio;
 
 #define CALL(api_name, api_handle, call_name, INVOKE, http_response_code) \
 {std::string("/v1/" #api_name "/" #call_name), \
@@ -48,16 +48,16 @@ using namespace enumivo;
 
 #define INVOKE_V_R(api_handle, call_name, in_param) \
      api_handle.call_name(fc::json::from_string(body).as<in_param>()); \
-     enumivo::detail::producer_api_plugin_response result{"ok"};
+     myeosio::detail::producer_api_plugin_response result{"ok"};
 
 #define INVOKE_V_R_R(api_handle, call_name, in_param0, in_param1) \
      const auto& vs = fc::json::json::from_string(body).as<fc::variants>(); \
      api_handle.call_name(vs.at(0).as<in_param0>(), vs.at(1).as<in_param1>()); \
-     enumivo::detail::producer_api_plugin_response result{"ok"};
+     myeosio::detail::producer_api_plugin_response result{"ok"};
 
 #define INVOKE_V_V(api_handle, call_name) \
      api_handle.call_name(); \
-     enumivo::detail::producer_api_plugin_response result{"ok"};
+     myeosio::detail::producer_api_plugin_response result{"ok"};
 
 
 void producer_api_plugin::plugin_startup() {

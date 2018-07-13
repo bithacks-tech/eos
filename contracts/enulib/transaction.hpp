@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include <enulib/transaction.h>
@@ -10,7 +10,7 @@
 #include <enulib/serialize.hpp>
 #include <vector>
 
-namespace enumivo {
+namespace myeosio {
 
    /**
     * @defgroup transactioncppapi Transaction C++ API
@@ -35,7 +35,7 @@ namespace enumivo {
       uint8_t         max_cpu_usage_ms = 0UL; /// number of CPU usage units to bill transaction for
       unsigned_int    delay_sec = 0UL; /// number of CPU usage units to bill transaction for
 
-      ENULIB_SERIALIZE( transaction_header, (expiration)(ref_block_num)(ref_block_prefix)(net_usage_words)(max_cpu_usage_ms)(delay_sec) )
+      MESLIB_SERIALIZE( transaction_header, (expiration)(ref_block_num)(ref_block_prefix)(net_usage_words)(max_cpu_usage_ms)(delay_sec) )
    };
 
    class transaction : public transaction_header {
@@ -51,7 +51,7 @@ namespace enumivo {
       vector<action>  actions;
       extensions_type transaction_extensions;
 
-      ENULIB_SERIALIZE_DERIVED( transaction, transaction_header, (context_free_actions)(actions)(transaction_extensions) )
+      MESLIB_SERIALIZE_DERIVED( transaction, transaction_header, (context_free_actions)(actions)(transaction_extensions) )
    };
 
    struct onerror {
@@ -66,7 +66,7 @@ namespace enumivo {
          return unpack<transaction>(sent_trx);
       }
 
-      ENULIB_SERIALIZE( onerror, (sender_id)(sent_trx) )
+      MESLIB_SERIALIZE( onerror, (sender_id)(sent_trx) )
    };
 
    /**
@@ -78,14 +78,14 @@ namespace enumivo {
    inline action get_action( uint32_t type, uint32_t index ) {
       constexpr size_t max_stack_buffer_size = 512;
       int s = ::get_action( type, index, nullptr, 0 );
-      enumivo_assert( s > 0, "get_action size failed" );
+      myeosio_assert( s > 0, "get_action size failed" );
       size_t size = static_cast<size_t>(s);
       char* buffer = (char*)( max_stack_buffer_size < size ? malloc(size) : alloca(size) );
       auto size2 = ::get_action( type, index, buffer, size );
-      enumivo_assert( size == static_cast<size_t>(size2), "get_action failed" );
-      return enumivo::unpack<enumivo::action>( buffer, size );
+      myeosio_assert( size == static_cast<size_t>(size2), "get_action failed" );
+      return myeosio::unpack<myeosio::action>( buffer, size );
    }
 
    ///@} transactioncpp api
 
-} // namespace enumivo
+} // namespace myeosio

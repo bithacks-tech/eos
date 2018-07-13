@@ -1,11 +1,11 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
 
 #include <enu.system/enu.system.wast.hpp>
 #include <enu.system/enu.system.abi.hpp>
@@ -18,8 +18,8 @@
 
 #include <fc/variant_object.hpp>
 
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 
 using mvo = fc::mutable_variant_object;
@@ -64,7 +64,7 @@ public:
 
       create_currency( N(enu.token), config::system_account_name, core_from_string("10000000000.0000") );
       issue(config::system_account_name,      core_from_string("1000000000.0000"));
-      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( "enumivo" ) );
+      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( "myeosio" ) );
 
       set_code( config::system_account_name, enu_system_wast );
       set_abi( config::system_account_name, enu_system_abi );
@@ -82,7 +82,7 @@ public:
       create_account_with_resources( N(bob111111111), config::system_account_name, core_from_string("0.4500"), false );
       create_account_with_resources( N(carol1111111), config::system_account_name, core_from_string("1.0000"), false );
 
-      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance("enumivo")  + get_balance("enu.ramfee") + get_balance("enu.stake") + get_balance("enu.ram") );
+      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance("myeosio")  + get_balance("enu.ramfee") + get_balance("enu.stake") + get_balance("enu.ram") );
    }
 
 
@@ -382,7 +382,7 @@ public:
    }
 
    fc::variant get_stats( const string& symbolname ) {
-      auto symb = enumivo::chain::symbol::from_string(symbolname);
+      auto symb = myeosio::chain::symbol::from_string(symbolname);
       auto symbol_code = symb.to_symbol_code().value;
       vector<char> data = get_row_by_account( N(enu.token), symbol_code, N(stat), symbol_code );
       return data.empty() ? fc::variant() : token_abi_ser.binary_to_variant( "currency_stats", data );
@@ -395,7 +395,7 @@ public:
    fc::variant get_global_state() {
       vector<char> data = get_row_by_account( config::system_account_name, config::system_account_name, N(global), N(global) );
       if (data.empty()) std::cout << "\nData is empty\n" << std::endl;
-      return data.empty() ? fc::variant() : abi_ser.binary_to_variant( "enumivo_global_state", data );
+      return data.empty() ? fc::variant() : abi_ser.binary_to_variant( "myeosio_global_state", data );
 
    }
 
@@ -408,7 +408,7 @@ public:
       abi_serializer msig_abi_ser;
       {
          create_account_with_resources( N(enu.msig), config::system_account_name );
-         BOOST_REQUIRE_EQUAL( success(), buyram( "enumivo", "enu.msig", core_from_string("5000.0000") ) );
+         BOOST_REQUIRE_EQUAL( success(), buyram( "myeosio", "enu.msig", core_from_string("5000.0000") ) );
          produce_block();
 
          auto trace = base_tester::push_action(config::system_account_name, N(setpriv),
@@ -444,8 +444,8 @@ public:
    */
 
    vector<name> active_and_vote_producers() {
-      //stake more than 15% of total ENU supply to activate chain
-      transfer( "enumivo", "alice1111111", core_from_string("650000000.0000"), "enumivo" );
+      //stake more than 15% of total MES supply to activate chain
+      transfer( "myeosio", "alice1111111", core_from_string("650000000.0000"), "myeosio" );
       BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
 
       // create accounts {defproducera, defproducerb, ..., defproducerz} and register as producers
@@ -469,7 +469,7 @@ public:
                                             ("permission", name(config::active_name).to_string())
                                             ("parent", name(config::owner_name).to_string())
                                             ("auth",  authority(1, {key_weight{get_public_key( config::system_account_name, "active" ), 1}}, {
-                                                  permission_level_weight{{config::system_account_name, config::enumivo_code_name}, 1},
+                                                  permission_level_weight{{config::system_account_name, config::myeosio_code_name}, 1},
                                                      permission_level_weight{{config::producers_account_name,  config::active_name}, 1}
                                                }
                                             ))

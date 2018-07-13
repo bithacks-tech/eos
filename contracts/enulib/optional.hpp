@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace enumivo {
+namespace myeosio {
 
    template<typename T>
    class optional {
@@ -189,17 +189,17 @@ namespace enumivo {
          // casts and comparisons, use valid() or !!
          explicit operator bool()const  { return _valid;  }
 
-         T&       operator*()      { enumivo_assert(_valid, "dereference of empty optional"); return ref(); }
-         const T& operator*()const { enumivo_assert(_valid, "dereference of empty optional"); return ref(); }
+         T&       operator*()      { myeosio_assert(_valid, "dereference of empty optional"); return ref(); }
+         const T& operator*()const { myeosio_assert(_valid, "dereference of empty optional"); return ref(); }
 
          T*       operator->()
          {
-            enumivo_assert(_valid, "dereference of empty optional");
+            myeosio_assert(_valid, "dereference of empty optional");
             return ptr();
          }
          const T* operator->()const
          {
-            enumivo_assert(_valid, "dereference of empty optional");
+            myeosio_assert(_valid, "dereference of empty optional");
             return ptr();
          }
 
@@ -229,7 +229,7 @@ namespace enumivo {
          }
 
          template<typename Stream>
-         friend inline enumivo::datastream<Stream>& operator>> (enumivo::datastream<Stream>& ds, optional& op)
+         friend inline myeosio::datastream<Stream>& operator>> (myeosio::datastream<Stream>& ds, optional& op)
          {
             char valid = 0;
             ds >> valid;
@@ -241,7 +241,7 @@ namespace enumivo {
          }
 
          template<typename Stream>
-         friend inline enumivo::datastream<Stream>& operator<< (enumivo::datastream<Stream>& ds, const optional& op)
+         friend inline myeosio::datastream<Stream>& operator<< (myeosio::datastream<Stream>& ds, const optional& op)
          {
             char valid = op._valid;
             ds << valid;
@@ -278,4 +278,4 @@ namespace enumivo {
       return !left || *left != u;
    }
 
-} // namespace enumivo
+} // namespace myeosio

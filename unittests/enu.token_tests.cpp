@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
 
 #include <enu.token/enu.token.wast.hpp>
 #include <enu.token/enu.token.abi.hpp>
@@ -9,10 +9,10 @@
 
 #include <fc/variant_object.hpp>
 
-using namespace enumivo::testing;
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 using namespace std;
 
@@ -51,7 +51,7 @@ public:
 
    fc::variant get_stats( const string& symbolname )
    {
-      auto symb = enumivo::chain::symbol::from_string(symbolname);
+      auto symb = myeosio::chain::symbol::from_string(symbolname);
       auto symbol_code = symb.to_symbol_code().value;
       vector<char> data = get_row_by_account( N(enu.token), symbol_code, N(stat), symbol_code );
       return data.empty() ? fc::variant() : abi_ser.binary_to_variant( "currency_stats", data );
@@ -59,7 +59,7 @@ public:
 
    fc::variant get_account( account_name acc, const string& symbolname)
    {
-      auto symb = enumivo::chain::symbol::from_string(symbolname);
+      auto symb = myeosio::chain::symbol::from_string(symbolname);
       auto symbol_code = symb.to_symbol_code().value;
       vector<char> data = get_row_by_account( N(enu.token), acc, N(accounts), symbol_code );
       return data.empty() ? fc::variant() : abi_ser.binary_to_variant( "account", data );
@@ -255,9 +255,9 @@ BOOST_FIXTURE_TEST_CASE( transfer_tests, enu_token_tester ) try {
    );
   
    ///////////////////////////////////////////////////////////////////////
-   //don't let enumivo.prods recieve tokens
-   BOOST_REQUIRE_EQUAL( wasm_assert_msg( "enumivo.prods prohibited to receive" ),
-      transfer( N(alice), N(enumivo.prods), asset::from_string("1 CERO"), "hola" )
+   //don't let myeosio.prods recieve tokens
+   BOOST_REQUIRE_EQUAL( wasm_assert_msg( "myeosio.prods prohibited to receive" ),
+      transfer( N(alice), N(myeosio.prods), asset::from_string("1 CERO"), "hola" )
    );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg( "overdrawn balance" ),

@@ -1,6 +1,6 @@
 #include "database.h"
 
-namespace enumivo {
+namespace myeosio {
 
 database::database(const std::string &uri)
 {

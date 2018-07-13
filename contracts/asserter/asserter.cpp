@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <asserter/asserter.hpp> /// defines assert_def struct (abi)
@@ -15,12 +15,12 @@ extern "C" {
        require_auth(code);
        if( code == N(asserter) ) {
           if( action == N(procassert) ) {
-             assertdef def = enumivo::unpack_action_data<assertdef>();
+             assertdef def = myeosio::unpack_action_data<assertdef>();
 
              // maybe assert?
-             enumivo_assert((uint32_t)def.condition, def.message.c_str());
+             myeosio_assert((uint32_t)def.condition, def.message.c_str());
           } else if( action == N(provereset) ) {
-             enumivo_assert(global_variable == 45, "Global Variable Initialized poorly");
+             myeosio_assert(global_variable == 45, "Global Variable Initialized poorly");
              global_variable = 100;
           }
        }

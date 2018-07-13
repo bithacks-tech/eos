@@ -2,9 +2,9 @@
 
 #include <enulib/asset.hpp>
 
-namespace enumivosystem {
-   using enumivo::asset;
-   using enumivo::symbol_type;
+namespace myeosiosystem {
+   using myeosio::asset;
+   using myeosio::symbol_type;
 
    typedef double real_type;
 
@@ -20,7 +20,7 @@ namespace enumivosystem {
          asset balance;
          double weight = .5;
 
-         ENULIB_SERIALIZE( connector, (balance)(weight) )
+         MESLIB_SERIALIZE( connector, (balance)(weight) )
       };
 
       connector base;
@@ -32,9 +32,9 @@ namespace enumivosystem {
       asset convert_from_exchange( connector& c, asset in );
       asset convert( asset from, symbol_type to );
 
-      ENULIB_SERIALIZE( exchange_state, (supply)(base)(quote) )
+      MESLIB_SERIALIZE( exchange_state, (supply)(base)(quote) )
    };
 
-   typedef enumivo::multi_index<N(rammarket), exchange_state> rammarket;
+   typedef myeosio::multi_index<N(rammarket), exchange_state> rammarket;
 
-} /// namespace enumivosystem
+} /// namespace myeosiosystem

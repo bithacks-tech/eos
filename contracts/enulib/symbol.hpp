@@ -6,7 +6,7 @@
 #include <tuple>
 #include <limits>
 
-namespace enumivo {
+namespace myeosio {
 
    static constexpr uint64_t string_to_symbol( uint8_t precision, const char* str ) {
       uint32_t len = 0;
@@ -25,7 +25,7 @@ namespace enumivo {
       return result;
    }
 
-   #define S(P,X) ::enumivo::string_to_symbol(P,#X)
+   #define S(P,X) ::myeosio::string_to_symbol(P,#X)
 
    typedef uint64_t symbol_name;
 
@@ -71,7 +71,7 @@ namespace enumivo {
 
       void print(bool show_precision=true)const {
          if( show_precision ){
-            ::enumivo::print(precision());
+            ::myeosio::print(precision());
             prints(",");
          }
 
@@ -85,7 +85,7 @@ namespace enumivo {
          }
       }
 
-      ENULIB_SERIALIZE( symbol_type, (value) )
+      MESLIB_SERIALIZE( symbol_type, (value) )
    };
 
    struct extended_symbol : public symbol_type
@@ -106,7 +106,7 @@ namespace enumivo {
       friend bool operator != ( const extended_symbol& a, const extended_symbol& b ) {
         return std::tie( a.value, a.contract ) != std::tie( b.value, b.contract );
       }
-      ENULIB_SERIALIZE( extended_symbol, (value)(contract) )
+      MESLIB_SERIALIZE( extended_symbol, (value)(contract) )
    };
 
-} /// namespace enumivo
+} /// namespace myeosio

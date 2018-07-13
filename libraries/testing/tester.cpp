@@ -1,17 +1,17 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/wast_to_wasm.hpp>
-#include <enumivo/chain/enumivo_contract.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/wast_to_wasm.hpp>
+#include <myeosio/chain/myeosio_contract.hpp>
 
 #include <enu.bios/enu.bios.wast.hpp>
 #include <enu.bios/enu.bios.abi.hpp>
 
-enumivo::chain::asset core_from_string(const std::string& s) {
-  return enumivo::chain::asset::from_string(s + " " CORE_SYMBOL_NAME);
+myeosio::chain::asset core_from_string(const std::string& s) {
+  return myeosio::chain::asset::from_string(s + " " CORE_SYMBOL_NAME);
 }
 
-namespace enumivo { namespace testing {
+namespace myeosio { namespace testing {
 
    bool expect_assert_message(const fc::exception& ex, string expected) {
       BOOST_TEST_MESSAGE("LOG : " << "expected: " << expected << ", actual: " << ex.get_log().at(0).get_message());
@@ -253,10 +253,10 @@ namespace enumivo { namespace testing {
       if( include_code ) {
          FC_ASSERT( owner_auth.threshold <= std::numeric_limits<weight_type>::max(), "threshold is too high" );
          FC_ASSERT( active_auth.threshold <= std::numeric_limits<weight_type>::max(), "threshold is too high" );
-         owner_auth.accounts.push_back( permission_level_weight{ {a, config::enumivo_code_name},
+         owner_auth.accounts.push_back( permission_level_weight{ {a, config::myeosio_code_name},
                                                                  static_cast<weight_type>(owner_auth.threshold) } );
          sort_permissions(owner_auth);
-         active_auth.accounts.push_back( permission_level_weight{ {a, config::enumivo_code_name},
+         active_auth.accounts.push_back( permission_level_weight{ {a, config::myeosio_code_name},
                                                                   static_cast<weight_type>(active_auth.threshold) } );
          sort_permissions(active_auth);
       }
@@ -749,7 +749,7 @@ namespace enumivo { namespace testing {
             auto block = a.control->fetch_block_by_number(i);
             if( block ) { //&& !b.control->is_known_block(block->id()) ) {
                b.control->abort_block();
-               b.control->push_block(block); //, enumivo::chain::validation_steps::created_block);
+               b.control->push_block(block); //, myeosio::chain::validation_steps::created_block);
             }
          }
       };
@@ -778,7 +778,7 @@ namespace enumivo { namespace testing {
    transaction_trace_ptr base_tester::set_producers(const vector<account_name>& producer_names) {
       auto schedule = get_producer_keys( producer_names );
 
-      return push_action( N(enumivo), N(setprods), N(enumivo),
+      return push_action( N(myeosio), N(setprods), N(myeosio),
                           fc::mutable_variant_object()("schedule", schedule));
    }
 
@@ -833,7 +833,7 @@ namespace enumivo { namespace testing {
       return match;
    }
 
-   bool enumivo_assert_message_is::operator()( const enumivo_assert_message_exception& ex ) {
+   bool myeosio_assert_message_is::operator()( const myeosio_assert_message_exception& ex ) {
       auto message = ex.get_log().at( 0 ).get_message();
       bool match = (message == expected);
       if( !match ) {
@@ -842,7 +842,7 @@ namespace enumivo { namespace testing {
       return match;
    }
 
-   bool enumivo_assert_message_starts_with::operator()( const enumivo_assert_message_exception& ex ) {
+   bool myeosio_assert_message_starts_with::operator()( const myeosio_assert_message_exception& ex ) {
       auto message = ex.get_log().at( 0 ).get_message();
       bool match = boost::algorithm::starts_with( message, expected );
       if( !match ) {
@@ -851,7 +851,7 @@ namespace enumivo { namespace testing {
       return match;
    }
 
-   bool enumivo_assert_code_is::operator()( const enumivo_assert_code_exception& ex ) {
+   bool myeosio_assert_code_is::operator()( const myeosio_assert_code_exception& ex ) {
       auto message = ex.get_log().at( 0 ).get_message();
       bool match = (message == expected);
       if( !match ) {
@@ -860,7 +860,7 @@ namespace enumivo { namespace testing {
       return match;
    }
 
-} }  /// enumivo::testing
+} }  /// myeosio::testing
 
 std::ostream& operator<<( std::ostream& osm, const fc::variant& v ) {
    //fc::json::to_stream( osm, v );

@@ -5,8 +5,8 @@ This contract implements a simple DICE game between two players with 50/50 odds 
 
 Before playing all players deposit funds into their @dice account just like the @exchange contract
 
-1. Player 1 proposes to bet 1 ENU and submits SHA256(secret1)
-2. Player 2 proposes to bet 1 ENU and submits SHA256(secret2)
+1. Player 1 proposes to bet 1 MES and submits SHA256(secret1)
+2. Player 2 proposes to bet 1 MES and submits SHA256(secret2)
 
 Because Player 1 and 2 bet equal amounts their orders are matched and the game begins.
 
@@ -43,7 +43,7 @@ Potential Vulnerabilities
     - under normal operation of DPOS chains there are few if any chain reorganizations
 
 
-Example game session using enucli
+Example game session using mycleos
 -------
 #### Prerequisites
 * Wallet must be unlock and have at least the following private keys
@@ -53,72 +53,72 @@ Example game session using enucli
 
 ##### Upload bios contract
 ````bash
-enucli set contract enumivo build/contracts/enu.bios -p enumivo
+mycleos set contract myeosio build/contracts/enu.bios -p myeosio
 ````
 
 ##### Ceate enu.token account
 ````bash
-enucli create account enumivo enu.token ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
+mycleos create account myeosio enu.token MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
 ````
 
 ##### Set enu.token contract to enu.token account
 ````bash
-enucli set contract enu.token build/contracts/enu.token -p enu.token
+mycleos set contract enu.token build/contracts/enu.token -p enu.token
 ````
 
 ##### Create dice account
 ````bash
-enucli create account enumivo dice ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
+mycleos create account myeosio dice MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
 ````
 
 ##### Set dice contract to dice account
 ````bash
-enucli set contract dice build/contracts/dice -p dice
+mycleos set contract dice build/contracts/dice -p dice
 ````
 
-##### Create native ENU token
+##### Create native MES token
 ````bash
-enucli push action enu.token create '[ "enumivo", "1000000000.0000 ENU", 0, 0, 0]' -p enu.token
+mycleos push action enu.token create '[ "myeosio", "1000000000.0000 MES", 0, 0, 0]' -p enu.token
 ````
 
 ##### Create alice account
 ````bash
-enucli create account enumivo alice ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
+mycleos create account myeosio alice MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
 ````
 
 ##### Create bob account
 ````bash
-enucli create account enumivo bob ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
+mycleos create account myeosio bob MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
 ````
 
-##### Issue 1000 ENU to alice
+##### Issue 1000 MES to alice
 ````bash
-enucli push action enu.token issue '[ "alice", "1000.0000 ENU", "" ]' -p enumivo
+mycleos push action enu.token issue '[ "alice", "1000.0000 MES", "" ]' -p myeosio
 ````
 
-##### Issue 1000 ENU to bob
+##### Issue 1000 MES to bob
 ````bash
-enucli push action enu.token issue '[ "bob", "1000.0000 ENU", "" ]' -p enumivo
+mycleos push action enu.token issue '[ "bob", "1000.0000 MES", "" ]' -p myeosio
 ````
 
 ##### Allow dice contract to make transfers on alice behalf (deposit)
 ````bash
-enucli set account permission alice active '{"threshold": 1,"keys": [{"key": "ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4","weight": 1}],"accounts": [{"permission":{"actor":"dice","permission":"active"},"weight":1}]}' owner -p alice
+mycleos set account permission alice active '{"threshold": 1,"keys": [{"key": "MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4","weight": 1}],"accounts": [{"permission":{"actor":"dice","permission":"active"},"weight":1}]}' owner -p alice
 ````
 
 ##### Allow dice contract to make transfers on bob behalf (deposit)
 ````bash
-enucli set account permission bob active '{"threshold": 1,"keys": [{"key": "ENU7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4","weight": 1}],"accounts": [{"permission":{"actor":"dice","permission":"active"},"weight":1}]}' owner -p bob
+mycleos set account permission bob active '{"threshold": 1,"keys": [{"key": "MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4","weight": 1}],"accounts": [{"permission":{"actor":"dice","permission":"active"},"weight":1}]}' owner -p bob
 ````
 
-##### Alice deposits 100 ENU into the dice contract
+##### Alice deposits 100 MES into the dice contract
 ````bash
-enucli push action dice deposit '[ "alice", "100.0000 ENU" ]' -p alice
+mycleos push action dice deposit '[ "alice", "100.0000 MES" ]' -p alice
 ````
 
-##### Bob deposits 100 ENU into the dice contract
+##### Bob deposits 100 MES into the dice contract
 ````bash
-enucli push action dice deposit '[ "bob", "100.0000 ENU" ]' -p bob
+mycleos push action dice deposit '[ "bob", "100.0000 MES" ]' -p bob
 ````
 
 ##### Alice generates a secret
@@ -133,9 +133,9 @@ echo -n '28349b1d4bcdc9905e4ef9719019e55743c84efa0c5e9a0b077f0b54fcd84905' | xxd
 d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883
 ````
 
-##### Alice bets 3 ENU
+##### Alice bets 3 MES
 ````bash
-enucli push action dice offerbet '[ "3.0000 ENU", "alice", "d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883" ]' -p alice
+mycleos push action dice offerbet '[ "3.0000 MES", "alice", "d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883" ]' -p alice
 ````
 
 ##### Bob generates a secret
@@ -150,25 +150,25 @@ echo -n '15fe76d25e124b08feb835f12e00a879bd15666a33786e64b655891fba7d6c12' | xxd
 50ed53fcdaf27f88d51ea4e835b1055efe779bb87e6cfdff47d28c88ffb27129
 ````
 
-##### Bob also bets 3 ENU (a game is started)
+##### Bob also bets 3 MES (a game is started)
 ````bash
-enucli push action dice offerbet '[ "3.0000 ENU", "bob", "50ed53fcdaf27f88d51ea4e835b1055efe779bb87e6cfdff47d28c88ffb27129" ]' -p bob
+mycleos push action dice offerbet '[ "3.0000 MES", "bob", "50ed53fcdaf27f88d51ea4e835b1055efe779bb87e6cfdff47d28c88ffb27129" ]' -p bob
 ````
 
 ##### Dice contract tables right after the game started
 ````bash
-enucli get table dice dice account
+mycleos get table dice dice account
 ````
 ````json
 {
   "rows": [{
       "owner": "alice",
-      "enu_balance": "97.0000 ENU",
+      "enu_balance": "97.0000 MES",
       "open_offers": 0,
       "open_games": 1
     },{
       "owner": "bob",
-      "enu_balance": "97.0000 ENU",
+      "enu_balance": "97.0000 MES",
       "open_offers": 0,
       "open_games": 1
     }
@@ -178,13 +178,13 @@ enucli get table dice dice account
 ````
 
 ````bash
-enucli get table dice dice game
+mycleos get table dice dice game
 ````
 ````json
 {
   "rows": [{
       "id": 1,
-      "bet": "3.0000 ENU",
+      "bet": "3.0000 MES",
       "deadline": "1970-01-01T00:00:00",
       "player1": {
         "commitment": "d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883",
@@ -202,18 +202,18 @@ enucli get table dice dice game
 
 ##### Bob reveals his secret
 ````bash
-enucli push action dice reveal '[ "50ed53fcdaf27f88d51ea4e835b1055efe779bb87e6cfdff47d28c88ffb27129", "15fe76d25e124b08feb835f12e00a879bd15666a33786e64b655891fba7d6c12" ]' -p bob
+mycleos push action dice reveal '[ "50ed53fcdaf27f88d51ea4e835b1055efe779bb87e6cfdff47d28c88ffb27129", "15fe76d25e124b08feb835f12e00a879bd15666a33786e64b655891fba7d6c12" ]' -p bob
 ````
 
 ##### Game table after bob revealed (now the game has a deadline for alice to reveal)
 ````bash
-enucli get table dice dice game
+mycleos get table dice dice game
 ````
 ````json
 {
   "rows": [{
       "id": 1,
-      "bet": "3.0000 ENU",
+      "bet": "3.0000 MES",
       "deadline": "2018-04-17T07:45:49",
       "player1": {
         "commitment": "d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883",
@@ -231,23 +231,23 @@ enucli get table dice dice game
 
 ##### Alice reveals her secret (the winner is determined, the game is removed)
 ````bash
-enucli push action dice reveal '[ "d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883", "28349b1d4bcdc9905e4ef9719019e55743c84efa0c5e9a0b077f0b54fcd84905" ]' -p alice
+mycleos push action dice reveal '[ "d533f24d6f28ddcef3f066474f7b8355383e485681ba8e793e037f5cf36e4883", "28349b1d4bcdc9905e4ef9719019e55743c84efa0c5e9a0b077f0b54fcd84905" ]' -p alice
 ````
 
 ##### Balance of the accounts after game ends
 ````bash
-enucli get table dice dice account
+mycleos get table dice dice account
 ````
 ````json
 {
   "rows": [{
       "owner": "alice",
-      "enu_balance": "103.0000 ENU",
+      "enu_balance": "103.0000 MES",
       "open_offers": 0,
       "open_games": 0
     },{
       "owner": "bob",
-      "enu_balance": "97.0000 ENU",
+      "enu_balance": "97.0000 MES",
       "open_offers": 0,
       "open_games": 0
     }
@@ -256,14 +256,14 @@ enucli get table dice dice account
 }
 ````
 
-##### Alice withdraw from her dice account 103 ENU
+##### Alice withdraw from her dice account 103 MES
 ````bash
-enucli push action dice withdraw '[ "alice", "103.0000 ENU" ]' -p alice
+mycleos push action dice withdraw '[ "alice", "103.0000 MES" ]' -p alice
 ````
 
 ##### Balance of alice after withdraw
 ````bash
-enucli get currency balance enu.token alice enu
-1003.0000 ENU
+mycleos get currency balance enu.token alice enu
+1003.0000 MES
 ````
 

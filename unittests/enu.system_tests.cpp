@@ -1,8 +1,8 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/chain/contract_table_objects.hpp>
-#include <enumivo/chain/global_property_object.hpp>
-#include <enumivo/chain/resource_limits.hpp>
-#include <enumivo/chain/wast_to_wasm.hpp>
+#include <myeosio/chain/contract_table_objects.hpp>
+#include <myeosio/chain/global_property_object.hpp>
+#include <myeosio/chain/resource_limits.hpp>
+#include <myeosio/chain/wast_to_wasm.hpp>
 
 #include <Runtime/Runtime.h>
 
@@ -16,8 +16,8 @@ BOOST_FIXTURE_TEST_CASE( buysell, enu_system_tester ) try {
 
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
 
-   transfer( "enumivo", "alice1111111", core_from_string("1000.0000"), "enumivo" );
-   BOOST_REQUIRE_EQUAL( success(), stake( "enumivo", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   transfer( "myeosio", "alice1111111", core_from_string("1000.0000"), "myeosio" );
+   BOOST_REQUIRE_EQUAL( success(), stake( "myeosio", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
    auto total = get_total_stake( "alice1111111" );
    auto init_bytes =  total["ram_bytes"].as_uint64();
@@ -41,7 +41,7 @@ BOOST_FIXTURE_TEST_CASE( buysell, enu_system_tester ) try {
    total = get_total_stake( "alice1111111" );
    BOOST_REQUIRE_EQUAL( true, total["ram_bytes"].as_uint64() == init_bytes );
 
-   transfer( "enumivo", "alice1111111", core_from_string("100000000.0000"), "enumivo" );
+   transfer( "myeosio", "alice1111111", core_from_string("100000000.0000"), "myeosio" );
    BOOST_REQUIRE_EQUAL( core_from_string("100000998.0049"), get_balance( "alice1111111" ) );
    // alice buys ram for 10000000.0000, 0.5% = 50000.0000 go to ramfee
    // after fee 9950000.0000 go to bought bytes
@@ -120,31 +120,31 @@ BOOST_FIXTURE_TEST_CASE( stake_unstake, enu_system_tester ) try {
    produce_block( fc::hours(3*24) );
 
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
-   transfer( "enumivo", "alice1111111", core_from_string("1000.0000"), "enumivo" );
+   transfer( "myeosio", "alice1111111", core_from_string("1000.0000"), "myeosio" );
 
    BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( success(), stake( "enumivo", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "myeosio", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
    auto total = get_total_stake("alice1111111");
    BOOST_REQUIRE_EQUAL( core_from_string("210.0000"), total["net_weight"].as<asset>());
    BOOST_REQUIRE_EQUAL( core_from_string("110.0000"), total["cpu_weight"].as<asset>());
 
-   const auto init_enumivo_stk_balance = get_balance( N(enu.stake) );
+   const auto init_myeosio_stk_balance = get_balance( N(enu.stake) );
    BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
    BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( init_enumivo_stk_balance + core_from_string("300.0000"), get_balance( N(enu.stake) ) );
+   BOOST_REQUIRE_EQUAL( init_myeosio_stk_balance + core_from_string("300.0000"), get_balance( N(enu.stake) ) );
    BOOST_REQUIRE_EQUAL( success(), unstake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
    BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
 
    produce_block( fc::hours(3*24-1) );
    produce_blocks(1);
    BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( init_enumivo_stk_balance + core_from_string("300.0000"), get_balance( N(enu.stake) ) );
+   BOOST_REQUIRE_EQUAL( init_myeosio_stk_balance + core_from_string("300.0000"), get_balance( N(enu.stake) ) );
    //after 3 days funds should be released
    produce_block( fc::hours(1) );
    produce_blocks(1);
    BOOST_REQUIRE_EQUAL( core_from_string("1000.0000"), get_balance( "alice1111111" ) );
-   BOOST_REQUIRE_EQUAL( init_enumivo_stk_balance, get_balance( N(enu.stake) ) );
+   BOOST_REQUIRE_EQUAL( init_myeosio_stk_balance, get_balance( N(enu.stake) ) );
 
    BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
    BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
@@ -181,13 +181,13 @@ BOOST_FIXTURE_TEST_CASE( stake_unstake, enu_system_tester ) try {
 BOOST_FIXTURE_TEST_CASE( stake_unstake_with_transfer, enu_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "enumivo", core_from_string("1000.0000"), config::system_account_name );
+   issue( "myeosio", core_from_string("1000.0000"), config::system_account_name );
    issue( "enu.stake", core_from_string("1000.0000"), config::system_account_name );
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
 
-   //enumivo stakes for alice with transfer flag
+   //myeosio stakes for alice with transfer flag
 
-   transfer( "enumivo", "bob111111111", core_from_string("1000.0000"), "enumivo" );
+   transfer( "myeosio", "bob111111111", core_from_string("1000.0000"), "myeosio" );
    BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "bob111111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
    //check that alice has both bandwidth and voting power
@@ -199,9 +199,9 @@ BOOST_FIXTURE_TEST_CASE( stake_unstake_with_transfer, enu_system_tester ) try {
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
 
    //alice stakes for herself
-   transfer( "enumivo", "alice1111111", core_from_string("1000.0000"), "enumivo" );
+   transfer( "myeosio", "alice1111111", core_from_string("1000.0000"), "myeosio" );
    BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   //now alice's stake should be equal to transfered from enumivo + own stake
+   //now alice's stake should be equal to transfered from myeosio + own stake
    total = get_total_stake("alice1111111");
    BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
    BOOST_REQUIRE_EQUAL( core_from_string("410.0000"), total["net_weight"].as<asset>());
@@ -237,7 +237,7 @@ BOOST_FIXTURE_TEST_CASE( stake_to_self_with_transfer, enu_system_tester ) try {
    cross_15_percent_threshold();
 
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
-   transfer( "enumivo", "alice1111111", core_from_string("1000.0000"), "enumivo" );
+   transfer( "myeosio", "alice1111111", core_from_string("1000.0000"), "myeosio" );
 
    BOOST_REQUIRE_EQUAL( wasm_assert_msg("cannot use transfer flag if delegating to self"),
                         stake_with_transfer( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") )
@@ -248,13 +248,13 @@ BOOST_FIXTURE_TEST_CASE( stake_to_self_with_transfer, enu_system_tester ) try {
 BOOST_FIXTURE_TEST_CASE( stake_while_pending_refund, enu_system_tester ) try {
    cross_15_percent_threshold();
 
-   issue( "enumivo", core_from_string("1000.0000"), config::system_account_name );
+   issue( "myeosio", core_from_string("1000.0000"), config::system_account_name );
    issue( "enu.stake", core_from_string("1000.0000"), config::system_account_name );
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
 
-   //enumivo stakes for alice with transfer flag
+   //myeosio stakes for alice with transfer flag
 
-   transfer( "enumivo", "bob111111111", core_from_string("1000.0000"), "enumivo" );
+   transfer( "myeosio", "bob111111111", core_from_string("1000.0000"), "myeosio" );
    BOOST_REQUIRE_EQUAL( success(), stake_with_transfer( "bob111111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
 
    //check that alice has both bandwidth and voting power
@@ -266,9 +266,9 @@ BOOST_FIXTURE_TEST_CASE( stake_while_pending_refund, enu_system_tester ) try {
    BOOST_REQUIRE_EQUAL( core_from_string("0.0000"), get_balance( "alice1111111" ) );
 
    //alice stakes for herself
-   transfer( "enumivo", "alice1111111", core_from_string("1000.0000"), "enumivo" );
+   transfer( "myeosio", "alice1111111", core_from_string("1000.0000"), "myeosio" );
    BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("200.0000"), core_from_string("100.0000") ) );
-   //now alice's stake should be equal to transfered from enumivo + own stake
+   //now alice's stake should be equal to transfered from myeosio + own stake
    total = get_total_stake("alice1111111");
    BOOST_REQUIRE_EQUAL( core_from_string("700.0000"), get_balance( "alice1111111" ) );
    BOOST_REQUIRE_EQUAL( core_from_string("410.0000"), total["net_weight"].as<asset>());
@@ -305,7 +305,7 @@ BOOST_FIXTURE_TEST_CASE( fail_without_auth, enu_system_tester ) try {
 
    issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
 
-   BOOST_REQUIRE_EQUAL( success(), stake( "enumivo", "alice1111111", core_from_string("2000.0000"), core_from_string("1000.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "myeosio", "alice1111111", core_from_string("2000.0000"), core_from_string("1000.0000") ) );
    BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "bob111111111", core_from_string("10.0000"), core_from_string("10.0000") ) );
 
    BOOST_REQUIRE_EQUAL( error("missing authority of alice1111111"),
@@ -682,7 +682,7 @@ BOOST_FIXTURE_TEST_CASE( producer_register_unregister, enu_system_tester ) try {
    issue( "alice1111111", core_from_string("1000.0000"),  config::system_account_name );
 
    //fc::variant params = producer_parameters_example(1);
-   auto key =  fc::crypto::public_key( std::string("ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV") );
+   auto key =  fc::crypto::public_key( std::string("MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV") );
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproducer), mvo()
                                                ("producer",  "alice1111111")
                                                ("producer_key", key )
@@ -711,7 +711,7 @@ BOOST_FIXTURE_TEST_CASE( producer_register_unregister, enu_system_tester ) try {
    BOOST_REQUIRE_EQUAL( "http://block.two", info["url"].as_string() );
    BOOST_REQUIRE_EQUAL( 1, info["location"].as_int64() );
 
-   auto key2 =  fc::crypto::public_key( std::string("ENU5jnmSKrzdBHE9n8hw58y7yxFWBC8SNiG7m8S1crJH3KvAnf9o6") );
+   auto key2 =  fc::crypto::public_key( std::string("MES5jnmSKrzdBHE9n8hw58y7yxFWBC8SNiG7m8S1crJH3KvAnf9o6") );
    BOOST_REQUIRE_EQUAL( success(), push_action(N(alice1111111), N(regproducer), mvo()
                                                ("producer",  "alice1111111")
                                                ("producer_key", key2 )
@@ -802,7 +802,7 @@ BOOST_FIXTURE_TEST_CASE( vote_for_producer, enu_system_tester, * boost::unit_tes
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("88.8888")) == prod["total_votes"].as_double() );
 
    //carol1111111 unstakes part of the stake
-   BOOST_REQUIRE_EQUAL( success(), unstake( "carol1111111", core_from_string("2.0000"), core_from_string("0.0002")/*"2.0000 ENU", "0.0002 ENU"*/ ) );
+   BOOST_REQUIRE_EQUAL( success(), unstake( "carol1111111", core_from_string("2.0000"), core_from_string("0.0002")/*"2.0000 MES", "0.0002 MES"*/ ) );
 
    //should decrease alice1111111's total_votes
    prod = get_producer_info( "alice1111111" );
@@ -1639,9 +1639,9 @@ BOOST_FIXTURE_TEST_CASE(multiple_producer_pay, enu_system_tester, * boost::unit_
       BOOST_REQUIRE( info["is_active"].as<bool>() );
       BOOST_REQUIRE( fc::crypto::public_key() != fc::crypto::public_key(info["producer_key"].as_string()) );
 
-      BOOST_REQUIRE_EQUAL( error("missing authority of enumivo"),
+      BOOST_REQUIRE_EQUAL( error("missing authority of myeosio"),
                            push_action(prod_name, N(rmvproducer), mvo()("producer", prod_name)));
-      BOOST_REQUIRE_EQUAL( error("missing authority of enumivo"),
+      BOOST_REQUIRE_EQUAL( error("missing authority of myeosio"),
                            push_action(producer_names[rmv_index + 2], N(rmvproducer), mvo()("producer", prod_name) ) );
       BOOST_REQUIRE_EQUAL( success(),
                            push_action(config::system_account_name, N(rmvproducer), mvo()("producer", prod_name) ) );
@@ -2087,7 +2087,7 @@ BOOST_FIXTURE_TEST_CASE( proxy_cannot_use_another_proxy, enu_system_tester ) try
 
 } FC_LOG_AND_RETHROW()
 
-fc::mutable_variant_object config_to_variant( const enumivo::chain::chain_config& config ) {
+fc::mutable_variant_object config_to_variant( const myeosio::chain::chain_config& config ) {
    return mutable_variant_object()
       ( "max_block_net_usage", config.max_block_net_usage )
       ( "target_block_net_usage_pct", config.target_block_net_usage_pct )
@@ -2113,8 +2113,8 @@ BOOST_FIXTURE_TEST_CASE( elect_producers /*_and_parameters*/, enu_system_tester 
    BOOST_REQUIRE_EQUAL( success(), regproducer( "defproducer2", 2) );
    BOOST_REQUIRE_EQUAL( success(), regproducer( "defproducer3", 3) );
 
-   //stake more than 15% of total ENU supply to activate chain
-   transfer( "enumivo", "alice1111111", core_from_string("600000000.0000"), "enumivo" );
+   //stake more than 15% of total MES supply to activate chain
+   transfer( "myeosio", "alice1111111", core_from_string("600000000.0000"), "myeosio" );
    BOOST_REQUIRE_EQUAL( success(), stake( "alice1111111", "alice1111111", core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
    //vote for producers
    BOOST_REQUIRE_EQUAL( success(), vote( N(alice1111111), { N(defproducer1) } ) );
@@ -2190,7 +2190,7 @@ BOOST_FIXTURE_TEST_CASE( buyname, enu_system_tester ) try {
    produce_block();
 
    BOOST_REQUIRE_EXCEPTION( create_accounts_with_resources( { N(fail) }, N(dan) ), // dan shouldn't be able to create fail
-                            enumivo_assert_message_exception, enumivo_assert_message_is( "no active bid for name" ) );
+                            myeosio_assert_message_exception, myeosio_assert_message_is( "no active bid for name" ) );
    bidname( "dan", "nofail", core_from_string( "1.0000" ) );
    BOOST_REQUIRE_EQUAL( "assertion failure with message: must increase bid by 10%", bidname( "sam", "nofail", core_from_string( "1.0000" ) )); // didn't increase bid by 10%
    BOOST_REQUIRE_EQUAL( success(), bidname( "sam", "nofail", core_from_string( "2.0000" ) )); // didn't increase bid by 10%
@@ -2198,15 +2198,15 @@ BOOST_FIXTURE_TEST_CASE( buyname, enu_system_tester ) try {
    produce_block();
 
    BOOST_REQUIRE_EXCEPTION( create_accounts_with_resources( { N(nofail) }, N(dan) ), // dan shoudn't be able to do this, sam won
-                            enumivo_assert_message_exception, enumivo_assert_message_is( "only highest bidder can claim" ) );
+                            myeosio_assert_message_exception, myeosio_assert_message_is( "only highest bidder can claim" ) );
    //wlog( "verify sam can create nofail" );
    create_accounts_with_resources( { N(nofail) }, N(sam) ); // sam should be able to do this, he won the bid
    //wlog( "verify nofail can create test.nofail" );
-   transfer( "enumivo", "nofail", core_from_string( "1000.0000" ) );
+   transfer( "myeosio", "nofail", core_from_string( "1000.0000" ) );
    create_accounts_with_resources( { N(test.nofail) }, N(nofail) ); // only nofail can create test.nofail
    //wlog( "verify dan cannot create test.fail" );
    BOOST_REQUIRE_EXCEPTION( create_accounts_with_resources( { N(test.fail) }, N(dan) ), // dan shouldn't be able to do this
-                            enumivo_assert_message_exception, enumivo_assert_message_is( "only suffix may create this account" ) );
+                            myeosio_assert_message_exception, myeosio_assert_message_is( "only suffix may create this account" ) );
 
    create_accounts_with_resources( { N(goodgoodgood) }, N(dan) ); /// 12 char names should succeed
 } FC_LOG_AND_RETHROW()
@@ -2343,9 +2343,9 @@ BOOST_FIXTURE_TEST_CASE( multiple_namebids, enu_system_tester ) try {
    produce_blocks(2);
    // bid for prefb has closed, only highest bidder can claim
    BOOST_REQUIRE_EXCEPTION( create_account_with_resources( N(prefb), N(alice) ),
-                            enumivo_assert_message_exception, enumivo_assert_message_is( "only highest bidder can claim" ) );
+                            myeosio_assert_message_exception, myeosio_assert_message_is( "only highest bidder can claim" ) );
    BOOST_REQUIRE_EXCEPTION( create_account_with_resources( N(prefb), N(carl) ),
-                            enumivo_assert_message_exception, enumivo_assert_message_is( "only highest bidder can claim" ) );
+                            myeosio_assert_message_exception, myeosio_assert_message_is( "only highest bidder can claim" ) );
    create_account_with_resources( N(prefb), N(eve) );
 
    BOOST_REQUIRE_EXCEPTION( create_account_with_resources( N(prefe), N(carl) ),
@@ -2466,7 +2466,7 @@ BOOST_FIXTURE_TEST_CASE( setparams, enu_system_tester ) try {
       prod_perms.push_back( { name(x), config::active_name } );
    }
 
-   enumivo::chain::chain_config params;
+   myeosio::chain::chain_config params;
    params = control->get_global_properties().configuration;
    //change some values
    params.max_block_net_usage += 10;
@@ -2570,7 +2570,7 @@ BOOST_FIXTURE_TEST_CASE( setram_effect, enu_system_tester ) try {
       // increase max_ram_size, ram bought by name_b loses part of its value
       BOOST_REQUIRE_EQUAL( wasm_assert_msg("ram may only be increased"),
                            push_action(config::system_account_name, N(setram), mvo()("max_ram_size", 64ll*1024 * 1024 * 1024)) );
-      BOOST_REQUIRE_EQUAL( error("missing authority of enumivo"),
+      BOOST_REQUIRE_EQUAL( error("missing authority of myeosio"),
                            push_action(name_b, N(setram), mvo()("max_ram_size", 80ll*1024 * 1024 * 1024)) );
       BOOST_REQUIRE_EQUAL( success(),
                            push_action(config::system_account_name, N(setram), mvo()("max_ram_size", 80ll*1024 * 1024 * 1024)) );

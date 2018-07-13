@@ -1,12 +1,12 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <enulib/enu.hpp>
 
 #include "test_api.hpp"
 
-//using namespace enumivo;
+//using namespace myeosio;
 
 void test_print::test_prints_l() {
   char ab[] = { 'a', 'b' };
@@ -116,7 +116,7 @@ void test_print::test_printqf() {
 
 void test_print::test_print_simple() {
     std::string const cvalue = "cvalue";
-    enumivo::print(cvalue);
+    myeosio::print(cvalue);
     std::string value = "value";
-    enumivo::print(value);
+    myeosio::print(value);
 }

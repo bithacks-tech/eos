@@ -1,9 +1,9 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
-#include <enumivo/chain/contract_table_objects.hpp>
-#include <enumivo/chain/fixed_key.hpp>
-#include <enumivo/chain/global_property_object.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
+#include <myeosio/chain/contract_table_objects.hpp>
+#include <myeosio/chain/fixed_key.hpp>
+#include <myeosio/chain/global_property_object.hpp>
 #include <chainbase/chainbase.hpp>
 
 #include <identity/identity.wast.hpp>
@@ -24,9 +24,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 
 class identity_tester : public TESTER {

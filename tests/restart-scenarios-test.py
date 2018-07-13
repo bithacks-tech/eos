@@ -17,9 +17,9 @@ import traceback
 # -d <delay between nodes startup>
 # -v <verbose logging>
 # --kill-sig <kill signal [term|kill]>
-# --kill-count <enunode instances to kill>
+# --kill-count <myeosnode instances to kill>
 # --dont-kill <Leave cluster running after test finishes>
-# --dump-error-details <Upon error print etc/enumivo/node_*/config.ini and var/lib/node_*/stderr.log to stdout>
+# --dump-error-details <Upon error print etc/myeosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout>
 # --keep-logs <Don't delete var/lib/node_* folders upon test completion>
 ###############################################################
 
@@ -52,7 +52,7 @@ Utils.Debug=debug
 testSuccessful=False
 
 random.seed(seed) # Use a fixed seed for repeatability.
-cluster=Cluster(enuwalletd=True)
+cluster=Cluster(mykeosdd=True)
 walletMgr=WalletMgr(True)
 
 try:
@@ -76,16 +76,16 @@ try:
     if not cluster.waitOnClusterBlockNumSync(3):
         errorExit("Cluster never stabilized")
 
-    Print("Stand up ENU wallet enuwallet")
+    Print("Stand up MES wallet mykeosd")
     walletMgr.killall(allInstances=killAll)
     walletMgr.cleanup()
     if walletMgr.launch() is False:
-        errorExit("Failed to stand up enuwallet.")
+        errorExit("Failed to stand up mykeosd.")
 
     accountsCount=total_nodes
     walletName="MyWallet"
     Print("Creating wallet %s if one doesn't already exist." % walletName)
-    wallet=walletMgr.create(walletName, [cluster.enumivoAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
+    wallet=walletMgr.create(walletName, [cluster.myeosioAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
     if wallet is None:
         errorExit("Failed to create wallet %s" % (walletName))
 
@@ -94,14 +94,14 @@ try:
         errorExit("Wallet initialization failed.")
 
     defproduceraAccount=cluster.defproduceraAccount
-    enumivoAccount=cluster.enumivoAccount
+    myeosioAccount=cluster.myeosioAccount
 
     Print("Importing keys for account %s into wallet %s." % (defproduceraAccount.name, wallet.name))
     if not walletMgr.importKey(defproduceraAccount, wallet):
         errorExit("Failed to import key for account %s" % (defproduceraAccount.name))
 
     Print("Create accounts.")
-    if not cluster.createAccounts(enumivoAccount):
+    if not cluster.createAccounts(myeosioAccount):
         errorExit("Accounts creation failed.")
 
     Print("Wait on cluster sync.")
@@ -111,7 +111,7 @@ try:
     Print("Kill %d cluster node instances." % (killCount))
     if cluster.killSomeEnuInstances(killCount, killSignal) is False:
         errorExit("Failed to kill Enu instances")
-    Print("enunode instances killed.")
+    Print("myeosnode instances killed.")
 
     Print("Spread funds and validate")
     if not cluster.spreadFundsAndValidate(10):
@@ -124,7 +124,7 @@ try:
     Print ("Relaunch dead cluster nodes instances.")
     if cluster.relaunchEnuInstances() is False:
         errorExit("Failed to relaunch Enu instances")
-    Print("enunode instances relaunched.")
+    Print("myeosnode instances relaunched.")
 
     Print ("Resyncing cluster nodes.")
     if not cluster.waitOnClusterSync():

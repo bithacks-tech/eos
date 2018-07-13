@@ -17,7 +17,7 @@ namespace identity {
       uint8_t           confidence = 1; ///< used to define liability for lies,
       /// 0 to delete
 
-      ENULIB_SERIALIZE( certvalue, (property)(type)(data)(memo)(confidence) )
+      MESLIB_SERIALIZE( certvalue, (property)(type)(data)(memo)(confidence) )
    };
 
    struct certrow {
@@ -29,7 +29,7 @@ namespace identity {
       std::string         type;
       std::vector<char>   data;
       uint64_t primary_key() const { return id; }
-      /* constexpr */ static enumivo::key256 key(uint64_t property, uint64_t trusted, uint64_t certifier) {
+      /* constexpr */ static myeosio::key256 key(uint64_t property, uint64_t trusted, uint64_t certifier) {
          /*
            key256 key;
            key.uint64s[0] = property;
@@ -37,11 +37,11 @@ namespace identity {
            key.uint64s[2] = certifier;
            key.uint64s[3] = 0;
          */
-         return enumivo::key256::make_from_word_sequence<uint64_t>(property, trusted, certifier);
+         return myeosio::key256::make_from_word_sequence<uint64_t>(property, trusted, certifier);
       }
-      enumivo::key256 get_key() const { return key(property, trusted, certifier); }
+      myeosio::key256 get_key() const { return key(property, trusted, certifier); }
 
-      ENULIB_SERIALIZE( certrow , (property)(trusted)(certifier)(confidence)(type)(data)(id) )
+      MESLIB_SERIALIZE( certrow , (property)(trusted)(certifier)(confidence)(type)(data)(id) )
    };
 
    struct identrow {
@@ -50,7 +50,7 @@ namespace identity {
 
       uint64_t primary_key() const { return identity; }
 
-      ENULIB_SERIALIZE( identrow , (identity)(creator) )
+      MESLIB_SERIALIZE( identrow , (identity)(creator) )
    };
 
    struct trustrow {
@@ -58,15 +58,15 @@ namespace identity {
 
       uint64_t primary_key() const { return account; }
 
-      ENULIB_SERIALIZE( trustrow, (account) )
+      MESLIB_SERIALIZE( trustrow, (account) )
    };
 
-   typedef enumivo::multi_index<N(certs), certrow,
-                              enumivo::indexed_by< N(bytuple), enumivo::const_mem_fun<certrow, enumivo::key256, &certrow::get_key> >
+   typedef myeosio::multi_index<N(certs), certrow,
+                              myeosio::indexed_by< N(bytuple), myeosio::const_mem_fun<certrow, myeosio::key256, &certrow::get_key> >
                               > certs_table;
-   typedef enumivo::multi_index<N(ident), identrow> idents_table;
-   typedef enumivo::singleton<N(account), identity_name>  accounts_table;
-   typedef enumivo::multi_index<N(trust), trustrow> trust_table;
+   typedef myeosio::multi_index<N(ident), identrow> idents_table;
+   typedef myeosio::singleton<N(account), identity_name>  accounts_table;
+   typedef myeosio::multi_index<N(trust), trustrow> trust_table;
 
    class identity_base {
       public:

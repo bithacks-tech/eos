@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
@@ -10,7 +10,7 @@
 #include <set>
 #include <limits>
 
-namespace enumivo {
+namespace myeosio {
 
    /**
     *  @brief Checks if a transaction is authorized by a provided set of keys and permissions

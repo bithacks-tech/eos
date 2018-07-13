@@ -3,7 +3,7 @@
 #include <string>
 #include <enulib/enu.hpp>
 
-namespace enumivo {
+namespace myeosio {
   class microseconds {
     public:
         explicit microseconds( int64_t c = 0) :_count(c){}
@@ -24,7 +24,7 @@ namespace enumivo {
         int64_t to_seconds()const { return _count/1000000; }
 
         int64_t _count;
-        ENULIB_SERIALIZE( microseconds, (_count) )
+        MESLIB_SERIALIZE( microseconds, (_count) )
     private:
         friend class time_point;
   };
@@ -55,7 +55,7 @@ namespace enumivo {
         time_point   operator - (const microseconds& m) const { return time_point(elapsed-m); }
         microseconds operator - (const time_point& m) const { return microseconds(elapsed.count() - m.elapsed.count()); }
         microseconds elapsed;
-        ENULIB_SERIALIZE( time_point, (elapsed) )
+        MESLIB_SERIALIZE( time_point, (elapsed) )
   };
 
   /**
@@ -76,10 +76,10 @@ namespace enumivo {
         static time_point_sec maximum() { return time_point_sec(0xffffffff); }
         static time_point_sec min() { return time_point_sec(0); }
 
-        operator time_point()const { return time_point( enumivo::seconds( utc_seconds) ); }
+        operator time_point()const { return time_point( myeosio::seconds( utc_seconds) ); }
         uint32_t sec_since_epoch()const { return utc_seconds; }
 
-        time_point_sec operator = ( const enumivo::time_point& t )
+        time_point_sec operator = ( const myeosio::time_point& t )
         {
           utc_seconds = uint32_t(t.time_since_epoch().count() / 1000000ll);
           return *this;
@@ -105,7 +105,7 @@ namespace enumivo {
         friend microseconds operator - ( const time_point& t, const time_point_sec& m ) { return time_point(t) - time_point(m); }
         uint32_t utc_seconds;
 
-        ENULIB_SERIALIZE( time_point_sec, (utc_seconds) )
+        MESLIB_SERIALIZE( time_point_sec, (utc_seconds) )
   };
 
    /**
@@ -129,7 +129,7 @@ namespace enumivo {
          static block_timestamp min() { return block_timestamp(0); }
 
          block_timestamp next() const {
-            enumivo_assert( std::numeric_limits<uint32_t>::max() - slot >= 1, "block timestamp overflow" );
+            myeosio_assert( std::numeric_limits<uint32_t>::max() - slot >= 1, "block timestamp overflow" );
             auto result = block_timestamp(*this);
             result.slot += 1;
             return result;
@@ -159,7 +159,7 @@ namespace enumivo {
          static constexpr int32_t block_interval_ms = 500;
          static constexpr int64_t block_timestamp_epoch = 946684800000ll;  // epoch is year 2000
 
-         ENULIB_SERIALIZE( block_timestamp, (slot) )
+         MESLIB_SERIALIZE( block_timestamp, (slot) )
       private:
       
 
@@ -176,4 +176,4 @@ namespace enumivo {
    }; // block_timestamp
    typedef block_timestamp block_timestamp_type; 
 
-} // namespace enumivo
+} // namespace myeosio

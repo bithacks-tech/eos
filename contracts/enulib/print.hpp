@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include <enulib/print.h>
@@ -9,7 +9,7 @@
 #include <utility>
 #include <string>
 
-namespace enumivo {
+namespace myeosio {
 
    static_assert( sizeof(long) == sizeof(int), "unexpected size difference" );
 

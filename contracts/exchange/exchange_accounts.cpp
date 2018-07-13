@@ -1,6 +1,6 @@
 #include <exchange/exchange_accounts.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
    void exchange_accounts::adjust_balance( account_name owner, extended_asset delta, const string& reason ) {
       (void)reason;
@@ -14,14 +14,14 @@ namespace enumivo {
          table->second.emplace( owner, [&]( auto& exa ){
            exa.owner = owner;
            exa.balances[delta.get_extended_symbol()] = delta.amount;
-           enumivo_assert( delta.amount >= 0, "overdrawn balance 1" );
+           myeosio_assert( delta.amount >= 0, "overdrawn balance 1" );
          });
       } else {
          table->second.modify( useraccounts, 0, [&]( auto& exa ) {
            const auto& b = exa.balances[delta.get_extended_symbol()] += delta.amount;
-           enumivo_assert( b >= 0, "overdrawn balance 2" );
+           myeosio_assert( b >= 0, "overdrawn balance 2" );
          });
       }
    }
 
-} /// namespace enumivo
+} /// namespace myeosio

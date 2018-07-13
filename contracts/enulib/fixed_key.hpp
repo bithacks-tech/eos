@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
@@ -10,7 +10,7 @@
 
 #include <enulib/system.h>
 
-namespace enumivo {
+namespace myeosio {
 
    template<size_t Size>
    class fixed_key;
@@ -56,7 +56,7 @@ namespace enumivo {
                    continue;
                }
 
-               enumivo_assert( sub_words_left == 1, "unexpected error in fixed_key constructor" );
+               myeosio_assert( sub_words_left == 1, "unexpected error in fixed_key constructor" );
                temp_word |= static_cast<word_t>(w);
                sub_words_left = num_sub_words;
 

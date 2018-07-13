@@ -1,15 +1,15 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #pragma once
 
 #include "consumer_core.h"
 
-#include <enumivo/chain/block_state.hpp>
+#include <myeosio/chain/block_state.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
 class block_storage : public consumer_core<chain::block_state_ptr>
 {

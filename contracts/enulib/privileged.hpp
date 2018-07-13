@@ -3,7 +3,7 @@
 #include "serialize.hpp"
 #include "types.h"
 
-namespace enumivo {
+namespace myeosio {
 
    struct blockchain_parameters {
       uint64_t max_block_net_usage;
@@ -26,7 +26,7 @@ namespace enumivo {
       uint16_t max_inline_action_depth;
       uint16_t max_authority_depth;
 
-      ENULIB_SERIALIZE( blockchain_parameters,
+      MESLIB_SERIALIZE( blockchain_parameters,
                         (max_block_net_usage)(target_block_net_usage_pct)
                         (max_transaction_net_usage)(base_per_transaction_net_usage)(net_usage_leeway)
                         (context_free_discount_net_usage_num)(context_free_discount_net_usage_den)
@@ -39,9 +39,9 @@ namespace enumivo {
       )
    };
 
-   void set_blockchain_parameters(const enumivo::blockchain_parameters& params);
+   void set_blockchain_parameters(const myeosio::blockchain_parameters& params);
 
-   void get_blockchain_parameters(enumivo::blockchain_parameters& params);
+   void get_blockchain_parameters(myeosio::blockchain_parameters& params);
 
    struct producer_key {
       account_name producer_name;
@@ -51,7 +51,7 @@ namespace enumivo {
          return a.producer_name < b.producer_name;
       }
 
-      ENULIB_SERIALIZE( producer_key, (producer_name)(block_signing_key) )
+      MESLIB_SERIALIZE( producer_key, (producer_name)(block_signing_key) )
    };
 
 }

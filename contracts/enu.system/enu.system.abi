@@ -1,5 +1,5 @@
 {
-   "version": "enumivo::abi/1.0",
+   "version": "myeosio::abi/1.0",
    "types": [{
       "new_type_name": "account_name",
       "type": "name"
@@ -243,7 +243,7 @@
 
       ]
     },{
-      "name": "enumivo_global_state",
+      "name": "myeosio_global_state",
       "base": "blockchain_parameters",
       "fields": [
          {"name":"max_ram_size",                  "type":"uint64"},
@@ -531,7 +531,7 @@
       "key_types" : ["uint64"]
     },{
       "name": "global",
-      "type": "enumivo_global_state",
+      "type": "myeosio_global_state",
       "index_type": "i64",
       "key_names" : [],
       "key_types" : []

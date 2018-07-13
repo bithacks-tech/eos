@@ -9,12 +9,12 @@ use File::Spec;
 use File::Path;
 use Cwd;
 
-my $enu_home = defined $ENV{ENU_HOME} ? $ENV{ENU_HOME} : getcwd;
+my $enu_home = defined $ENV{MES_HOME} ? $ENV{MES_HOME} : getcwd;
 my $enudaemon = $enu_home . "/programs/enudaemon/enudaemon";
-my $enuclient = $enu_home . "/programs/enuclient/enuclient";
+my $mycleosent = $enu_home . "/programs/mycleosent/mycleosent";
 
-my $nodes = defined $ENV{ENU_TEST_RING} ? $ENV{ENU_TEST_RING} : "1";
-my $pnodes = defined $ENV{ENU_TEST_PRODUCERS} ? $ENV{ENU_TEST_PRODUCERS} : "1";
+my $nodes = defined $ENV{MES_TEST_RING} ? $ENV{MES_TEST_RING} : "1";
+my $pnodes = defined $ENV{MES_TEST_PRODUCERS} ? $ENV{MES_TEST_PRODUCERS} : "1";
 
 my $prods = 21;
 my $genesis = "$enu_home/genesis.json";
@@ -112,10 +112,10 @@ sub write_config {
     if (defined $producer) {
         print $cfg "enable-stale-production = true\n";
         print $cfg "required-participation = true\n";
-        print $cfg "private-key = [\"ENU6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\",\"5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3\"]\n";
+        print $cfg "private-key = [\"MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\",\"5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3\"]\n";
 
-        print $cfg "plugin = enumivo::producer_plugin\n";
-        print $cfg "plugin = enumivo::chain_api_plugin\n";
+        print $cfg "plugin = myeosio::producer_plugin\n";
+        print $cfg "plugin = myeosio::chain_api_plugin\n";
 
         my $prod_ndx = ord('a') + $producer;
         my $num_prod = $pcount[$producer];
@@ -246,7 +246,7 @@ sub perform_work {
         my $stoptime = time () + $run_duration;
         my $counter = 0;
         while (time () < $stoptime) {
-            `$enuclient transfer enu inita 10 >> enuclient.out 2>> enuclient.err`;
+            `$mycleosent transfer enu inita 10 >> mycleosent.out 2>> mycleosent.err`;
             $counter++;
             if ($counter % 1000 == 0) {
                 print "$counter client iterations\n";

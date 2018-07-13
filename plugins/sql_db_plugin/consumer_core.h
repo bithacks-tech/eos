@@ -1,13 +1,13 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #pragma once
 
 #include <vector>
 
-namespace enumivo {
+namespace myeosio {
 
 template<typename T>
 class consumer_core {

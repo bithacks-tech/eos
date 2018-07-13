@@ -1,13 +1,13 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 #include "test_api_common.hpp"
 #include <string>
 
 
-namespace enumivo {
+namespace myeosio {
    class transaction;
 }
 
@@ -163,7 +163,7 @@ struct test_transaction {
   static void send_transaction(uint64_t receiver, uint64_t code, uint64_t action);
   static void send_transaction_empty(uint64_t receiver, uint64_t code, uint64_t action);
   static void send_transaction_trigger_error_handler(uint64_t receiver, uint64_t code, uint64_t action);
-  static void assert_false_error_handler(const enumivo::transaction&);
+  static void assert_false_error_handler(const myeosio::transaction&);
   static void send_transaction_max();
   static void send_transaction_large(uint64_t receiver, uint64_t code, uint64_t action);
   static void send_action_sender(uint64_t receiver, uint64_t code, uint64_t action);

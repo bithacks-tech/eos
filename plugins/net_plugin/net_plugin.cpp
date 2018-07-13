@@ -1,18 +1,18 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/chain/types.hpp>
+#include <myeosio/chain/types.hpp>
 
-#include <enumivo/net_plugin/net_plugin.hpp>
-#include <enumivo/net_plugin/protocol.hpp>
-#include <enumivo/chain/controller.hpp>
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/block.hpp>
-#include <enumivo/chain/plugin_interface.hpp>
-#include <enumivo/producer_plugin/producer_plugin.hpp>
-#include <enumivo/utilities/key_conversion.hpp>
-#include <enumivo/chain/contract_types.hpp>
+#include <myeosio/net_plugin/net_plugin.hpp>
+#include <myeosio/net_plugin/protocol.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/block.hpp>
+#include <myeosio/chain/plugin_interface.hpp>
+#include <myeosio/producer_plugin/producer_plugin.hpp>
+#include <myeosio/utilities/key_conversion.hpp>
+#include <myeosio/chain/contract_types.hpp>
 
 #include <fc/network/message_buffer.hpp>
 #include <fc/network/ip.hpp>
@@ -29,13 +29,13 @@
 #include <boost/asio/steady_timer.hpp>
 #include <boost/intrusive/set.hpp>
 
-using namespace enumivo::chain::plugin_interface::compat;
+using namespace myeosio::chain::plugin_interface::compat;
 
 namespace fc {
    extern std::unordered_map<std::string,logger>& get_logger_map();
 }
 
-namespace enumivo {
+namespace myeosio {
    static appbase::abstract_plugin& _net_plugin = app().register_plugin<net_plugin>();
 
    using std::vector;
@@ -48,7 +48,7 @@ namespace enumivo {
 
    using fc::time_point;
    using fc::time_point_sec;
-   using enumivo::chain::transaction_id_type;
+   using myeosio::chain::transaction_id_type;
    namespace bip = boost::interprocess;
 
    class connection;
@@ -416,22 +416,22 @@ namespace enumivo {
       void operator() (struct transaction_state &ts) {
          ts.requested_time = time_point::now();
       }
-      void operator () (struct enumivo::peer_block_state &bs) {
+      void operator () (struct myeosio::peer_block_state &bs) {
          bs.requested_time = time_point::now();
       }
    } set_request_time;
 
    typedef multi_index_container<
-      enumivo::peer_block_state,
+      myeosio::peer_block_state,
       indexed_by<
-         ordered_unique< tag<by_id>, member<enumivo::peer_block_state, block_id_type, &enumivo::peer_block_state::id > >,
-         ordered_unique< tag<by_block_num>, member<enumivo::peer_block_state, uint32_t, &enumivo::peer_block_state::block_num > >
+         ordered_unique< tag<by_id>, member<myeosio::peer_block_state, block_id_type, &myeosio::peer_block_state::id > >,
+         ordered_unique< tag<by_block_num>, member<myeosio::peer_block_state, uint32_t, &myeosio::peer_block_state::block_num > >
          >
       > peer_block_state_index;
 
 
    struct update_known_by_peer {
-      void operator() (enumivo::peer_block_state& bs) {
+      void operator() (myeosio::peer_block_state& bs) {
          bs.is_known = true;
       }
       void operator() (transaction_state& ts) {
@@ -2915,7 +2915,7 @@ namespace enumivo {
          ( "p2p-server-address", bpo::value<string>(), "An externally accessible host:port for identifying this node. Defaults to p2p-listen-endpoint.")
          ( "p2p-peer-address", bpo::value< vector<string> >()->composing(), "The public endpoint of a peer node to connect to. Use multiple p2p-peer-address options as needed to compose a network.")
          ( "p2p-max-nodes-per-host", bpo::value<int>()->default_value(def_max_nodes_per_host), "Maximum number of client0nodes from any single IP address")
-         ( "agent-name", bpo::value<string>()->default_value("\"Enumivo Test Agent\""), "The name supplied to identify this node amongst the peers.")
+         ( "agent-name", bpo::value<string>()->default_value("\"MyEOSIO Test Agent\""), "The name supplied to identify this node amongst the peers.")
          ( "allowed-connection", bpo::value<vector<string>>()->multitoken()->default_value({"any"}, "any"), "Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined.")
          ( "peer-key", bpo::value<vector<string>>()->composing()->multitoken(), "Optional public key of peer allowed to connect.  May be used multiple times.")
          ( "peer-private-key", boost::program_options::value<vector<string>>()->composing()->multitoken(),

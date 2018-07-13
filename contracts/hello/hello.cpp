@@ -1,7 +1,7 @@
 #include <enulib/enu.hpp>
-using namespace enumivo;
+using namespace myeosio;
 
-class hello : public enumivo::contract {
+class hello : public myeosio::contract {
   public:
       using contract::contract;
 

@@ -1,16 +1,16 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/chain/chain_config.hpp>
-#include <enumivo/chain/authority_checker.hpp>
-#include <enumivo/chain/authority.hpp>
-#include <enumivo/chain/types.hpp>
-#include <enumivo/chain/asset.hpp>
-#include <enumivo/testing/tester.hpp>
+#include <myeosio/chain/chain_config.hpp>
+#include <myeosio/chain/authority_checker.hpp>
+#include <myeosio/chain/authority.hpp>
+#include <myeosio/chain/types.hpp>
+#include <myeosio/chain/asset.hpp>
+#include <myeosio/testing/tester.hpp>
 
-#include <enumivo/utilities/key_conversion.hpp>
-#include <enumivo/utilities/rand.hpp>
+#include <myeosio/utilities/key_conversion.hpp>
+#include <myeosio/utilities/rand.hpp>
 
 #include <fc/io/json.hpp>
 
@@ -22,13 +22,13 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
-namespace enumivo
+namespace myeosio
 {
 using namespace chain;
 using namespace std;
@@ -593,22 +593,22 @@ BOOST_AUTO_TEST_CASE(transaction_test) { try {
    variant pretty_trx = fc::mutable_variant_object()
       ("actions", fc::variants({
          fc::mutable_variant_object()
-            ("account", "enumivo")
+            ("account", "myeosio")
             ("name", "reqauth")
             ("authorization", fc::variants({
                fc::mutable_variant_object()
-                  ("actor", "enumivo")
+                  ("actor", "myeosio")
                   ("permission", "active")
             }))
             ("data", fc::mutable_variant_object()
-               ("from", "enumivo")
+               ("from", "myeosio")
             )
          })
       )
       // lets also push a context free action, the multi chain test will then also include a context free action
       ("context_free_actions", fc::variants({
          fc::mutable_variant_object()
-            ("account", "enumivo")
+            ("account", "myeosio")
             ("name", "nonce")
             ("data", fc::raw::pack(std::string("dummy")))
          })
@@ -621,9 +621,9 @@ BOOST_AUTO_TEST_CASE(transaction_test) { try {
    trx.expiration = fc::time_point::now();
    trx.validate();
    BOOST_CHECK_EQUAL(0, trx.signatures.size());
-   ((const signed_transaction &)trx).sign( test.get_private_key( N(enumivo), "active" ), test.control->get_chain_id());
+   ((const signed_transaction &)trx).sign( test.get_private_key( N(myeosio), "active" ), test.control->get_chain_id());
    BOOST_CHECK_EQUAL(0, trx.signatures.size());
-   trx.sign( test.get_private_key( N(enumivo), "active" ), test.control->get_chain_id()  );
+   trx.sign( test.get_private_key( N(myeosio), "active" ), test.control->get_chain_id()  );
    BOOST_CHECK_EQUAL(1, trx.signatures.size());
    trx.validate();
 
@@ -647,4 +647,4 @@ BOOST_AUTO_TEST_CASE(transaction_test) { try {
 
 BOOST_AUTO_TEST_SUITE_END()
 
-} // namespace enumivo
+} // namespace myeosio

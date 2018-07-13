@@ -1,18 +1,18 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <enumivo/chain/genesis_state.hpp>
+#include <myeosio/chain/genesis_state.hpp>
 
 // these are required to serialize a genesis_state
 #include <fc/smart_ref_impl.hpp>   // required for gcc in release mode
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
 genesis_state::genesis_state() {
    initial_timestamp = fc::time_point::from_iso_string( "2018-06-01T12:00:00" );
-   initial_key = fc::variant(enumivo_root_key).as<public_key_type>();
+   initial_key = fc::variant(myeosio_root_key).as<public_key_type>();
 }
 
 chain::chain_id_type genesis_state::compute_chain_id() const {
@@ -21,4 +21,4 @@ chain::chain_id_type genesis_state::compute_chain_id() const {
    return chain_id_type{enc.result()};
 }
 
-} } // namespace enumivo::chain
+} } // namespace myeosio::chain

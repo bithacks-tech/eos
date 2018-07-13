@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace enumivo {
+namespace myeosio {
    /**
     *  Defines both the order, account name, and signing keys of the active set of producers.
     */
@@ -11,4 +11,4 @@ namespace enumivo {
       uint32_t                     version;   ///< sequentially incrementing version number
       std::vector<producer_key>    producers;
    };
-} /// namespace enumivo
+} /// namespace myeosio

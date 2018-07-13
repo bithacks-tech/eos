@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #pragma once
@@ -14,7 +14,7 @@
 #include "consumer_core.h"
 #include "fifo.h"
 
-namespace enumivo {
+namespace myeosio {
 
 template<typename T>
 class consumer final : public boost::noncopyable

@@ -7,7 +7,7 @@
 #include "exchange_state.cpp"
 
 
-namespace enumivosystem {
+namespace myeosiosystem {
 
    system_contract::system_contract( account_name s )
    :native(s),
@@ -22,7 +22,7 @@ namespace enumivosystem {
       auto itr = _rammarket.find(S(4,RAMCORE));
 
       if( itr == _rammarket.end() ) {
-         auto system_token_supply   = enumivo::token(N(enu.token)).get_supply(enumivo::symbol_type(system_token_symbol).name()).amount;
+         auto system_token_supply   = myeosio::token(N(enu.token)).get_supply(myeosio::symbol_type(system_token_symbol).name()).amount;
          if( system_token_supply > 0 ) {
             itr = _rammarket.emplace( _self, [&]( auto& m ) {
                m.supply.amount = 100000000000000ll;
@@ -38,8 +38,8 @@ namespace enumivosystem {
       }
    }
 
-   enumivo_global_state system_contract::get_default_parameters() {
-      enumivo_global_state dp;
+   myeosio_global_state system_contract::get_default_parameters() {
+      myeosio_global_state dp;
       get_blockchain_parameters(dp);
       return dp;
    }
@@ -48,15 +48,15 @@ namespace enumivosystem {
    system_contract::~system_contract() {
       //print( "destruct system\n" );
       _global.set( _gstate, _self );
-      //enumivo_exit(0);
+      //myeosio_exit(0);
    }
 
    void system_contract::setram( uint64_t max_ram_size ) {
       require_auth( _self );
 
-      enumivo_assert( _gstate.max_ram_size < max_ram_size, "ram may only be increased" ); /// decreasing ram might result market maker issues
-      enumivo_assert( max_ram_size < 1024ll*1024*1024*1024*1024, "ram size is unrealistic" );
-      enumivo_assert( max_ram_size > _gstate.total_ram_bytes_reserved, "attempt to set max below reserved" );
+      myeosio_assert( _gstate.max_ram_size < max_ram_size, "ram may only be increased" ); /// decreasing ram might result market maker issues
+      myeosio_assert( max_ram_size < 1024ll*1024*1024*1024*1024, "ram size is unrealistic" );
+      myeosio_assert( max_ram_size > _gstate.total_ram_bytes_reserved, "attempt to set max below reserved" );
 
       auto delta = int64_t(max_ram_size) - int64_t(_gstate.max_ram_size);
       auto itr = _rammarket.find(S(4,RAMCORE));
@@ -73,10 +73,10 @@ namespace enumivosystem {
       _global.set( _gstate, _self );
    }
 
-   void system_contract::setparams( const enumivo::blockchain_parameters& params ) {
-      require_auth( N(enumivo) );
-      (enumivo::blockchain_parameters&)(_gstate) = params;
-      enumivo_assert( 3 <= _gstate.max_authority_depth, "max_authority_depth should be at least 3" );
+   void system_contract::setparams( const myeosio::blockchain_parameters& params ) {
+      require_auth( N(myeosio) );
+      (myeosio::blockchain_parameters&)(_gstate) = params;
+      myeosio_assert( 3 <= _gstate.max_authority_depth, "max_authority_depth should be at least 3" );
       set_blockchain_parameters( params );
    }
 
@@ -88,7 +88,7 @@ namespace enumivosystem {
    void system_contract::rmvproducer( account_name producer ) {
       require_auth( _self );
       auto prod = _producers.find( producer );
-      enumivo_assert( prod != _producers.end(), "producer not found" );
+      myeosio_assert( prod != _producers.end(), "producer not found" );
       _producers.modify( prod, 0, [&](auto& p) {
             p.deactivate();
          });
@@ -96,15 +96,15 @@ namespace enumivosystem {
 
    void system_contract::bidname( account_name bidder, account_name newname, asset bid ) {
       require_auth( bidder );
-      enumivo_assert( enumivo::name_suffix(newname) == newname, "you can only bid on top-level suffix" );
-      enumivo_assert( newname != 0, "the empty name is not a valid account name to bid on" );
-      enumivo_assert( (newname & 0xFull) == 0, "13 character names are not valid account names to bid on" );
-      enumivo_assert( (newname & 0x1F0ull) == 0, "accounts with 12 character names and no dots can be created without bidding required" );
-      enumivo_assert( !is_account( newname ), "account already exists" );
-      enumivo_assert( bid.symbol == asset().symbol, "asset must be system token" );
-      enumivo_assert( bid.amount > 0, "insufficient bid" );
+      myeosio_assert( myeosio::name_suffix(newname) == newname, "you can only bid on top-level suffix" );
+      myeosio_assert( newname != 0, "the empty name is not a valid account name to bid on" );
+      myeosio_assert( (newname & 0xFull) == 0, "13 character names are not valid account names to bid on" );
+      myeosio_assert( (newname & 0x1F0ull) == 0, "accounts with 12 character names and no dots can be created without bidding required" );
+      myeosio_assert( !is_account( newname ), "account already exists" );
+      myeosio_assert( bid.symbol == asset().symbol, "asset must be system token" );
+      myeosio_assert( bid.amount > 0, "insufficient bid" );
 
-      INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {bidder,N(active)},
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {bidder,N(active)},
                                                     { bidder, N(enu.names), bid, std::string("bid name ")+(name{newname}).to_string()  } );
 
       name_bid_table bids(_self,_self);
@@ -118,11 +118,11 @@ namespace enumivosystem {
             b.last_bid_time = current_time();
          });
       } else {
-         enumivo_assert( current->high_bid > 0, "this auction has already closed" );
-         enumivo_assert( bid.amount - current->high_bid > (current->high_bid / 10), "must increase bid by 10%" );
-         enumivo_assert( current->high_bidder != bidder, "account is already highest bidder" );
+         myeosio_assert( current->high_bid > 0, "this auction has already closed" );
+         myeosio_assert( bid.amount - current->high_bid > (current->high_bid / 10), "must increase bid by 10%" );
+         myeosio_assert( current->high_bidder != bidder, "account is already highest bidder" );
 
-         INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {N(enu.names),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.names),N(active)},
                                                        { N(enu.names), current->high_bidder, asset(current->high_bid),
                                                        std::string("refund bid on name ")+(name{newname}).to_string()  } );
 
@@ -151,7 +151,7 @@ namespace enumivosystem {
 
       if( creator != _self ) {
 
-         //enumivo_assert( newact != N(enumivo.prods), "will cause collision" ); //with enumivo.prods
+         //myeosio_assert( newact != N(myeosio.prods), "will cause collision" ); //with myeosio.prods
          //line above not needed since no collision will take place according to @iamveritas
          //but better safe than sorry
 
@@ -163,16 +163,16 @@ namespace enumivosystem {
            tmp >>= 5;
          }
          if( has_dot ) { // or is less than 12 characters
-            auto suffix = enumivo::name_suffix(newact);
+            auto suffix = myeosio::name_suffix(newact);
             if( suffix == newact ) {
                name_bid_table bids(_self,_self);
                auto current = bids.find( newact );
-               enumivo_assert( current != bids.end(), "no active bid for name" );
-               enumivo_assert( current->high_bidder == creator, "only highest bidder can claim" );
-               enumivo_assert( current->high_bid < 0, "auction for name is not closed yet" );
+               myeosio_assert( current != bids.end(), "no active bid for name" );
+               myeosio_assert( current->high_bidder == creator, "only highest bidder can claim" );
+               myeosio_assert( current->high_bid < 0, "auction for name is not closed yet" );
                bids.erase( current );
             } else {
-               enumivo_assert( creator == suffix, "only suffix may create this account" );
+               myeosio_assert( creator == suffix, "only suffix may create this account" );
             }
          }
       }
@@ -189,7 +189,7 @@ namespace enumivosystem {
 } /// enu.system
 
 
-ENUMIVO_ABI( enumivosystem::system_contract,
+ENUMIVO_ABI( myeosiosystem::system_contract,
      // native.hpp (newaccount definition is actually in enu.system.cpp)
      (newaccount)(updateauth)(deleteauth)(linkauth)(unlinkauth)(canceldelay)(onerror)
      // enu.system.cpp

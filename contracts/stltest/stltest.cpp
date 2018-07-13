@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 // include entire libc
 #include <alloca.h>
@@ -138,7 +138,7 @@
 //include <enulib/enu.hpp>
 #include <enulib/dispatcher.hpp>
 
-using namespace enumivo;
+using namespace myeosio;
 /*
 namespace std {
    extern ios_base __start_std_streams;
@@ -195,7 +195,7 @@ namespace stltest {
            */
            /*
            prints("STD string: "); prints(s.c_str());
-           prints("\nENU string: "); prints_l(s2.get_data(), s2.get_size());
+           prints("\nMES string: "); prints_l(s2.get_data(), s2.get_size());
            */
            prints("STL test start\n");
            /* doesn't work with WASM::serializeWithInjection
@@ -253,11 +253,11 @@ namespace stltest {
         }
 
         static void apply( account_name c, action_name act) {
-            enumivo::dispatch<stltest::contract, message>(c,act);
+            myeosio::dispatch<stltest::contract, message>(c,act);
         }
     };
 
-} /// namespace enumivo
+} /// namespace myeosio
 
 
 extern "C" {

@@ -4,7 +4,7 @@
 #include <memory>
 #include <soci/soci.h>
 
-namespace enumivo {
+namespace myeosio {
 
 class blocks_table
 {

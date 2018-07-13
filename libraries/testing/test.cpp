@@ -1,11 +1,11 @@
-#include <enumivo/testing/tester.hpp>
+#include <myeosio/testing/tester.hpp>
 #include <fc/io/json.hpp>
 
 #include <enu.token/enu.token.wast.hpp>
 #include <enu.token/enu.token.abi.hpp>
 
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 
 private_key_type get_private_key( name keyname, string role ) {
    return private_key_type::regenerate<fc::ecc::private_key_shim>(fc::sha256::hash(string(keyname)+role));
@@ -39,8 +39,8 @@ int main( int argc, char** argv ) {
 
 
       auto cr = c.push_action( N(enu.token), N(create), N(enu.token), mutable_variant_object()
-                 ("issuer",       "enumivo" )
-                 ("maximum_supply", "10000000.0000 ENU")
+                 ("issuer",       "myeosio" )
+                 ("maximum_supply", "10000000.0000 MES")
                  ("can_freeze", 0)
                  ("can_recall", 0)
                  ("can_whitelist", 0)
@@ -48,9 +48,9 @@ int main( int argc, char** argv ) {
 
       wdump((fc::json::to_pretty_string(cr)));
 
-      cr = c.push_action( N(enu.token), N(issue), N(enumivo), mutable_variant_object()
+      cr = c.push_action( N(enu.token), N(issue), N(myeosio), mutable_variant_object()
                  ("to",       "dan" )
-                 ("quantity", "100.0000 ENU")
+                 ("quantity", "100.0000 MES")
                  ("memo", "")
          );
 
@@ -187,9 +187,9 @@ int main( int argc, char** argv ) {
 
       c.produce_blocks(3);
 
-      cr = c.push_action( N(enu.token), N(issue), N(enumivo), mutable_variant_object()
+      cr = c.push_action( N(enu.token), N(issue), N(myeosio), mutable_variant_object()
                  ("to",       "unregistered" )
-                 ("quantity", "100.0000 ENU")
+                 ("quantity", "100.0000 MES")
                  ("memo", "")
          );
 

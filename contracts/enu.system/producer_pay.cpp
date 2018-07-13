@@ -2,7 +2,7 @@
 
 #include <enu.token/enu.token.hpp>
 
-namespace enumivosystem {
+namespace myeosiosystem {
 
    const int64_t  min_pervote_daily_pay = 100'0000;
    const int64_t  min_activated_stake   = 150'000'000'0000;
@@ -18,9 +18,9 @@ namespace enumivosystem {
 
 
    void system_contract::onblock( block_timestamp timestamp, account_name producer ) {
-      using namespace enumivo;
+      using namespace myeosio;
 
-      require_auth(N(enumivo));
+      require_auth(N(myeosio));
 
       /** until activated stake crosses this threshold no new rewards are paid */
       if( _gstate.total_activated_stake < min_activated_stake )
@@ -64,19 +64,19 @@ namespace enumivosystem {
       }
    }
 
-   using namespace enumivo;
+   using namespace myeosio;
    void system_contract::claimrewards( const account_name& owner ) {
       require_auth(owner);
 
       const auto& prod = _producers.get( owner );
-      enumivo_assert( prod.active(), "producer does not have an active key" );
+      myeosio_assert( prod.active(), "producer does not have an active key" );
 
-      enumivo_assert( _gstate.total_activated_stake >= min_activated_stake,
+      myeosio_assert( _gstate.total_activated_stake >= min_activated_stake,
                     "cannot claim rewards until the chain is activated (at least 15% of all tokens participate in voting)" );
 
       auto ct = current_time();
 
-      enumivo_assert( ct - prod.last_claim_time > useconds_per_day, "already claimed rewards within past day" );
+      myeosio_assert( ct - prod.last_claim_time > useconds_per_day, "already claimed rewards within past day" );
 
       const asset token_supply   = token( N(enu.token)).get_supply(symbol_type(system_token_symbol).name() );
       const auto usecs_since_last_fill = ct - _gstate.last_pervote_bucket_fill;
@@ -89,17 +89,17 @@ namespace enumivosystem {
          auto to_per_block_pay   = to_producers / 4;
          auto to_per_vote_pay    = to_producers - to_per_block_pay;
 
-         INLINE_ACTION_SENDER(enumivo::token, issue)( N(enu.token), {{N(enumivo),N(active)}},
-                                                    {N(enumivo), asset(new_tokens), std::string("issue tokens for producer pay and savings")} );
+         INLINE_ACTION_SENDER(myeosio::token, issue)( N(enu.token), {{N(myeosio),N(active)}},
+                                                    {N(myeosio), asset(new_tokens), std::string("issue tokens for producer pay and savings")} );
 
-         INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {N(enumivo),N(active)},
-                                                       { N(enumivo), N(enu.savings), asset(to_savings), "unallocated inflation" } );
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(myeosio),N(active)},
+                                                       { N(myeosio), N(enu.savings), asset(to_savings), "unallocated inflation" } );
 
-         INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {N(enumivo),N(active)},
-                                                       { N(enumivo), N(enu.blockpay), asset(to_per_block_pay), "fund per-block bucket" } );
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(myeosio),N(active)},
+                                                       { N(myeosio), N(enu.blockpay), asset(to_per_block_pay), "fund per-block bucket" } );
 
-         INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {N(enumivo),N(active)},
-                                                       { N(enumivo), N(enu.votepay), asset(to_per_vote_pay), "fund per-vote bucket" } );
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(myeosio),N(active)},
+                                                       { N(myeosio), N(enu.votepay), asset(to_per_vote_pay), "fund per-vote bucket" } );
 
          _gstate.pervote_bucket  += to_per_vote_pay;
          _gstate.perblock_bucket += to_per_block_pay;
@@ -128,13 +128,13 @@ namespace enumivosystem {
       });
 
       if( producer_per_block_pay > 0 ) {
-         INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {N(enu.blockpay),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.blockpay),N(active)},
                                                        { N(enu.blockpay), owner, asset(producer_per_block_pay), std::string("producer block pay") } );
       }
       if( producer_per_vote_pay > 0 ) {
-         INLINE_ACTION_SENDER(enumivo::token, transfer)( N(enu.token), {N(enu.votepay),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.votepay),N(active)},
                                                        { N(enu.votepay), owner, asset(producer_per_vote_pay), std::string("producer vote pay") } );
       }
    }
 
-} //namespace enumivosystem
+} //namespace myeosiosystem

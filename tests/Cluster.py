@@ -30,11 +30,11 @@ class Cluster(object):
     __BiosPort=8788
 
     # pylint: disable=too-many-arguments
-    # enuwalletd [True|False] Is enuwallet running. If not load the wallet plugin
-    def __init__(self, enuwalletd=False, localCluster=True, host="localhost", port=8888, walletHost="localhost", walletPort=8899, enableMongo=False
-                 , mongoHost="localhost", mongoPort=27017, mongoDb="ENUtest", defproduceraPrvtKey=None, defproducerbPrvtKey=None, staging=False):
+    # mykeosdd [True|False] Is mykeosd running. If not load the wallet plugin
+    def __init__(self, mykeosdd=False, localCluster=True, host="localhost", port=8888, walletHost="localhost", walletPort=8899, enableMongo=False
+                 , mongoHost="localhost", mongoPort=27017, mongoDb="MEStest", defproduceraPrvtKey=None, defproducerbPrvtKey=None, staging=False):
         """Cluster container.
-        enuwalletd [True|False] Is wallet enuwallet running. If not load the wallet plugin
+        mykeosdd [True|False] Is wallet mykeosd running. If not load the wallet plugin
         localCluster [True|False] Is cluster local to host.
         host: enu server host
         port: enu server port
@@ -50,7 +50,7 @@ class Cluster(object):
         self.nodes={}
         self.localCluster=localCluster
         self.wallet=None
-        self.enuwalletd=enuwalletd
+        self.mykeosdd=mykeosdd
         self.enableMongo=enableMongo
         self.mongoHost=mongoHost
         self.mongoPort=mongoPort
@@ -61,7 +61,7 @@ class Cluster(object):
         self.walletHost=walletHost
         self.walletPort=walletPort
         self.walletEndpointArgs=""
-        if self.enuwalletd:
+        if self.mykeosdd:
             self.walletEndpointArgs += " --wallet-url http://%s:%d" % (self.walletHost, self.walletPort)
         self.mongoEndpointArgs=""
         self.mongoUri=""
@@ -72,7 +72,7 @@ class Cluster(object):
         # init accounts
         self.defproduceraAccount=Account("defproducera")
         self.defproducerbAccount=Account("defproducerb")
-        self.enumivoAccount=Account("enumivo")
+        self.myeosioAccount=Account("myeosio")
         self.defproduceraAccount.ownerPrivateKey=defproduceraPrvtKey
         self.defproduceraAccount.activePrivateKey=defproduceraPrvtKey
         self.defproducerbAccount.ownerPrivateKey=defproducerbPrvtKey
@@ -120,15 +120,15 @@ class Cluster(object):
         if self.staging:
             cmdArr.append("--nogen")
 
-        enunodeArgs="--max-transaction-time 5000 --filter-on * --p2p-max-nodes-per-host %d" % (totalNodes)
-        if not self.enuwalletd:
-            enunodeArgs += " --plugin enumivo::wallet_api_plugin"
+        myeosnodeArgs="--max-transaction-time 5000 --filter-on * --p2p-max-nodes-per-host %d" % (totalNodes)
+        if not self.mykeosdd:
+            myeosnodeArgs += " --plugin myeosio::wallet_api_plugin"
         if self.enableMongo:
-            enunodeArgs += " --plugin enumivo::mongo_db_plugin --delete-all-blocks --mongodb-uri %s" % self.mongoUri
+            myeosnodeArgs += " --plugin myeosio::mongo_db_plugin --delete-all-blocks --mongodb-uri %s" % self.mongoUri
 
-        if enunodeArgs:
-            cmdArr.append("--enunode")
-            cmdArr.append(enunodeArgs)
+        if myeosnodeArgs:
+            cmdArr.append("--myeosnode")
+            cmdArr.append(myeosnodeArgs)
 
         s=" ".join(cmdArr)
         if Utils.Debug: Utils.Print("cmd: %s" % (s))
@@ -183,7 +183,7 @@ class Cluster(object):
             account.activePrivateKey=keys["private"]
             account.activePublicKey=keys["public"]
 
-        initAccountKeys(self.enumivoAccount, producerKeys["enumivo"])
+        initAccountKeys(self.myeosioAccount, producerKeys["myeosio"])
         initAccountKeys(self.defproduceraAccount, producerKeys["defproducera"])
         initAccountKeys(self.defproducerbAccount, producerKeys["defproducerb"])
 
@@ -465,7 +465,7 @@ class Cluster(object):
 
     def spreadFundsAndValidate(self, transferAmount=1):
         """Sprays 'transferAmount' funds across configured accounts and validates action. The spray is done in a trickle down fashion with account 1
-        receiving transferAmount*n ENU and forwarding x-transferAmount funds. Transfer actions are spread round-robin across the cluster to vaidate system cohesiveness."""
+        receiving transferAmount*n MES and forwarding x-transferAmount funds. Transfer actions are spread round-robin across the cluster to vaidate system cohesiveness."""
 
         if Utils.Debug: Utils.Print("Get initial system balances.")
         initialBalances=self.nodes[0].getEnuBalances([self.defproduceraAccount] + self.accounts)
@@ -490,7 +490,7 @@ class Cluster(object):
 
         myAccounts = []
         if testSysAccounts:
-            myAccounts += [self.enumivoAccount, self.defproduceraAccount, self.defproducerbAccount]
+            myAccounts += [self.myeosioAccount, self.defproduceraAccount, self.defproducerbAccount]
         if accounts:
             assert(isinstance(accounts, list))
             myAccounts += accounts
@@ -572,16 +572,16 @@ class Cluster(object):
         """Parse cluster config file. Updates producer keys data members."""
 
         node="node_bios"
-        configFile="etc/enumivo/%s/config.ini" % (node)
+        configFile="etc/myeosio/%s/config.ini" % (node)
         if Utils.Debug: Utils.Print("Parsing config file %s" % configFile)
         producerKeys=Cluster.parseProducerKeys(configFile, node)
         if producerKeys is None:
-            Utils.Print("ERROR: Failed to parse enumivo private keys from cluster config files.")
+            Utils.Print("ERROR: Failed to parse myeosio private keys from cluster config files.")
             return None
 
         for i in range(0, totalNodes):
             node="node_%02d" % (i)
-            configFile="etc/enumivo/%s/config.ini" % (node)
+            configFile="etc/myeosio/%s/config.ini" % (node)
             if Utils.Debug: Utils.Print("Parsing config file %s" % configFile)
 
             keys=Cluster.parseProducerKeys(configFile, node)
@@ -592,7 +592,7 @@ class Cluster(object):
 
     @staticmethod
     def bootstrap(totalNodes, prodCount, biosHost, biosPort, dontKill=False, onlyBios=False):
-        """Create 'prodCount' init accounts and deposits 10000000000 ENU in each. If prodCount is -1 will initialize all possible producers.
+        """Create 'prodCount' init accounts and deposits 10000000000 MES in each. If prodCount is -1 will initialize all possible producers.
         Ensure nodes are inter-connected prior to this call. One way to validate this will be to check if every node has block 1."""
 
         Utils.Print("Starting cluster bootstrap.")
@@ -622,16 +622,16 @@ class Cluster(object):
                 Utils.Print("ERROR: Failed to create ignition wallet.")
                 return False
 
-            enumivoName="enumivo"
-            enumivoKeys=producerKeys[enumivoName]
-            enumivoAccount=Account(enumivoName)
-            enumivoAccount.ownerPrivateKey=enumivoKeys["private"]
-            enumivoAccount.ownerPublicKey=enumivoKeys["public"]
-            enumivoAccount.activePrivateKey=enumivoKeys["private"]
-            enumivoAccount.activePublicKey=enumivoKeys["public"]
+            myeosioName="myeosio"
+            myeosioKeys=producerKeys[myeosioName]
+            myeosioAccount=Account(myeosioName)
+            myeosioAccount.ownerPrivateKey=myeosioKeys["private"]
+            myeosioAccount.ownerPublicKey=myeosioKeys["public"]
+            myeosioAccount.activePrivateKey=myeosioKeys["private"]
+            myeosioAccount.activePublicKey=myeosioKeys["public"]
 
-            if not walletMgr.importKey(enumivoAccount, ignWallet):
-                Utils.Print("ERROR: Failed to import %s account keys into ignition wallet." % (enumivoName))
+            if not walletMgr.importKey(myeosioAccount, ignWallet):
+                Utils.Print("ERROR: Failed to import %s account keys into ignition wallet." % (myeosioName))
                 return False
 
             contract="enu.bios"
@@ -639,7 +639,7 @@ class Cluster(object):
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
             Utils.Print("Publish %s contract" % (contract))
-            trans=biosNode.publishContract(enumivoAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
+            trans=biosNode.publishContract(myeosioAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
             if trans is None:
                 Utils.Print("ERROR: Failed to publish contract %s." % (contract))
                 return False
@@ -647,7 +647,7 @@ class Cluster(object):
             Node.validateTransaction(trans)
 
             Utils.Print("Creating accounts: %s " % ", ".join(producerKeys.keys()))
-            producerKeys.pop(enumivoName)
+            producerKeys.pop(myeosioName)
             accounts=[]
             for name, keys in producerKeys.items():
                 initx = None
@@ -656,7 +656,7 @@ class Cluster(object):
                 initx.ownerPublicKey=keys["public"]
                 initx.activePrivateKey=keys["private"]
                 initx.activePublicKey=keys["public"]
-                trans=biosNode.createAccount(initx, enumivoAccount, 0)
+                trans=biosNode.createAccount(initx, myeosioAccount, 0)
                 if trans is None:
                     Utils.Print("ERROR: Failed to create account %s" % (name))
                     return False
@@ -677,8 +677,8 @@ class Cluster(object):
                         setProdsStr=f.read()
 
                         Utils.Print("Setting producers.")
-                        opts="--permission enumivo@active"
-                        myTrans=biosNode.pushMessage("enumivo", "setprods", setProdsStr, opts)
+                        opts="--permission myeosio@active"
+                        myTrans=biosNode.pushMessage("myeosio", "setprods", setProdsStr, opts)
                         if myTrans is None or not myTrans[0]:
                             Utils.Print("ERROR: Failed to set producers.")
                             return False
@@ -702,9 +702,9 @@ class Cluster(object):
                     setProdsStr += ' ] }'
                     if Utils.Debug: Utils.Print("setprods: %s" % (setProdsStr))
                     Utils.Print("Setting producers: %s." % (", ".join(prodNames)))
-                    opts="--permission enumivo@active"
+                    opts="--permission myeosio@active"
                     # pylint: disable=redefined-variable-type
-                    trans=biosNode.pushMessage("enumivo", "setprods", setProdsStr, opts)
+                    trans=biosNode.pushMessage("myeosio", "setprods", setProdsStr, opts)
                     if trans is None or not trans[0]:
                         Utils.Print("ERROR: Failed to set producer %s." % (keys["name"]))
                         return False
@@ -714,39 +714,39 @@ class Cluster(object):
                 if not biosNode.waitForTransInBlock(transId):
                     return False
 
-                # wait for block production handover (essentially a block produced by anyone but enumivo).
-                lam = lambda: biosNode.getInfo()["head_block_producer"] != "enumivo"
+                # wait for block production handover (essentially a block produced by anyone but myeosio).
+                lam = lambda: biosNode.getInfo()["head_block_producer"] != "myeosio"
                 ret=Utils.waitForBool(lam)
                 if not ret:
                     Utils.Print("ERROR: Block production handover failed.")
                     return False
 
-            enumivoTokenAccount=copy.deepcopy(enumivoAccount)
-            enumivoTokenAccount.name="enu.token"
-            trans=biosNode.createAccount(enumivoTokenAccount, enumivoAccount, 0)
+            myeosioTokenAccount=copy.deepcopy(myeosioAccount)
+            myeosioTokenAccount.name="enu.token"
+            trans=biosNode.createAccount(myeosioTokenAccount, myeosioAccount, 0)
             if trans is None:
-                Utils.Print("ERROR: Failed to create account %s" % (enumivoTokenAccount.name))
+                Utils.Print("ERROR: Failed to create account %s" % (myeosioTokenAccount.name))
                 return False
 
-            enumivoRamAccount=copy.deepcopy(enumivoAccount)
-            enumivoRamAccount.name="enu.ram"
-            trans=biosNode.createAccount(enumivoRamAccount, enumivoAccount, 0)
+            myeosioRamAccount=copy.deepcopy(myeosioAccount)
+            myeosioRamAccount.name="enu.ram"
+            trans=biosNode.createAccount(myeosioRamAccount, myeosioAccount, 0)
             if trans is None:
-                Utils.Print("ERROR: Failed to create account %s" % (enumivoRamAccount.name))
+                Utils.Print("ERROR: Failed to create account %s" % (myeosioRamAccount.name))
                 return False
 
-            enumivoRamfeeAccount=copy.deepcopy(enumivoAccount)
-            enumivoRamfeeAccount.name="enu.ramfee"
-            trans=biosNode.createAccount(enumivoRamfeeAccount, enumivoAccount, 0)
+            myeosioRamfeeAccount=copy.deepcopy(myeosioAccount)
+            myeosioRamfeeAccount.name="enu.ramfee"
+            trans=biosNode.createAccount(myeosioRamfeeAccount, myeosioAccount, 0)
             if trans is None:
-                Utils.Print("ERROR: Failed to create account %s" % (enumivoRamfeeAccount.name))
+                Utils.Print("ERROR: Failed to create account %s" % (myeosioRamfeeAccount.name))
                 return False
 
-            enumivoStakeAccount=copy.deepcopy(enumivoAccount)
-            enumivoStakeAccount.name="enu.stake"
-            trans=biosNode.createAccount(enumivoStakeAccount, enumivoAccount, 0)
+            myeosioStakeAccount=copy.deepcopy(myeosioAccount)
+            myeosioStakeAccount.name="enu.stake"
+            trans=biosNode.createAccount(myeosioStakeAccount, myeosioAccount, 0)
             if trans is None:
-                Utils.Print("ERROR: Failed to create account %s" % (enumivoStakeAccount.name))
+                Utils.Print("ERROR: Failed to create account %s" % (myeosioStakeAccount.name))
                 return False
 
             Node.validateTransaction(trans)
@@ -758,34 +758,34 @@ class Cluster(object):
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
             Utils.Print("Publish %s contract" % (contract))
-            trans=biosNode.publishContract(enumivoTokenAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
+            trans=biosNode.publishContract(myeosioTokenAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
             if trans is None:
                 Utils.Print("ERROR: Failed to publish contract %s." % (contract))
                 return False
 
             # Create currency0000, followed by issue currency0000
-            contract=enumivoTokenAccount.name
+            contract=myeosioTokenAccount.name
             Utils.Print("push create action to %s contract" % (contract))
             action="create"
-            data="{\"issuer\":\"%s\",\"maximum_supply\":\"1000000000.0000 %s\",\"can_freeze\":\"0\",\"can_recall\":\"0\",\"can_whitelist\":\"0\"}" % (enumivoTokenAccount.name, CORE_SYMBOL)
+            data="{\"issuer\":\"%s\",\"maximum_supply\":\"1000000000.0000 %s\",\"can_freeze\":\"0\",\"can_recall\":\"0\",\"can_whitelist\":\"0\"}" % (myeosioTokenAccount.name, CORE_SYMBOL)
             opts="--permission %s@active" % (contract)
             trans=biosNode.pushMessage(contract, action, data, opts)
             if trans is None or not trans[0]:
-                Utils.Print("ERROR: Failed to push create action to enumivo contract.")
+                Utils.Print("ERROR: Failed to push create action to myeosio contract.")
                 return False
 
             Node.validateTransaction(trans[1])
             transId=Node.getTransId(trans[1])
             biosNode.waitForTransInBlock(transId)
 
-            contract=enumivoTokenAccount.name
+            contract=myeosioTokenAccount.name
             Utils.Print("push issue action to %s contract" % (contract))
             action="issue"
-            data="{\"to\":\"%s\",\"quantity\":\"1000000000.0000 %s\",\"memo\":\"initial issue\"}" % (enumivoAccount.name, CORE_SYMBOL)
+            data="{\"to\":\"%s\",\"quantity\":\"1000000000.0000 %s\",\"memo\":\"initial issue\"}" % (myeosioAccount.name, CORE_SYMBOL)
             opts="--permission %s@active" % (contract)
             trans=biosNode.pushMessage(contract, action, data, opts)
             if trans is None or not trans[0]:
-                Utils.Print("ERROR: Failed to push issue action to enumivo contract.")
+                Utils.Print("ERROR: Failed to push issue action to myeosio contract.")
                 return False
 
             Node.validateTransaction(trans[1])
@@ -795,8 +795,8 @@ class Cluster(object):
             biosNode.waitForTransFinalization(transId)
 
             expectedAmount="1000000000.0000 {0}".format(CORE_SYMBOL)
-            Utils.Print("Verify enumivo issue, Expected: %s" % (expectedAmount))
-            actualAmount=biosNode.getAccountEnuBalanceStr(enumivoAccount.name)
+            Utils.Print("Verify myeosio issue, Expected: %s" % (expectedAmount))
+            actualAmount=biosNode.getAccountEnuBalanceStr(myeosioAccount.name)
             if expectedAmount != actualAmount:
                 Utils.Print("ERROR: Issue verification failed. Excepted %s, actual: %s" %
                             (expectedAmount, actualAmount))
@@ -807,7 +807,7 @@ class Cluster(object):
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
             Utils.Print("Publish %s contract" % (contract))
-            trans=biosNode.publishContract(enumivoAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
+            trans=biosNode.publishContract(myeosioAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
             if trans is None:
                 Utils.Print("ERROR: Failed to publish contract %s." % (contract))
                 return False
@@ -817,14 +817,14 @@ class Cluster(object):
             initialFunds="1000000.0000 {0}".format(CORE_SYMBOL)
             Utils.Print("Transfer initial fund %s to individual accounts." % (initialFunds))
             trans=None
-            contract=enumivoTokenAccount.name
+            contract=myeosioTokenAccount.name
             action="transfer"
             for name, keys in producerKeys.items():
-                data="{\"from\":\"%s\",\"to\":\"%s\",\"quantity\":\"%s\",\"memo\":\"%s\"}" % (enumivoAccount.name, name, initialFunds, "init transfer")
-                opts="--permission %s@active" % (enumivoAccount.name)
+                data="{\"from\":\"%s\",\"to\":\"%s\",\"quantity\":\"%s\",\"memo\":\"%s\"}" % (myeosioAccount.name, name, initialFunds, "init transfer")
+                opts="--permission %s@active" % (myeosioAccount.name)
                 trans=biosNode.pushMessage(contract, action, data, opts)
                 if trans is None or not trans[0]:
-                    Utils.Print("ERROR: Failed to transfer funds from %s to %s." % (enumivoTokenAccount.name, name))
+                    Utils.Print("ERROR: Failed to transfer funds from %s to %s." % (myeosioTokenAccount.name, name))
                     return False
 
                 Node.validateTransaction(trans[1])
@@ -925,19 +925,19 @@ class Cluster(object):
             Utils.Print("File %s not found." % (fileName))
 
     def dumpErrorDetails(self):
-        fileName="etc/enumivo/node_bios/config.ini"
+        fileName="etc/myeosio/node_bios/config.ini"
         Cluster.dumpErrorDetailImpl(fileName)
         fileName="var/lib/node_bios/stderr.txt"
         Cluster.dumpErrorDetailImpl(fileName)
 
         for i in range(0, len(self.nodes)):
-            fileName="etc/enumivo/node_%02d/config.ini" % (i)
+            fileName="etc/myeosio/node_%02d/config.ini" % (i)
             Cluster.dumpErrorDetailImpl(fileName)
             fileName="var/lib/node_%02d/stderr.txt" % (i)
             Cluster.dumpErrorDetailImpl(fileName)
 
     def killall(self, silent=True, allInstances=False):
-        """Kill cluster enunode instances. allInstances will kill all enunode instances running on the system."""
+        """Kill cluster myeosnode instances. allInstances will kill all myeosnode instances running on the system."""
         cmd="%s -k 9" % (Utils.EnuLauncherPath)
         if Utils.Debug: Utils.Print("cmd: %s" % (cmd))
         if 0 != subprocess.call(cmd.split(), stdout=Utils.FNull):
@@ -978,7 +978,7 @@ class Cluster(object):
     def cleanup(self):
         for f in glob.glob("var/lib/node_*"):
             shutil.rmtree(f)
-        for f in glob.glob("etc/enumivo/node_*"):
+        for f in glob.glob("etc/myeosio/node_*"):
             shutil.rmtree(f)
 
         if self.enableMongo:

@@ -6,8 +6,8 @@
 #include <boost/fusion/include/std_tuple.hpp>
 
 #include <boost/mp11/tuple.hpp>
-#define N(X) ::enumivo::string_to_name(#X)
-namespace enumivo {
+#define N(X) ::myeosio::string_to_name(#X)
+namespace myeosio {
    template<typename Contract, typename FirstAction>
    bool dispatch( uint64_t code, uint64_t act ) {
       if( code == FirstAction::get_account() && FirstAction::get_name() == act ) {
@@ -34,7 +34,7 @@ namespace enumivo {
          Contract().on( unpack_action_data<FirstAction>() );
          return true;
       }
-      return enumivo::dispatch<Contract,SecondAction,Actions...>( code, act );
+      return myeosio::dispatch<Contract,SecondAction,Actions...>( code, act );
    }
 
    template<typename T, typename Q, typename... Args>
@@ -64,8 +64,8 @@ namespace enumivo {
    }
 
 #define ENUMIVO_API_CALL( r, OP, elem ) \
-   case ::enumivo::string_to_name( BOOST_PP_STRINGIZE(elem) ): \
-      enumivo::execute_action( &thiscontract, &OP::elem ); \
+   case ::myeosio::string_to_name( BOOST_PP_STRINGIZE(elem) ): \
+      myeosio::execute_action( &thiscontract, &OP::elem ); \
       break;
 
 #define ENUMIVO_API( TYPE,  MEMBERS ) \
@@ -76,15 +76,15 @@ extern "C" { \
    void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
       auto self = receiver; \
       if( action == N(onerror)) { \
-         /* onerror is only valid if it is for the "enumivo" code account and authorized by "enumivo"'s "active permission */ \
-         enumivo_assert(code == N(enumivo), "onerror action's are only valid from the \"enumivo\" system account"); \
+         /* onerror is only valid if it is for the "myeosio" code account and authorized by "myeosio"'s "active permission */ \
+         myeosio_assert(code == N(myeosio), "onerror action's are only valid from the \"myeosio\" system account"); \
       } \
       if( code == self || action == N(onerror) ) { \
          TYPE thiscontract( self ); \
          switch( action ) { \
             ENUMIVO_API( TYPE, MEMBERS ) \
          } \
-         /* does not allow destructor of thiscontract to run: enumivo_exit(0); */ \
+         /* does not allow destructor of thiscontract to run: myeosio_exit(0); */ \
       } \
    } \
 } \

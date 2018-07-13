@@ -9,7 +9,7 @@ import subprocess
 import signal
 
 ###############################################################
-# Test for validating the dirty db flag sticks repeated enunode restart attempts
+# Test for validating the dirty db flag sticks repeated myeosnode restart attempts
 ###############################################################
 
 
@@ -39,9 +39,9 @@ Utils.Debug=debug
 testSuccessful=False
 
 def runEnunodeAndGetOutput(myNodeId, myTimeout=3):
-    """Startup enunode, wait for timeout (before forced shutdown) and collect output. Stdout, stderr and return code are returned in a dictionary."""
-    Print("Launching enunode process id: %d" % (myNodeId))
-    cmd="programs/enunode/enunode --config-dir etc/enumivo/node_bios --data-dir var/lib/node_bios --verbose-http-errors"
+    """Startup myeosnode, wait for timeout (before forced shutdown) and collect output. Stdout, stderr and return code are returned in a dictionary."""
+    Print("Launching myeosnode process id: %d" % (myNodeId))
+    cmd="programs/myeosnode/myeosnode --config-dir etc/myeosio/node_bios --data-dir var/lib/node_bios --verbose-http-errors"
     Print("cmd: %s" % (cmd))
     proc=subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -52,14 +52,14 @@ def runEnunodeAndGetOutput(myNodeId, myTimeout=3):
         output["stderr"] = errs.decode("utf-8")
         output["returncode"] = proc.returncode
     except (subprocess.TimeoutExpired) as _:
-        Print("ERROR: Enunode is running beyond the defined wait time. Hard killing enunode instance.")
+        Print("ERROR: Enunode is running beyond the defined wait time. Hard killing myeosnode instance.")
         proc.send_signal(signal.SIGKILL)
         return (False, None)
 
     return (True, output)
 
 random.seed(seed) # Use a fixed seed for repeatability.
-cluster=Cluster(enuwalletd=True)
+cluster=Cluster(mykeosdd=True)
 
 try:
     cluster.setChainStrategy(chainSyncStrategyStr)
@@ -81,7 +81,7 @@ try:
     Print("Kill cluster nodes.")
     cluster.killall(allInstances=killAll)
     
-    Print("Restart enunode repeatedly to ensure dirty database flag sticks.")
+    Print("Restart myeosnode repeatedly to ensure dirty database flag sticks.")
     nodeId=0
     timeout=3
     

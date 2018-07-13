@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <fc/network/message_buffer.hpp>
@@ -8,7 +8,7 @@
 #include <iostream>
 
 
-namespace enumivo {
+namespace myeosio {
 using namespace std;
 
 size_t mb_size(boost::asio::mutable_buffer& mb) {
@@ -320,5 +320,5 @@ BOOST_AUTO_TEST_CASE(message_buffer_read_peek_bounds_multi) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
-} // namespace enumivo
+} // namespace myeosio
 

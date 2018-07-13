@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
 
 #include <enu.system/enu.system.wast.hpp>
 #include <enu.system/enu.system.abi.hpp>
@@ -23,9 +23,9 @@
 #endif
 
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 
 using mvo = fc::mutable_variant_object;
@@ -74,14 +74,14 @@ class bootseq_tester : public TESTER {
 public:
 
    fc::variant get_global_state() {
-      vector<char> data = get_row_by_account( N(enumivo), N(enumivo), N(global), N(global) );
+      vector<char> data = get_row_by_account( N(myeosio), N(myeosio), N(global), N(global) );
       if (data.empty()) std::cout << "\nData is empty\n" << std::endl;
-      return data.empty() ? fc::variant() : abi_ser.binary_to_variant( "enumivo_global_state", data );
+      return data.empty() ? fc::variant() : abi_ser.binary_to_variant( "myeosio_global_state", data );
 
    }
 
     auto buyram( name payer, name receiver, asset ram ) {
-       auto r = base_tester::push_action(N(enumivo), N(buyram), payer, mvo()
+       auto r = base_tester::push_action(N(myeosio), N(buyram), payer, mvo()
                     ("payer", payer)
                     ("receiver", receiver)
                     ("quant", ram)
@@ -91,7 +91,7 @@ public:
     }
 
     auto delegate_bandwidth( name from, name receiver, asset net, asset cpu, uint8_t transfer = 1) {
-       auto r = base_tester::push_action(N(enumivo), N(delegatebw), from, mvo()
+       auto r = base_tester::push_action(N(myeosio), N(delegatebw), from, mvo()
                     ("from", from )
                     ("receiver", receiver)
                     ("stake_net_quantity", net)
@@ -133,7 +133,7 @@ public:
     }
 
     auto register_producer(name producer) {
-       auto r = base_tester::push_action(N(enumivo), N(regproducer), producer, mvo()
+       auto r = base_tester::push_action(N(myeosio), N(regproducer), producer, mvo()
                        ("producer",  name(producer))
                        ("producer_key", get_public_key( producer, "active" ) )
                        ("url", "" )
@@ -145,7 +145,7 @@ public:
 
 
     auto undelegate_bandwidth( name from, name receiver, asset net, asset cpu ) {
-       auto r = base_tester::push_action(N(enumivo), N(undelegatebw), from, mvo()
+       auto r = base_tester::push_action(N(myeosio), N(undelegatebw), from, mvo()
                     ("from", from )
                     ("receiver", receiver)
                     ("unstake_net_quantity", net)
@@ -163,7 +163,7 @@ public:
        wdump((account));
         set_code(account, wast, signer);
         set_abi(account, abi, signer);
-        if (account == N(enumivo)) {
+        if (account == N(myeosio)) {
            const auto& accnt = control->db().get<account_object,by_name>( account );
            abi_def abi_definition;
            BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, abi_definition), true);
@@ -185,11 +185,11 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         create_accounts({N(enu.msig), N(enu.token), N(enu.ram), N(enu.ramfee), N(enu.stake), N(enu.votepay), N(enu.blockpay), N(enu.savings) });
 
         // Set code for the following accounts:
-        //  - enumivo (code: enu.bios) (already set by tester constructor)
+        //  - myeosio (code: enu.bios) (already set by tester constructor)
         //  - enu.msig (code: enu.msig)
         //  - enu.token (code: enu.token)
-        set_code_abi(N(enu.msig), enu_msig_wast, enu_msig_abi);//, &enumivo_active_pk);
-        set_code_abi(N(enu.token), enu_token_wast, enu_token_abi); //, &enumivo_active_pk);
+        set_code_abi(N(enu.msig), enu_msig_wast, enu_msig_abi);//, &myeosio_active_pk);
+        set_code_abi(N(enu.token), enu_token_wast, enu_token_abi); //, &myeosio_active_pk);
 
         // Set privileged for enu.msig and enu.token
         set_privileged(N(enu.msig));
@@ -202,11 +202,11 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         BOOST_TEST(enu_token_acc.privileged == true);
 
 
-        // Create ENU tokens in enu.token, set its manager as enumivo
+        // Create MES tokens in enu.token, set its manager as myeosio
         auto max_supply = core_from_string("5000000000.0000"); /// 1x larger than 1B initial tokens
         auto initial_supply = core_from_string("500000000.0000"); /// 1x larger than 1B initial tokens
         create_currency(N(enu.token), config::system_account_name, max_supply);
-        // Issue the genesis supply of 1 billion ENU tokens to enu.system
+        // Issue the genesis supply of 1 billion MES tokens to enu.system
         issue(N(enu.token), config::system_account_name, config::system_account_name, initial_supply);
 
         auto actual = get_balance(config::system_account_name);
@@ -214,11 +214,11 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
 
         // Create genesis accounts
         for( const auto& a : test_genesis ) {
-           create_account( a.aname, N(enumivo) );
+           create_account( a.aname, N(myeosio) );
         }
 
-        // Set enu.system to enumivo
-        set_code_abi(N(enumivo), enu_system_wast, enu_system_abi);
+        // Set enu.system to myeosio
+        set_code_abi(N(myeosio), enu_system_wast, enu_system_abi);
 
         // Buy ram and stake cpu and net for each genesis accounts
         for( const auto& a : test_genesis ) {
@@ -227,7 +227,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
            auto net = (ib - ram) / 2;
            auto cpu = ib - net - ram;
 
-           auto r = buyram(N(enumivo), a.aname, asset(ram));
+           auto r = buyram(N(myeosio), a.aname, asset(ram));
            BOOST_REQUIRE( !r->except_ptr );
 
            r = delegate_bandwidth(N(enu.stake), a.aname, asset(net), asset(cpu));
@@ -241,8 +241,8 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
                 N(runnerup1), N(runnerup2), N(runnerup3)
         };
 
-        //enumivo.prods should not receive ram
-        BOOST_REQUIRE_THROW( buyram(N(enumivo), N(enumivo.prods), asset(1)), enumivo_assert_message_exception);
+        //myeosio.prods should not receive ram
+        BOOST_REQUIRE_THROW( buyram(N(myeosio), N(myeosio.prods), asset(1)), myeosio_assert_message_exception);
 
 
         // Register producers
@@ -253,7 +253,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         // Vote for producers
         auto votepro = [&]( account_name voter, vector<account_name> producers ) {
           std::sort( producers.begin(), producers.end() );
-          base_tester::push_action(N(enumivo), N(voteproducer), voter, mvo()
+          base_tester::push_action(N(myeosio), N(voteproducer), voter, mvo()
                                 ("voter",  name(voter))
                                 ("proxy", name(0) )
                                 ("producers", producers)
@@ -272,12 +272,12 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
         produce_blocks_for_n_rounds(2); // 2 rounds since new producer schedule is set when the first block of next round is irreversible
         auto active_schedule = control->head_block_state()->active_schedule;
         BOOST_TEST(active_schedule.producers.size() == 1);
-        BOOST_TEST(active_schedule.producers.front().producer_name == "enumivo");
+        BOOST_TEST(active_schedule.producers.front().producer_name == "myeosio");
 
         // Spend some time so the producer pay pool is filled by the inflation rate
         produce_min_num_of_blocks_to_spend_time_wo_inactive_prod(fc::seconds(30 * 24 * 3600)); // 30 days
         // Since the total activated stake is less than 150,000,000, it shouldn't be possible to claim rewards
-        BOOST_REQUIRE_THROW(claim_rewards(N(runnerup1)), enumivo_assert_message_exception);
+        BOOST_REQUIRE_THROW(claim_rewards(N(runnerup1)), myeosio_assert_message_exception);
 
         // This will increase the total vote stake by (40,000,000 - 1,000)
         votepro( N(whale4), {N(prodq), N(prodr), N(prods), N(prodt), N(produ)} );
@@ -322,7 +322,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
 
         // This should thrown an error, since block one can only unstake all his stake after 10 years
 
-        BOOST_REQUIRE_THROW(undelegate_bandwidth(N(erl), N(erl), core_from_string("49999500.0000"), core_from_string("49999500.0000")), enumivo_assert_message_exception);
+        BOOST_REQUIRE_THROW(undelegate_bandwidth(N(erl), N(erl), core_from_string("49999500.0000"), core_from_string("49999500.0000")), myeosio_assert_message_exception);
 
         // Skip 10 years
         produce_block(first_june_2028 - control->head_block_time().time_since_epoch());

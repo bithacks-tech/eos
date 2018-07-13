@@ -1,15 +1,15 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <enulib/enu.hpp>
 #include <enulib/transaction.hpp>
 #include <enulib/dispatcher.hpp>
 
-using namespace enumivo;
+using namespace myeosio;
 
-class deferred_test : public enumivo::contract {
+class deferred_test : public myeosio::contract {
    public:
       using contract::contract;
 
@@ -32,7 +32,7 @@ class deferred_test : public enumivo::contract {
       //@abi action
       void deferfunc( uint64_t payload ) {
          print("deferfunc called on ", name{_self}, " with payload = ", payload, "\n");
-         enumivo_assert( payload != 13, "value 13 not allowed in payload" );
+         myeosio_assert( payload != 13, "value 13 not allowed in payload" );
       }
 
    private:
@@ -45,7 +45,7 @@ void apply_onerror(uint64_t receiver, const onerror& error ) {
 extern "C" {
     /// The apply method implements the dispatch of events to this contract
     void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
-      if( code == N(enumivo) && action == N(onerror) ) {
+      if( code == N(myeosio) && action == N(onerror) ) {
          apply_onerror( receiver, onerror::from_current_action() );
       } else if( code == receiver ) {
          deferred_test thiscontract(receiver);

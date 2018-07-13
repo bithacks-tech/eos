@@ -3,9 +3,9 @@
 #include <boost/test/unit_test.hpp>
 #pragma GCC diagnostic pop
 #include <boost/algorithm/string/predicate.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
-#include <enumivo/chain/generated_transaction_object.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
+#include <myeosio/chain/generated_transaction_object.hpp>
 
 #include <enu.token/enu.token.wast.hpp>
 #include <enu.token/enu.token.abi.hpp>
@@ -24,9 +24,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 
 class currency_tester : public TESTER {
@@ -217,7 +217,7 @@ BOOST_FIXTURE_TEST_CASE( test_overspend, currency_tester ) try {
          ("memo", "overspend! Alice");
 
       BOOST_CHECK_EXCEPTION( push_action(N(alice), N(transfer), data),
-                             enumivo_assert_message_exception, enumivo_assert_message_is("overdrawn balance") );
+                             myeosio_assert_message_exception, myeosio_assert_message_is("overdrawn balance") );
       produce_block();
 
       BOOST_REQUIRE_EQUAL(get_balance(N(alice)), asset::from_string( "100.0000 CUR" ));
@@ -275,10 +275,10 @@ BOOST_FIXTURE_TEST_CASE(test_symbol, TESTER) try {
    }
 
    {
-      symbol enu(4, "ENU");
-      BOOST_REQUIRE_EQUAL(SY(4,ENU), enu.value());
-      BOOST_REQUIRE_EQUAL("4,ENU", enu.to_string());
-      BOOST_REQUIRE_EQUAL("ENU", enu.name());
+      symbol enu(4, "MES");
+      BOOST_REQUIRE_EQUAL(SY(4,MES), enu.value());
+      BOOST_REQUIRE_EQUAL("4,MES", enu.to_string());
+      BOOST_REQUIRE_EQUAL("MES", enu.name());
       BOOST_REQUIRE_EQUAL(4, enu.decimals());
    }
 
@@ -581,7 +581,7 @@ BOOST_FIXTURE_TEST_CASE( test_input_quantity, currency_tester ) try {
 
    // transfer using different symbol name fails
    {
-      BOOST_REQUIRE_THROW(transfer(N(alice), N(carl), "20.50 USD"), enumivo_assert_message_exception);
+      BOOST_REQUIRE_THROW(transfer(N(alice), N(carl), "20.50 USD"), myeosio_assert_message_exception);
    }
 
    // issue to alice using right precision

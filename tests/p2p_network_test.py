@@ -37,7 +37,7 @@ parser.add_argument("--wallet_port", type=int, help="wallet port", default=8899)
 parser.add_argument("--impaired_network", help="test impaired network", action='store_true')
 parser.add_argument("--lossy_network", help="test lossy network", action='store_true')
 parser.add_argument("--stress_network", help="test load/stress network", action='store_true')
-parser.add_argument("--not_kill_wallet", help="not killing enuwalletd", action='store_true')
+parser.add_argument("--not_kill_wallet", help="not killing mykeosdd", action='store_true')
 
 args = parser.parse_args()
 enableMongo=False
@@ -55,7 +55,7 @@ elif args.stress_network:
 else:
     errorExit("one of impaired_network, lossy_network or stress_network must be set. Please also check peer configs in p2p_test_peers.py.")
 
-cluster=testUtils.Cluster(enuwalletd=True, enableMongo=enableMongo, defproduceraPrvtKey=defproduceraPrvtKey, defproducerbPrvtKey=defproducerbPrvtKey, walletHost=args.wallet_host, walletPort=args.wallet_port)
+cluster=testUtils.Cluster(mykeosdd=True, enableMongo=enableMongo, defproduceraPrvtKey=defproduceraPrvtKey, defproducerbPrvtKey=defproducerbPrvtKey, walletHost=args.wallet_host, walletPort=args.wallet_port)
 
 print("BEGIN")
 
@@ -103,10 +103,10 @@ testeraAccount.activePublicKey=currencyAccount.activePublicKey=PUB_KEY3
 exchangeAccount.ownerPrivateKey=PRV_KEY2
 exchangeAccount.ownerPublicKey=PUB_KEY2
 
-print("Stand up enuwalletd")
+print("Stand up mykeosdd")
 if walletMgr.launch() is False:
     cmdError("%s" % (EnuWalletDName))
-    errorExit("Failed to stand up enuwalletd.")
+    errorExit("Failed to stand up mykeosdd.")
 
 testWalletName="test"
 Print("Creating wallet \"%s\"." % (testWalletName))
@@ -140,9 +140,9 @@ node0=cluster.getNode(0)
 if node0 is None:
     errorExit("cluster in bad state, received None node")
 
-# enumivo should have the same key as defproducera
-enumivo = copy.copy(defproduceraAccount)
-enu.names = "enumivo"
+# myeosio should have the same key as defproducera
+myeosio = copy.copy(defproduceraAccount)
+enu.names = "myeosio"
 
 Print("Info of each node:")
 for i in range(len(hosts)):
@@ -164,7 +164,7 @@ else:
 try:
     maxIndex = module.maxIndex()
     for cmdInd in range(maxIndex):
-        (transIdList, checkacct, expBal, errmsg) = module.execute(cmdInd, node0, testeraAccount, enumivo)
+        (transIdList, checkacct, expBal, errmsg) = module.execute(cmdInd, node0, testeraAccount, myeosio)
 
         if len(transIdList) == 0 and len(checkacct) == 0:
             errorExit("failed to execute command in host %s:%s" % (hosts[0], errmsg))

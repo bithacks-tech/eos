@@ -1,8 +1,8 @@
-#include <enumivo/chain/block_header_state.hpp>
-#include <enumivo/chain/exceptions.hpp>
+#include <myeosio/chain/block_header_state.hpp>
+#include <myeosio/chain/exceptions.hpp>
 #include <limits>
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
 
    bool block_header_state::is_active_producer( account_name n )const {
@@ -250,4 +250,4 @@ namespace enumivo { namespace chain {
   }
 
 
-} } /// namespace enumivo::chain
+} } /// namespace myeosio::chain

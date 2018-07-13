@@ -1,7 +1,7 @@
-#include <enumivo/chain/block_state.hpp>
-#include <enumivo/chain/exceptions.hpp>
+#include <myeosio/chain/block_state.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
    block_state::block_state( const block_header_state& prev, block_timestamp_type when )
    :block_header_state( prev.generate_next( when ) ), 
@@ -16,4 +16,4 @@ namespace enumivo { namespace chain {
 
 
 
-} } /// enumivo::chain
+} } /// myeosio::chain

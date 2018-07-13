@@ -1,7 +1,7 @@
-#include <enumivo/chain/merkle.hpp>
+#include <myeosio/chain/merkle.hpp>
 #include <fc/io/raw.hpp>
 
-namespace enumivo { namespace chain {
+namespace myeosio { namespace chain {
 
 /**
  * in order to keep proofs concise, before hashing we set the first bit
@@ -49,4 +49,4 @@ digest_type merkle(vector<digest_type> ids) {
    return ids.front();
 }
 
-} } // enumivo::chain
+} } // myeosio::chain

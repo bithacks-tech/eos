@@ -2,7 +2,7 @@
 
 #include "consumer.h"
 
-using namespace enumivo;
+using namespace myeosio;
 
 BOOST_AUTO_TEST_SUITE(consumer_test)
 

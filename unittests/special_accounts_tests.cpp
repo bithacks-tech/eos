@@ -1,20 +1,20 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <algorithm>
 #include <vector>
 #include <iterator>
 #include <boost/test/unit_test.hpp>
 
-#include <enumivo/chain/controller.hpp>
-#include <enumivo/chain/exceptions.hpp>
-#include <enumivo/chain/permission_object.hpp>
-#include <enumivo/chain/global_property_object.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/permission_object.hpp>
+#include <myeosio/chain/global_property_object.hpp>
 
-#include <enumivo/testing/tester.hpp>
+#include <myeosio/testing/tester.hpp>
 
-#include <enumivo/utilities/tempdir.hpp>
+#include <myeosio/utilities/tempdir.hpp>
 
 #include <fc/crypto/digest.hpp>
 
@@ -23,9 +23,9 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/permutation.hpp>
 
-using namespace enumivo;
+using namespace myeosio;
 using namespace chain;
-using tester = enumivo::testing::tester;
+using tester = myeosio::testing::tester;
 
 BOOST_AUTO_TEST_SUITE(special_account_tests)
 

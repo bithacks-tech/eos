@@ -1,15 +1,15 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enumivo/history_api_plugin/history_api_plugin.hpp>
-#include <enumivo/chain/exceptions.hpp>
+#include <myeosio/history_api_plugin/history_api_plugin.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
 #include <fc/io/json.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
-using namespace enumivo;
+using namespace myeosio;
 
 static appbase::abstract_plugin& _history_api_plugin = app().register_plugin<history_api_plugin>();
 

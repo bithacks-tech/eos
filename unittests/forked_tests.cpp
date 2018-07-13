@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
-#include <enumivo/chain/fork_database.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
+#include <myeosio/chain/fork_database.hpp>
 
 #include <enu.token/enu.token.wast.hpp>
 #include <enu.token/enu.token.abi.hpp>
@@ -10,8 +10,8 @@
 
 #include <fc/variant_object.hpp>
 
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 
 private_key_type get_private_key( name keyname, string role ) {
    return private_key_type::regenerate<fc::ecc::private_key_shim>(fc::sha256::hash(string(keyname)+role));
@@ -160,13 +160,13 @@ BOOST_AUTO_TEST_CASE( forking ) try {
 
 
    auto cr = c.push_action( N(enu.token), N(create), N(enu.token), mutable_variant_object()
-              ("issuer",       "enumivo" )
+              ("issuer",       "myeosio" )
               ("maximum_supply", core_from_string("10000000.0000"))
       );
 
    wdump((fc::json::to_pretty_string(cr)));
 
-   cr = c.push_action( N(enu.token), N(issue), N(enumivo), mutable_variant_object()
+   cr = c.push_action( N(enu.token), N(issue), N(myeosio), mutable_variant_object()
               ("to",       "dan" )
               ("quantity", core_from_string("100.0000"))
               ("memo", "")

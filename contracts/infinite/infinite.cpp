@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <enulib/print.hpp> /// defines transfer struct (abi)
 
@@ -10,7 +10,7 @@ extern "C" {
     void apply( uint64_t, uint64_t, uint64_t ) {
        int idx = 0;
        while(true) {
-          enumivo::print(idx++);
+          myeosio::print(idx++);
        }
     }
 }

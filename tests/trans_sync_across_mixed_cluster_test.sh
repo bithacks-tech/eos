@@ -71,7 +71,7 @@ killAll()
 
 cleanup()
 {
-    rm -rf etc/enumivo/node_*
+    rm -rf etc/myeosio/node_*
     rm -rf var/lib/node_*
 }
 
@@ -79,8 +79,8 @@ cleanup()
 # result stored in HEAD_BLOCK_NUM
 getHeadBlockNum()
 {
-  INFO="$(programs/enucli/enucli get info)"
-  verifyErrorCode "enucli get info"
+  INFO="$(programs/mycleos/mycleos get info)"
+  verifyErrorCode "mycleos get info"
   HEAD_BLOCK_NUM="$(echo "$INFO" | awk '/head_block_num/ {print $2}')"
   # remove trailing coma
   HEAD_BLOCK_NUM=${HEAD_BLOCK_NUM%,}
@@ -111,10 +111,10 @@ INITA_PRV_KEY="5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
 # cleanup from last run
 cleanup
 
-# stand up enunode cluster
+# stand up myeosnode cluster
 launcherOpts="-p $pnodes -n $total_nodes -s $topo -d $delay"
-echo Launcher options: --enunode \"--plugin enumivo::wallet_api_plugin\" $launcherOpts
-programs/enulauncher/enulauncher --enunode "--plugin enumivo::wallet_api_plugin" $launcherOpts
+echo Launcher options: --myeosnode \"--plugin myeosio::wallet_api_plugin\" $launcherOpts
+programs/enulauncher/enulauncher --myeosnode "--plugin myeosio::wallet_api_plugin" $launcherOpts
 sleep 7
 
 startPort=8888
@@ -126,22 +126,22 @@ echo endPort: $endPort
 port2=$startPort
 while [ $port2  -ne $endport ]; do
     echo Request block 1 from node on port $port2
-    TRANS_INFO="$(programs/enucli/enucli --port $port2 get block 1)"
-    verifyErrorCode "enucli get block"
+    TRANS_INFO="$(programs/mycleos/mycleos --port $port2 get block 1)"
+    verifyErrorCode "mycleos get block"
     port2=`expr $port2 + 1`
 done
 
 # create 3 keys
-KEYS="$(programs/enucli/enucli create key)"
-verifyErrorCode "enucli create key"
+KEYS="$(programs/mycleos/mycleos create key)"
+verifyErrorCode "mycleos create key"
 PRV_KEY1="$(echo "$KEYS" | awk '/Private/ {print $3}')"
 PUB_KEY1="$(echo "$KEYS" | awk '/Public/ {print $3}')"
-KEYS="$(programs/enucli/enucli create key)"
-verifyErrorCode "enucli create key"
+KEYS="$(programs/mycleos/mycleos create key)"
+verifyErrorCode "mycleos create key"
 PRV_KEY2="$(echo "$KEYS" | awk '/Private/ {print $3}')"
 PUB_KEY2="$(echo "$KEYS" | awk '/Public/ {print $3}')"
-KEYS="$(programs/enucli/enucli create key)"
-verifyErrorCode "enucli create key"
+KEYS="$(programs/mycleos/mycleos create key)"
+verifyErrorCode "mycleos create key"
 PRV_KEY3="$(echo "$KEYS" | awk '/Private/ {print $3}')"
 PUB_KEY3="$(echo "$KEYS" | awk '/Public/ {print $3}')"
 if [ -z "$PRV_KEY1" ] || [ -z "$PRV_KEY2" ] || [ -z "$PRV_KEY3" ] || [ -z "$PUB_KEY1" ] || [ -z "$PUB_KEY2" ] || [ -z "$PUB_KEY3" ]; then
@@ -150,21 +150,21 @@ fi
 
 
 # create wallet for inita
-PASSWORD_INITA="$(programs/enucli/enucli wallet create --name inita)"
-verifyErrorCode "enucli wallet create"
+PASSWORD_INITA="$(programs/mycleos/mycleos wallet create --name inita)"
+verifyErrorCode "mycleos wallet create"
 # strip out password from output
 PASSWORD_INITA="$(echo "$PASSWORD_INITA" | awk '/PW/ {print $1}')"
 # remove leading/trailing quotes
 PASSWORD_INITA=${PASSWORD_INITA#\"}
 PASSWORD_INITA=${PASSWORD_INITA%\"}
-programs/enucli/enucli wallet import --name inita $INITA_PRV_KEY
-verifyErrorCode "enucli wallet import"
-programs/enucli/enucli wallet import --name inita $PRV_KEY1
-verifyErrorCode "enucli wallet import"
-programs/enucli/enucli wallet import --name inita $PRV_KEY2
-verifyErrorCode "enucli wallet import"
-programs/enucli/enucli wallet import --name inita $PRV_KEY3
-verifyErrorCode "enucli wallet import"
+programs/mycleos/mycleos wallet import --name inita $INITA_PRV_KEY
+verifyErrorCode "mycleos wallet import"
+programs/mycleos/mycleos wallet import --name inita $PRV_KEY1
+verifyErrorCode "mycleos wallet import"
+programs/mycleos/mycleos wallet import --name inita $PRV_KEY2
+verifyErrorCode "mycleos wallet import"
+programs/mycleos/mycleos wallet import --name inita $PRV_KEY3
+verifyErrorCode "mycleos wallet import"
 
 #
 # Account and Transfer Tests
@@ -172,12 +172,12 @@ verifyErrorCode "enucli wallet import"
 
 # create new account
 echo Creating account testera
-ACCOUNT_INFO="$(programs/enucli/enucli create account inita testera $PUB_KEY1 $PUB_KEY3)"
-verifyErrorCode "enucli create account"
+ACCOUNT_INFO="$(programs/mycleos/mycleos create account inita testera $PUB_KEY1 $PUB_KEY3)"
+verifyErrorCode "mycleos create account"
 waitForNextBlock
 # verify account created
-ACCOUNT_INFO="$(programs/enucli/enucli get account testera)"
-verifyErrorCode "enucli get account"
+ACCOUNT_INFO="$(programs/mycleos/mycleos get account testera)"
+verifyErrorCode "mycleos get account"
 count=`echo $ACCOUNT_INFO | grep -c "staked_balance"`
 if [ $count == 0 ]; then
   error "FAILURE - account creation failed: $ACCOUNT_INFO"
@@ -189,8 +189,8 @@ echo Producing node port: $pPort
 while [ $port  -ne $endport ]; do
 
     echo Sending transfer request to node on port $port.
-    TRANSFER_INFO="$(programs/enucli/enucli transfer inita testera 975321 "test transfer")"
-    verifyErrorCode "enucli transfer"
+    TRANSFER_INFO="$(programs/mycleos/mycleos transfer inita testera 975321 "test transfer")"
+    verifyErrorCode "mycleos transfer"
     getTransactionId "$TRANSFER_INFO"
     echo Transaction id: $TRANS_ID
 
@@ -200,8 +200,8 @@ while [ $port  -ne $endport ]; do
     port2=$startPort
     while [ $port2  -ne $endport ]; do
 	echo Verifying transaction exists on node on port $port2
-   TRANS_INFO="$(programs/enucli/enucli --port $port2 get transaction $TRANS_ID)"
-   verifyErrorCode "enucli get transaction trans_id of <$TRANS_INFO> from node on port $port2"
+   TRANS_INFO="$(programs/mycleos/mycleos --port $port2 get transaction $TRANS_ID)"
+   verifyErrorCode "mycleos get transaction trans_id of <$TRANS_INFO> from node on port $port2"
 	port2=`expr $port2 + 1`
     done
 

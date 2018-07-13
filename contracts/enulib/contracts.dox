@@ -1,17 +1,17 @@
 /**
   @defgroup contractdev Smart Contract API Reference
-  @brief Introduction to writing contracts for Enumivo
+  @brief Introduction to writing contracts for MyEOSIO
 
   @section background Background 
 
-  Enumivo contracts (aka applications) are deployed to a blockchain as pre-compiled Web Assembly (aka WASM). WASM is compiled
+  MyEOSIO contracts (aka applications) are deployed to a blockchain as pre-compiled Web Assembly (aka WASM). WASM is compiled
   from C/C++ using LLVM and clang, which means that you will require knowledge of C/C++ in order to develop your blockchain
-  applications.  While it is possible to develop in C, we strongly recommend that all developers use the Enumivo C++ API which
+  applications.  While it is possible to develop in C, we strongly recommend that all developers use the MyEOSIO C++ API which
   provides much stronger type safety and is generally easier to read.
 
   @section programstructure Application Structure
 
-  Enumivo applications are designed around event (aka action) handlers that respond to user actions. For example,
+  MyEOSIO applications are designed around event (aka action) handlers that respond to user actions. For example,
   a user might transfer tokens to another user. This event can be processed and potentially rejected by the sender,
   the receiver, and the currency application itself.
 
@@ -21,7 +21,7 @@
 
   @subsection programentry Entry Points
 
-  Enumivo applications have a `apply` which is like `main` in traditional applications:
+  MyEOSIO applications have a `apply` which is like `main` in traditional applications:
 
   ```
   extern "C" {
@@ -51,7 +51,7 @@
            if( action == N(transfer) ) 
               currency::apply_currency_transfer( current_action< currency::transfer >() );
         } else {
-           enumivo_assert( false, "rejecting unexpected event" );
+           myeosio_assert( false, "rejecting unexpected event" );
         }
      }
   }

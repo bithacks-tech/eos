@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #pragma once
 
@@ -13,12 +13,12 @@
 
 #include <string>
 
-namespace enumivosystem {
+namespace myeosiosystem {
 
-   using enumivo::asset;
-   using enumivo::indexed_by;
-   using enumivo::const_mem_fun;
-   using enumivo::block_timestamp;
+   using myeosio::asset;
+   using myeosio::indexed_by;
+   using myeosio::const_mem_fun;
+   using myeosio::block_timestamp;
 
    struct name_bid {
      account_name            newname;
@@ -30,12 +30,12 @@ namespace enumivosystem {
      uint64_t by_high_bid()const { return static_cast<uint64_t>(-high_bid); }
    };
 
-   typedef enumivo::multi_index< N(namebids), name_bid,
+   typedef myeosio::multi_index< N(namebids), name_bid,
                                indexed_by<N(highbid), const_mem_fun<name_bid, uint64_t, &name_bid::by_high_bid>  >
                                >  name_bid_table;
 
 
-   struct enumivo_global_state : enumivo::blockchain_parameters {
+   struct myeosio_global_state : myeosio::blockchain_parameters {
       uint64_t free_ram()const { return max_ram_size - total_ram_bytes_reserved; }
 
       uint64_t             max_ram_size = 64ll*1024 * 1024 * 1024;
@@ -54,7 +54,7 @@ namespace enumivosystem {
       block_timestamp      last_name_close;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE_DERIVED( enumivo_global_state, enumivo::blockchain_parameters,
+      MESLIB_SERIALIZE_DERIVED( myeosio_global_state, myeosio::blockchain_parameters,
                                 (max_ram_size)(total_ram_bytes_reserved)(total_ram_stake)
                                 (last_producer_schedule_update)(last_pervote_bucket_fill)
                                 (pervote_bucket)(perblock_bucket)(total_unpaid_blocks)(total_activated_stake)(thresh_activated_stake_time)
@@ -64,7 +64,7 @@ namespace enumivosystem {
    struct producer_info {
       account_name          owner;
       double                total_votes = 0;
-      enumivo::public_key   producer_key; /// a packed public key object
+      myeosio::public_key   producer_key; /// a packed public key object
       bool                  is_active = true;
       std::string           url;
       uint32_t              unpaid_blocks = 0;
@@ -77,7 +77,7 @@ namespace enumivosystem {
       void     deactivate()       { producer_key = public_key(); is_active = false; }
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE( producer_info, (owner)(total_votes)(producer_key)(is_active)(url)
+      MESLIB_SERIALIZE( producer_info, (owner)(total_votes)(producer_key)(is_active)(url)
                         (unpaid_blocks)(last_claim_time)(location) )
    };
 
@@ -104,22 +104,22 @@ namespace enumivosystem {
 
       uint32_t                    reserved1 = 0;
       time                        reserved2 = 0;
-      enumivo::asset              reserved3;
+      myeosio::asset              reserved3;
 
       uint64_t primary_key()const { return owner; }
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      ENULIB_SERIALIZE( voter_info, (owner)(proxy)(producers)(staked)(last_vote_weight)(proxied_vote_weight)(is_proxy)(reserved1)(reserved2)(reserved3) )
+      MESLIB_SERIALIZE( voter_info, (owner)(proxy)(producers)(staked)(last_vote_weight)(proxied_vote_weight)(is_proxy)(reserved1)(reserved2)(reserved3) )
    };
 
-   typedef enumivo::multi_index< N(voters), voter_info>  voters_table;
+   typedef myeosio::multi_index< N(voters), voter_info>  voters_table;
 
 
-   typedef enumivo::multi_index< N(producers), producer_info,
+   typedef myeosio::multi_index< N(producers), producer_info,
                                indexed_by<N(prototalvote), const_mem_fun<producer_info, double, &producer_info::by_votes>  >
                                >  producers_table;
 
-   typedef enumivo::singleton<N(global), enumivo_global_state> global_state_singleton;
+   typedef myeosio::singleton<N(global), myeosio_global_state> global_state_singleton;
 
    //   static constexpr uint32_t     max_inflation_rate = 5;  // 5% annual inflation
    static constexpr uint32_t     seconds_per_day = 24 * 3600;
@@ -131,7 +131,7 @@ namespace enumivosystem {
          producers_table        _producers;
          global_state_singleton _global;
 
-         enumivo_global_state     _gstate;
+         myeosio_global_state     _gstate;
          rammarket              _rammarket;
 
       public:
@@ -145,7 +145,7 @@ namespace enumivosystem {
          // functions defined in delegate_bandwidth.cpp
 
          /**
-          *  Stakes ENU from the balance of 'from' for the benfit of 'receiver'.
+          *  Stakes MES from the balance of 'from' for the benfit of 'receiver'.
           *  If transfer == true, then 'receiver' can unstake to their account
           *  Else 'from' can unstake at any time.
           */
@@ -205,7 +205,7 @@ namespace enumivosystem {
 
          void regproxy( const account_name proxy, bool isproxy );
 
-         void setparams( const enumivo::blockchain_parameters& params );
+         void setparams( const myeosio::blockchain_parameters& params );
 
          // functions defined in producer_pay.cpp
          void claimrewards( const account_name& owner );
@@ -225,7 +225,7 @@ namespace enumivosystem {
                         asset stake_net_quantity, asset stake_cpu_quantity, bool transfer );
 
          //defined in voting.hpp
-         static enumivo_global_state get_default_parameters();
+         static myeosio_global_state get_default_parameters();
 
          void update_votes( const account_name voter, const account_name proxy, const std::vector<account_name>& producers, bool voting );
 
@@ -233,4 +233,4 @@ namespace enumivosystem {
          void propagate_weight_change( const voter_info& voter );
    };
 
-} /// enumivosystem
+} /// myeosiosystem

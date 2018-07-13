@@ -1,7 +1,7 @@
-#include <enumivo/abi_generator/abi_generator.hpp>
-#include <enumivo/chain/abi_def.hpp>
+#include <myeosio/abi_generator/abi_generator.hpp>
+#include <myeosio/chain/abi_def.hpp>
 
-namespace enumivo {
+namespace myeosio {
 
 void abi_generator::set_target_contract(const string& contract, const vector<string>& actions) {
   target_contract = contract;
@@ -85,9 +85,9 @@ string abi_generator::translate_type(const string& type_name) {
   else if (type_name == "char"               || type_name == "int8_t")   built_in_type = "int8";
   else if (type_name == "double")   built_in_type = "float64";
   else {
-     static auto types = enumivo::chain::common_type_defs();
+     static auto types = myeosio::chain::common_type_defs();
      auto itr = std::find_if( types.begin(), types.end(),
-                              [&type_name]( const enumivo::chain::type_def& t ) { return t.new_type_name == type_name; } );
+                              [&type_name]( const myeosio::chain::type_def& t ) { return t.new_type_name == type_name; } );
      if( itr != types.end()) {
         built_in_type = itr->type;
      }

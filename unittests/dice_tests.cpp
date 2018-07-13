@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
-#include <enumivo/testing/tester.hpp>
-#include <enumivo/chain/abi_serializer.hpp>
-#include <enumivo/chain/contract_table_objects.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/abi_serializer.hpp>
+#include <myeosio/chain/contract_table_objects.hpp>
 
 #include <dice/dice.wast.hpp>
 #include <dice/dice.abi.hpp>
@@ -19,9 +19,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace enumivo;
-using namespace enumivo::chain;
-using namespace enumivo::testing;
+using namespace myeosio;
+using namespace myeosio::chain;
+using namespace myeosio::testing;
 using namespace fc;
 using namespace std;
 using mvo = fc::mutable_variant_object;
@@ -241,14 +241,14 @@ BOOST_FIXTURE_TEST_CASE( dice_test, dice_tester ) try {
    );
 
    push_action(N(enu.token), N(issue), N(enu.token), mvo()
-     ("to", "enumivo")
+     ("to", "myeosio")
      ("quantity", core_from_string("1000000000.0000"))
      ("memo", "")
    );
 
-   transfer( N(enumivo), N(alice), core_from_string("10000.0000"), "", N(enu.token) );
-   transfer( N(enumivo), N(bob),   core_from_string("10000.0000"), "", N(enu.token) );
-   transfer( N(enumivo), N(carol), core_from_string("10000.0000"), "", N(enu.token) );
+   transfer( N(myeosio), N(alice), core_from_string("10000.0000"), "", N(enu.token) );
+   transfer( N(myeosio), N(bob),   core_from_string("10000.0000"), "", N(enu.token) );
+   transfer( N(myeosio), N(carol), core_from_string("10000.0000"), "", N(enu.token) );
 
    produce_block();
 
