@@ -327,6 +327,7 @@ BOOST_AUTO_TEST_CASE( blacklist_myeosio ) { try {
    whitelist_blacklist_tester<tester> tester1;
    tester1.init();
    tester1.chain->produce_blocks();
+
    tester1.chain->set_code(N(myeosio), myeos_token_wast);
    tester1.chain->produce_blocks();
    tester1.shutdown();
