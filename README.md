@@ -39,8 +39,17 @@ MyEOSIO currently supports the following operating systems:
 3. [Community Telegram Group](https://t.me/myeosiochat)
 
 # Running
-To run MyEOSIO, the git clone command is:
+To download MyEOSIO, the git clone command is:
 ```bash
 git clone -b myeosio https://github.com/bithacks-tech/myeosio --recursive
 ```
-
+Then run the following script for the first time:
+```bash
+./myeosio_build.sh
+```
+Remember waiting for the code to be successfully built. Then run the following command to install the environment of MyEOSIO:
+```bash
+cd build
+sudo make install
+```
+Wait for the accomplishment of the installation.
