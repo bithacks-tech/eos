@@ -60,7 +60,7 @@ $ ./myeosnode -d ~/myeosio.data/generator_node --config-dir ~/myeosio.data/gener
 ### Create a wallet on the non-producer and set bios contract
 ```bash
 $ ./mycleos wallet create
-$ ./mycleos set contract myeosio ~/myeosio/build.release/contracts/enu.bios/ 
+$ ./mycleos set contract myeosio ~/myeosio/build.release/contracts/myeos.bios/ 
 ```
 
 ### Initialize the accounts txn_test_gen_plugin uses

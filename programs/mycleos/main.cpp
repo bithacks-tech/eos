@@ -592,7 +592,7 @@ asset to_asset( const string& code, const string& s ) {
 }
 
 inline asset to_asset( const string& s ) {
-   return to_asset( "enu.token", s );
+   return to_asset( "myeos.token", s );
 }
 
 struct set_account_permission_subcommand {
@@ -2081,7 +2081,7 @@ int main( int argc, char** argv ) {
    auto setActionPermission = set_action_permission_subcommand(setAction);
 
    // Transfer subcommand
-   string con = "enu.token";
+   string con = "myeos.token";
    string sender;
    string recipient;
    string amount;
@@ -2495,7 +2495,7 @@ int main( int argc, char** argv ) {
       fc::to_variant(trx, trx_var);
 
       arg = fc::mutable_variant_object()
-         ("code", "enu.msig")
+         ("code", "myeos.msig")
          ("action", "propose")
          ("args", fc::mutable_variant_object()
           ("proposer", proposer )
@@ -2504,7 +2504,7 @@ int main( int argc, char** argv ) {
           ("trx", trx_var)
          );
       result = call(json_to_bin_func, arg);
-      send_actions({chain::action{accountPermissions, "enu.msig", "propose", result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "myeos.msig", "propose", result.get_object()["binargs"].as<bytes>()}});
    });
 
    //resolver for ABI serializer to decode actions in proposed transaction in multisig contract
@@ -2527,7 +2527,7 @@ int main( int argc, char** argv ) {
 
    review->set_callback([&] {
       auto result = call(get_table_func, fc::mutable_variant_object("json", true)
-                         ("code", "enu.msig")
+                         ("code", "myeos.msig")
                          ("scope", proposer)
                          ("table", "proposal")
                          ("table_key", "")
@@ -2567,7 +2567,7 @@ int main( int argc, char** argv ) {
          perm_var = json_from_file_or_string(perm);
       } MES_RETHROW_EXCEPTIONS(transaction_type_exception, "Fail to parse permissions JSON '${data}'", ("data",perm))
       auto arg = fc::mutable_variant_object()
-         ("code", "enu.msig")
+         ("code", "myeos.msig")
          ("action", action)
          ("args", fc::mutable_variant_object()
           ("proposer", proposer)
@@ -2576,7 +2576,7 @@ int main( int argc, char** argv ) {
          );
       auto result = call(json_to_bin_func, arg);
       auto accountPermissions = tx_permission.empty() ? vector<chain::permission_level>{{sender,config::active_name}} : get_account_permissions(tx_permission);
-      send_actions({chain::action{accountPermissions, "enu.msig", action, result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "myeos.msig", action, result.get_object()["binargs"].as<bytes>()}});
    };
 
    // multisig approve
@@ -2615,7 +2615,7 @@ int main( int argc, char** argv ) {
          canceler = name(accountPermissions.at(0).actor).to_string();
       }
       auto arg = fc::mutable_variant_object()
-         ("code", "enu.msig")
+         ("code", "myeos.msig")
          ("action", "cancel")
          ("args", fc::mutable_variant_object()
           ("proposer", proposer)
@@ -2623,7 +2623,7 @@ int main( int argc, char** argv ) {
           ("canceler", canceler)
          );
       auto result = call(json_to_bin_func, arg);
-      send_actions({chain::action{accountPermissions, "enu.msig", "cancel", result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "myeos.msig", "cancel", result.get_object()["binargs"].as<bytes>()}});
       }
    );
 
@@ -2648,7 +2648,7 @@ int main( int argc, char** argv ) {
       }
 
       auto arg = fc::mutable_variant_object()
-         ("code", "enu.msig")
+         ("code", "myeos.msig")
          ("action", "exec")
          ("args", fc::mutable_variant_object()
           ("proposer", proposer )
@@ -2657,12 +2657,12 @@ int main( int argc, char** argv ) {
          );
       auto result = call(json_to_bin_func, arg);
       //std::cout << "Result: " << result << std::endl;
-      send_actions({chain::action{accountPermissions, "enu.msig", "exec", result.get_object()["binargs"].as<bytes>()}});
+      send_actions({chain::action{accountPermissions, "myeos.msig", "exec", result.get_object()["binargs"].as<bytes>()}});
       }
    );
 
    // system subcommand
-   auto system = app.add_subcommand("system", localized("Send enu.system contract action to the blockchain."), false);
+   auto system = app.add_subcommand("system", localized("Send myeos.system contract action to the blockchain."), false);
    system->require_subcommand();
 
    auto createAccountSystem = create_account_subcommand( system, false /*simple*/ );

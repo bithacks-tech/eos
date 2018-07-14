@@ -7,14 +7,14 @@
 #include <myeosio/testing/tester.hpp>
 #include <myeosio/chain/abi_serializer.hpp>
 
-#include <enu.system/enu.system.wast.hpp>
-#include <enu.system/enu.system.abi.hpp>
+#include <myeos.system/myeos.system.wast.hpp>
+#include <myeos.system/myeos.system.abi.hpp>
 
-#include <enu.token/enu.token.wast.hpp>
-#include <enu.token/enu.token.abi.hpp>
+#include <myeos.token/myeos.token.wast.hpp>
+#include <myeos.token/myeos.token.abi.hpp>
 
-#include <enu.msig/enu.msig.wast.hpp>
-#include <enu.msig/enu.msig.abi.hpp>
+#include <myeos.msig/myeos.msig.wast.hpp>
+#include <myeos.msig/myeos.msig.abi.hpp>
 
 #include <fc/variant_object.hpp>
 
@@ -32,42 +32,42 @@ using mvo = fc::mutable_variant_object;
 #endif
 #endif
 
-namespace enu_system {
+namespace myeos.system {
 
-class enu_system_tester : public TESTER {
+class myeos.system_tester : public TESTER {
 public:
 
-   enu_system_tester()
-   : enu_system_tester([](TESTER& ) {}){}
+   myeos.system_tester()
+   : myeos.system_tester([](TESTER& ) {}){}
 
    template<typename Lambda>
-   enu_system_tester(Lambda setup) {
+   myeos.system_tester(Lambda setup) {
       setup(*this);
 
       produce_blocks( 2 );
 
-      create_accounts({ N(enu.token), N(enu.ram), N(enu.ramfee), N(enu.stake),
+      create_accounts({ N(myeos.token), N(enu.ram), N(enu.ramfee), N(enu.stake),
                N(enu.blockpay), N(enu.votepay), N(enu.savings), N(enu.names) });
 
 
       produce_blocks( 100 );
 
-      set_code( N(enu.token), enu_token_wast );
-      set_abi( N(enu.token), enu_token_abi );
+      set_code( N(myeos.token), myeos.token_wast );
+      set_abi( N(myeos.token), myeos_token_abi );
 
       {
-         const auto& accnt = control->db().get<account_object,by_name>( N(enu.token) );
+         const auto& accnt = control->db().get<account_object,by_name>( N(myeos.token) );
          abi_def abi;
          BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, abi), true);
          token_abi_ser.set_abi(abi);
       }
 
-      create_currency( N(enu.token), config::system_account_name, core_from_string("10000000000.0000") );
+      create_currency( N(myeos.token), config::system_account_name, core_from_string("10000000000.0000") );
       issue(config::system_account_name,      core_from_string("1000000000.0000"));
       BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( "myeosio" ) );
 
-      set_code( config::system_account_name, enu_system_wast );
-      set_abi( config::system_account_name, enu_system_abi );
+      set_code( config::system_account_name, myeos.system_wast );
+      set_abi( config::system_account_name, myeos_system_abi );
 
       {
          const auto& accnt = control->db().get<account_object,by_name>( config::system_account_name );
@@ -329,7 +329,7 @@ public:
    }
 
    asset get_balance( const account_name& act ) {
-      vector<char> data = get_row_by_account( N(enu.token), act, N(accounts), symbol(CORE_SYMBOL).to_symbol_code().value );
+      vector<char> data = get_row_by_account( N(myeos.token), act, N(accounts), symbol(CORE_SYMBOL).to_symbol_code().value );
       return data.empty() ? asset(0, symbol(CORE_SYMBOL)) : token_abi_ser.binary_to_variant("account", data)["balance"].as<asset>();
    }
 
@@ -357,14 +357,14 @@ public:
    }
 
    void issue( name to, const asset& amount, name manager = config::system_account_name ) {
-      base_tester::push_action( N(enu.token), N(issue), manager, mutable_variant_object()
+      base_tester::push_action( N(myeos.token), N(issue), manager, mutable_variant_object()
                                 ("to",      to )
                                 ("quantity", amount )
                                 ("memo", "")
                                 );
    }
    void transfer( name from, name to, const asset& amount, name manager = config::system_account_name ) {
-      base_tester::push_action( N(enu.token), N(transfer), manager, mutable_variant_object()
+      base_tester::push_action( N(myeos.token), N(transfer), manager, mutable_variant_object()
                                 ("from",    from)
                                 ("to",      to )
                                 ("quantity", amount)
@@ -384,7 +384,7 @@ public:
    fc::variant get_stats( const string& symbolname ) {
       auto symb = myeosio::chain::symbol::from_string(symbolname);
       auto symbol_code = symb.to_symbol_code().value;
-      vector<char> data = get_row_by_account( N(enu.token), symbol_code, N(stat), symbol_code );
+      vector<char> data = get_row_by_account( N(myeos.token), symbol_code, N(stat), symbol_code );
       return data.empty() ? fc::variant() : token_abi_ser.binary_to_variant( "currency_stats", data );
    }
 
@@ -407,21 +407,21 @@ public:
    abi_serializer initialize_multisig() {
       abi_serializer msig_abi_ser;
       {
-         create_account_with_resources( N(enu.msig), config::system_account_name );
-         BOOST_REQUIRE_EQUAL( success(), buyram( "myeosio", "enu.msig", core_from_string("5000.0000") ) );
+         create_account_with_resources( N(myeos.msig), config::system_account_name );
+         BOOST_REQUIRE_EQUAL( success(), buyram( "myeosio", "myeos.msig", core_from_string("5000.0000") ) );
          produce_block();
 
          auto trace = base_tester::push_action(config::system_account_name, N(setpriv),
                                                config::system_account_name,  mutable_variant_object()
-                                               ("account", "enu.msig")
+                                               ("account", "myeos.msig")
                                                ("is_priv", 1)
          );
 
-         set_code( N(enu.msig), enu_msig_wast );
-         set_abi( N(enu.msig), enu_msig_abi );
+         set_code( N(myeos.msig), myeos.msig_wast );
+         set_abi( N(myeos.msig), myeos_msig_abi );
 
          produce_blocks();
-         const auto& accnt = control->db().get<account_object,by_name>( N(enu.msig) );
+         const auto& accnt = control->db().get<account_object,by_name>( N(myeos.msig) );
          abi_def msig_abi;
          BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, msig_abi), true);
          msig_abi_ser.set_abi(msig_abi);
@@ -435,7 +435,7 @@ public:
       string action_type_name = msig_abi_ser.get_action_type(name);
 
       action act;
-      act.account = N(enu.msig);
+      act.account = N(myeos.msig);
       act.name = name;
       act.data = msig_abi_ser.variant_to_binary( action_type_name, data );
 

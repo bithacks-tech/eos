@@ -2,15 +2,15 @@
 #include <myeosio/testing/tester.hpp>
 #include <myeosio/chain/abi_serializer.hpp>
 
-#include <enu.system/enu.system.wast.hpp>
-#include <enu.system/enu.system.abi.hpp>
+#include <myeos.system/myeos.system.wast.hpp>
+#include <myeos.system/myeos.system.abi.hpp>
 // These contracts are still under dev
-#include <enu.bios/enu.bios.wast.hpp>
-#include <enu.bios/enu.bios.abi.hpp>
-#include <enu.token/enu.token.wast.hpp>
-#include <enu.token/enu.token.abi.hpp>
-#include <enu.msig/enu.msig.wast.hpp>
-#include <enu.msig/enu.msig.abi.hpp>
+#include <myeos.bios/myeos.bios.wast.hpp>
+#include <myeos.bios/myeos.bios.abi.hpp>
+#include <myeos.token/myeos.token.wast.hpp>
+#include <myeos.token/myeos.token.abi.hpp>
+#include <myeos.msig/myeos.msig.wast.hpp>
+#include <myeos.msig/myeos.msig.abi.hpp>
 
 #include <Runtime/Runtime.h>
 
@@ -156,7 +156,7 @@ public:
     }
 
     asset get_balance( const account_name& act ) {
-         return get_currency_balance(N(enu.token), symbol(CORE_SYMBOL), act);
+         return get_currency_balance(N(myeos.token), symbol(CORE_SYMBOL), act);
     }
 
     void set_code_abi(const account_name& account, const char* wast, const char* abi, const private_key_type* signer = nullptr) {
@@ -181,34 +181,34 @@ BOOST_AUTO_TEST_SUITE(bootseq_tests)
 BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
     try {
 
-        // Create enu.msig and enu.token
-        create_accounts({N(enu.msig), N(enu.token), N(enu.ram), N(enu.ramfee), N(enu.stake), N(enu.votepay), N(enu.blockpay), N(enu.savings) });
+        // Create myeos.msig and myeos.token
+        create_accounts({N(myeos.msig), N(myeos.token), N(enu.ram), N(enu.ramfee), N(enu.stake), N(enu.votepay), N(enu.blockpay), N(enu.savings) });
 
         // Set code for the following accounts:
-        //  - myeosio (code: enu.bios) (already set by tester constructor)
-        //  - enu.msig (code: enu.msig)
-        //  - enu.token (code: enu.token)
+        //  - myeosio (code: myeos.bios) (already set by tester constructor)
+        //  - myeos.msig (code: myeos.msig)
+        //  - myeos.token (code: myeos.token)
 
-        set_code_abi(N(enu.msig), myeos_msig_wast, myeos_msig_abi);//, &myeosio_active_pk);
-        set_code_abi(N(enu.token), myeos_token_wast, myeos_token_abi); //, &myeosio_active_pk);
+        set_code_abi(N(myeos.msig), myeos_msig_wast, myeos_msig_abi);//, &myeosio_active_pk);
+        set_code_abi(N(myeos.token), myeos_token_wast, myeos_token_abi); //, &myeosio_active_pk);
 
-        // Set privileged for enu.msig and enu.token
-        set_privileged(N(enu.msig));
-        set_privileged(N(enu.token));
+        // Set privileged for myeos.msig and myeos.token
+        set_privileged(N(myeos.msig));
+        set_privileged(N(myeos.token));
 
-        // Verify enu.msig and enu.token is privileged
-        const auto& myeos_msig_acc = get<account_object, by_name>(N(enu.msig));
+        // Verify myeos.msig and myeos.token is privileged
+        const auto& myeos_msig_acc = get<account_object, by_name>(N(myeos.msig));
         BOOST_TEST(myeos_msig_acc.privileged == true);
-        const auto& myeos_token_acc = get<account_object, by_name>(N(enu.token));
+        const auto& myeos_token_acc = get<account_object, by_name>(N(myeos.token));
         BOOST_TEST(myeos_token_acc.privileged == true);
 
 
-        // Create MES tokens in enu.token, set its manager as myeosio
+        // Create MES tokens in myeos.token, set its manager as myeosio
         auto max_supply = core_from_string("5000000000.0000"); /// 1x larger than 1B initial tokens
         auto initial_supply = core_from_string("500000000.0000"); /// 1x larger than 1B initial tokens
-        create_currency(N(enu.token), config::system_account_name, max_supply);
-        // Issue the genesis supply of 1 billion MES tokens to enu.system
-        issue(N(enu.token), config::system_account_name, config::system_account_name, initial_supply);
+        create_currency(N(myeos.token), config::system_account_name, max_supply);
+        // Issue the genesis supply of 1 billion MES tokens to myeos.system
+        issue(N(myeos.token), config::system_account_name, config::system_account_name, initial_supply);
 
         auto actual = get_balance(config::system_account_name);
         BOOST_REQUIRE_EQUAL(initial_supply, actual);
@@ -218,7 +218,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
            create_account( a.aname, N(myeosio) );
         }
 
-        // Set enu.system to myeosio
+        // Set myeos.system to myeosio
 
         set_code_abi(N(myeosio), myeos_system_wast, myeos_system_abi);
 

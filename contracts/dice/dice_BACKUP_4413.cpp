@@ -237,7 +237,7 @@ class dice : public myeosio::contract {
 
          action(
             permission_level{ from, N(active) },
-            N(enu.token), N(transfer),
+            N(myeos.token), N(transfer),
             std::make_tuple(from, _self, quantity, std::string(""))
          ).send();
 
@@ -268,7 +268,7 @@ class dice : public myeosio::contract {
 
          action(
             permission_level{ _self, N(active) },
-            N(enu.token), N(transfer),
+            N(myeos.token), N(transfer),
             std::make_tuple(_self, to, quantity, std::string(""))
          ).send();
 

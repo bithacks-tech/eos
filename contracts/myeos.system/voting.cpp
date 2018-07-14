@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include "enu.system.hpp"
+#include "myeos.system.hpp"
 
 #include <myeoslib/enu.hpp>
 #include <myeoslib/crypto.h>
@@ -13,7 +13,7 @@
 #include <myeoslib/privileged.hpp>
 #include <myeoslib/singleton.hpp>
 #include <myeoslib/transaction.hpp>
-#include <enu.token/enu.token.hpp>
+#include <myeos.token/myeos.token.hpp>
 
 #include <algorithm>
 #include <cmath>

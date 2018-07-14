@@ -1,4 +1,4 @@
-# enu.system delegatebw
+# myeos.system delegatebw
 
 ## delegatebw
     (account_name-from; 

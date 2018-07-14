@@ -53,17 +53,17 @@ Example game session using mycleos
 
 ##### Upload bios contract
 ````bash
-mycleos set contract myeosio build/contracts/enu.bios -p myeosio
+mycleos set contract myeosio build/contracts/myeos.bios -p myeosio
 ````
 
-##### Ceate enu.token account
+##### Ceate myeos.token account
 ````bash
-mycleos create account myeosio enu.token MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
+mycleos create account myeosio myeos.token MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
 ````
 
-##### Set enu.token contract to enu.token account
+##### Set myeos.token contract to myeos.token account
 ````bash
-mycleos set contract enu.token build/contracts/enu.token -p enu.token
+mycleos set contract myeos.token build/contracts/myeos.token -p myeos.token
 ````
 
 ##### Create dice account
@@ -78,7 +78,7 @@ mycleos set contract dice build/contracts/dice -p dice
 
 ##### Create native MES token
 ````bash
-mycleos push action enu.token create '[ "myeosio", "1000000000.0000 MES", 0, 0, 0]' -p enu.token
+mycleos push action myeos.token create '[ "myeosio", "1000000000.0000 MES", 0, 0, 0]' -p myeos.token
 ````
 
 ##### Create alice account
@@ -93,12 +93,12 @@ mycleos create account myeosio bob MES7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7
 
 ##### Issue 1000 MES to alice
 ````bash
-mycleos push action enu.token issue '[ "alice", "1000.0000 MES", "" ]' -p myeosio
+mycleos push action myeos.token issue '[ "alice", "1000.0000 MES", "" ]' -p myeosio
 ````
 
 ##### Issue 1000 MES to bob
 ````bash
-mycleos push action enu.token issue '[ "bob", "1000.0000 MES", "" ]' -p myeosio
+mycleos push action myeos.token issue '[ "bob", "1000.0000 MES", "" ]' -p myeosio
 ````
 
 ##### Allow dice contract to make transfers on alice behalf (deposit)
@@ -263,7 +263,7 @@ mycleos push action dice withdraw '[ "alice", "103.0000 MES" ]' -p alice
 
 ##### Balance of alice after withdraw
 ````bash
-mycleos get currency balance enu.token alice enu
+mycleos get currency balance myeos.token alice enu
 1003.0000 MES
 ````
 

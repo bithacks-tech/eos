@@ -3,7 +3,7 @@
  *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include "enu.token.hpp"
+#include "myeos.token.hpp"
 
 namespace myeosio {
 

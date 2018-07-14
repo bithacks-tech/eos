@@ -3,8 +3,8 @@
 #include <myeosio/chain/abi_serializer.hpp>
 #include <myeosio/chain/fork_database.hpp>
 
-#include <enu.token/enu.token.wast.hpp>
-#include <enu.token/enu.token.abi.hpp>
+#include <myeos.token/myeos.token.wast.hpp>
+#include <myeos.token/myeos.token.abi.hpp>
 
 #include <Runtime/Runtime.h>
 
@@ -152,21 +152,21 @@ BOOST_AUTO_TEST_CASE( forking ) try {
    wlog("set producer schedule to [dan,sam,pam]");
    c.produce_blocks(30);
 
-   auto r2 = c.create_accounts( {N(enu.token)} );
+   auto r2 = c.create_accounts( {N(myeos.token)} );
    wdump((fc::json::to_pretty_string(r2)));
-   c.set_code( N(enu.token), myeos_token_wast );
-   c.set_abi( N(enu.token), myeos_token_abi );
+   c.set_code( N(myeos.token), myeos_token_wast );
+   c.set_abi( N(myeos.token), myeos_token_abi );
    c.produce_blocks(10);
 
 
-   auto cr = c.push_action( N(enu.token), N(create), N(enu.token), mutable_variant_object()
+   auto cr = c.push_action( N(myeos.token), N(create), N(myeos.token), mutable_variant_object()
               ("issuer",       "myeosio" )
               ("maximum_supply", core_from_string("10000000.0000"))
       );
 
    wdump((fc::json::to_pretty_string(cr)));
 
-   cr = c.push_action( N(enu.token), N(issue), N(myeosio), mutable_variant_object()
+   cr = c.push_action( N(myeos.token), N(issue), N(myeosio), mutable_variant_object()
               ("to",       "dan" )
               ("quantity", core_from_string("100.0000"))
               ("memo", "")

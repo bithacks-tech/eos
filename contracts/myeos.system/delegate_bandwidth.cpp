@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include "enu.system.hpp"
+#include "myeos.system.hpp"
 
 #include <myeoslib/enu.hpp>
 #include <myeoslib/print.hpp>
@@ -12,7 +12,7 @@
 #include <myeoslib/privileged.h>
 #include <myeoslib/transaction.hpp>
 
-#include <enu.token/enu.token.hpp>
+#include <myeos.token/myeos.token.hpp>
 
 
 #include <cmath>
@@ -121,11 +121,11 @@ namespace myeosiosystem {
       // quant_after_fee.amount should be > 0 if quant.amount > 1.
       // If quant.amount == 1, then quant_after_fee.amount == 0 and the next inline transfer will fail causing the buyram action to fail.
 
-      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {payer,N(active)},
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {payer,N(active)},
          { payer, N(enu.ram), quant_after_fee, std::string("buy ram") } );
 
       if( fee.amount > 0 ) {
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {payer,N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {payer,N(active)},
                                                        { payer, N(enu.ramfee), fee, std::string("ram fee") } );
       }
 
@@ -192,14 +192,14 @@ namespace myeosiosystem {
       });
       set_resource_limits( res_itr->owner, res_itr->ram_bytes, res_itr->net_weight.amount, res_itr->cpu_weight.amount );
 
-      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.ram),N(active)},
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.ram),N(active)},
                                                        { N(enu.ram), account, asset(tokens_out), std::string("sell ram") } );
 
       auto fee = ( tokens_out.amount + 199 ) / 200; /// .5% fee (round up)
       // since tokens_out.amount was asserted to be at least 2 earlier, fee.amount < tokens_out.amount
       
       if( fee > 0 ) {
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {account,N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {account,N(active)},
             { account, N(enu.ramfee), asset(fee), std::string("sell ram fee") } );
       }
    }
@@ -354,7 +354,7 @@ namespace myeosiosystem {
 
          auto transfer_amount = net_balance + cpu_balance;
          if ( asset(0) < transfer_amount ) {
-            INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {source_stake_from, N(active)},
+            INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {source_stake_from, N(active)},
                { source_stake_from, N(enu.stake), asset(transfer_amount), std::string("stake bandwidth") } );
          }
       }
@@ -420,7 +420,7 @@ namespace myeosiosystem {
       // allow people to get their tokens earlier than the 3 day delay if the unstake happened immediately after many
       // consecutive missed blocks.
 
-      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.stake),N(active)},
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.stake),N(active)},
                                                     { N(enu.stake), req->owner, req->net_amount + req->cpu_amount, std::string("unstake") } );
 
       refunds_tbl.erase( req );

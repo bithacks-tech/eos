@@ -634,7 +634,7 @@ class Cluster(object):
                 Utils.Print("ERROR: Failed to import %s account keys into ignition wallet." % (myeosioName))
                 return False
 
-            contract="enu.bios"
+            contract="myeos.bios"
             contractDir="contracts/%s" % (contract)
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
@@ -722,7 +722,7 @@ class Cluster(object):
                     return False
 
             myeosioTokenAccount=copy.deepcopy(myeosioAccount)
-            myeosioTokenAccount.name="enu.token"
+            myeosioTokenAccount.name="myeos.token"
             trans=biosNode.createAccount(myeosioTokenAccount, myeosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (myeosioTokenAccount.name))
@@ -753,7 +753,7 @@ class Cluster(object):
             transId=Node.getTransId(trans)
             biosNode.waitForTransInBlock(transId)
 
-            contract="enu.token"
+            contract="myeos.token"
             contractDir="contracts/%s" % (contract)
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)
@@ -802,7 +802,7 @@ class Cluster(object):
                             (expectedAmount, actualAmount))
                 return False
 
-            contract="enu.system"
+            contract="myeos.system"
             contractDir="contracts/%s" % (contract)
             wastFile="contracts/%s/%s.wast" % (contract, contract)
             abiFile="contracts/%s/%s.abi" % (contract, contract)

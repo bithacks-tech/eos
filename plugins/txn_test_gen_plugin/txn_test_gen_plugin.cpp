@@ -23,8 +23,8 @@
 #include <WASM/WASM.h>
 #include <Runtime/Runtime.h>
 
-#include <enu.token/enu.token.wast.hpp>
-#include <enu.token/enu.token.abi.hpp>
+#include <myeos.token/myeos.token.wast.hpp>
+#include <myeos.token/myeos.token.abi.hpp>
 
 namespace myeosio { namespace detail {
   struct txn_test_gen_empty {};
@@ -163,7 +163,7 @@ struct txn_test_gen_plugin_impl {
             trxs.emplace_back(std::move(trx));
          }
 
-         //set txn.test.t contract to enu.token & initialize it
+         //set txn.test.t contract to myeos.token & initialize it
          {
             signed_transaction trx;
 

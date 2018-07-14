@@ -1692,7 +1692,7 @@ BOOST_FIXTURE_TEST_CASE(producers_upgrade_system_contract, myeos_system_tester) 
          string action_type_name = msig_abi_ser.get_action_type(name);
 
          action act;
-         act.account = N(enu.msig);
+         act.account = N(myeos.msig);
          act.name = name;
          act.data = msig_abi_ser.variant_to_binary( action_type_name, data );
 
@@ -2453,7 +2453,7 @@ BOOST_FIXTURE_TEST_CASE( setparams, myeos_system_tester ) try {
          string action_type_name = msig_abi_ser.get_action_type(name);
 
          action act;
-         act.account = N(enu.msig);
+         act.account = N(myeos.msig);
          act.name = name;
          act.data = msig_abi_ser.variant_to_binary( action_type_name, data );
 

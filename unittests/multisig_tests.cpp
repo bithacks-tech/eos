@@ -3,19 +3,19 @@
 #include <myeosio/chain/abi_serializer.hpp>
 #include <myeosio/chain/wast_to_wasm.hpp>
 
-#include <enu.msig/enu.msig.wast.hpp>
-#include <enu.msig/enu.msig.abi.hpp>
+#include <myeos.msig/myeos.msig.wast.hpp>
+#include <myeos.msig/myeos.msig.abi.hpp>
 
 #include <exchange/exchange.wast.hpp>
 #include <exchange/exchange.abi.hpp>
 
 #include <test_api/test_api.wast.hpp>
 
-#include <enu.system/enu.system.wast.hpp>
-#include <enu.system/enu.system.abi.hpp>
+#include <myeos.system/myeos.system.wast.hpp>
+#include <myeos.system/myeos.system.abi.hpp>
 
-#include <enu.token/enu.token.wast.hpp>
-#include <enu.token/enu.token.abi.hpp>
+#include <myeos.token/myeos.token.wast.hpp>
+#include <myeos.token/myeos.token.abi.hpp>
 
 #include <Runtime/Runtime.h>
 
@@ -33,20 +33,20 @@ class myeos_msig_tester : public tester {
 public:
 
    myeos_msig_tester() {
-      create_accounts( { N(enu.msig), N(enu.stake), N(enu.ram), N(enu.ramfee), N(alice), N(bob), N(carol) } );
+      create_accounts( { N(myeos.msig), N(enu.stake), N(enu.ram), N(enu.ramfee), N(alice), N(bob), N(carol) } );
       produce_block();
 
       auto trace = base_tester::push_action(config::system_account_name, N(setpriv),
                                             config::system_account_name,  mutable_variant_object()
-                                            ("account", "enu.msig")
+                                            ("account", "myeos.msig")
                                             ("is_priv", 1)
       );
 
-      set_code( N(enu.msig), myeos_msig_wast );
-      set_abi( N(enu.msig), myeos_msig_abi );
+      set_code( N(myeos.msig), myeos_msig_wast );
+      set_abi( N(myeos.msig), myeos_msig_abi );
 
       produce_blocks();
-      const auto& accnt = control->db().get<account_object,by_name>( N(enu.msig) );
+      const auto& accnt = control->db().get<account_object,by_name>( N(myeos.msig) );
       abi_def abi;
       BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, abi), true);
       abi_ser.set_abi(abi);
@@ -102,14 +102,14 @@ public:
       base_tester::push_action(contract, N(create), contract, act );
    }
    void issue( name to, const asset& amount, name manager = config::system_account_name ) {
-      base_tester::push_action( N(enu.token), N(issue), manager, mutable_variant_object()
+      base_tester::push_action( N(myeos.token), N(issue), manager, mutable_variant_object()
                                 ("to",      to )
                                 ("quantity", amount )
                                 ("memo", "")
                                 );
    }
    void transfer( name from, name to, const string& amount, name manager = config::system_account_name ) {
-      base_tester::push_action( N(enu.token), N(transfer), manager, mutable_variant_object()
+      base_tester::push_action( N(myeos.token), N(transfer), manager, mutable_variant_object()
                                 ("from",    from)
                                 ("to",      to )
                                 ("quantity", asset::from_string(amount) )
@@ -121,7 +121,7 @@ public:
       //temporary code. current get_currency_balancy uses table name N(accounts) from currency.h
       //generic_currency table name is N(account).
       const auto& db  = control->db();
-      const auto* tbl = db.find<table_id_object, by_code_scope_table>(boost::make_tuple(N(enu.token), act, N(accounts)));
+      const auto* tbl = db.find<table_id_object, by_code_scope_table>(boost::make_tuple(N(myeos.token), act, N(accounts)));
       share_type result = 0;
 
       // the balance is implied to be 0 if either the table or row does not exist
@@ -140,7 +140,7 @@ public:
       vector<account_name> accounts;
       if( auth )
          accounts.push_back( signer );
-      auto trace = base_tester::push_action( N(enu.msig), name, accounts, data );
+      auto trace = base_tester::push_action( N(myeos.msig), name, accounts, data );
       produce_block();
       BOOST_REQUIRE_EQUAL( true, chain_has_transaction(trace->id) );
       return trace;
@@ -149,7 +149,7 @@ public:
          string action_type_name = abi_ser.get_action_type(name);
 
          action act;
-         act.account = N(enu.msig);
+         act.account = N(myeos.msig);
          act.name = name;
          act.data = abi_ser.variant_to_binary( action_type_name, data );
          //std::cout << "test:\n" << fc::to_hex(act.data.data(), act.data.size()) << " size = " << act.data.size() << std::endl;
@@ -414,11 +414,11 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_all_approve, myeos_msig_tester )
    set_producers( {N(alice),N(bob),N(carol)} );
    produce_blocks(50);
 
-   create_accounts( { N(enu.token) } );
-   set_code( N(enu.token), myeos_token_wast );
-   set_abi( N(enu.token), myeos_token_abi );
+   create_accounts( { N(myeos.token) } );
+   set_code( N(myeos.token), myeos_token_wast );
+   set_abi( N(myeos.token), myeos_token_abi );
 
-   create_currency( N(enu.token), config::system_account_name, core_from_string("10000000000.0000") );
+   create_currency( N(myeos.token), config::system_account_name, core_from_string("10000000000.0000") );
    issue(config::system_account_name, core_from_string("1000000000.0000"));
    BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"),
                         get_balance("myeosio") + get_balance("enu.ramfee") + get_balance("enu.stake") + get_balance("enu.ram") );
@@ -526,11 +526,11 @@ BOOST_FIXTURE_TEST_CASE( update_system_contract_major_approve, myeos_msig_tester
    set_producers( {N(alice),N(bob),N(carol), N(apple)} );
    produce_blocks(50);
 
-   create_accounts( { N(enu.token) } );
-   set_code( N(enu.token), myeos_token_wast );
-   set_abi( N(enu.token), myeos_token_abi );
+   create_accounts( { N(myeos.token) } );
+   set_code( N(myeos.token), myeos_token_wast );
+   set_abi( N(myeos.token), myeos_token_abi );
 
-   create_currency( N(enu.token), config::system_account_name, core_from_string("10000000000.0000") );
+   create_currency( N(myeos.token), config::system_account_name, core_from_string("10000000000.0000") );
    issue(config::system_account_name, core_from_string("1000000000.0000"));
    BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( "myeosio" ) );
 

@@ -1,4 +1,4 @@
-# enu.system regproducer
+# myeos.system regproducer
 
 I, {{producer}}, hereby nominate myself for consideration as an elected block producer. 
 

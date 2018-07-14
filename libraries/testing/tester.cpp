@@ -4,8 +4,8 @@
 #include <myeosio/chain/wast_to_wasm.hpp>
 #include <myeosio/chain/myeosio_contract.hpp>
 
-#include <enu.bios/enu.bios.wast.hpp>
-#include <enu.bios/enu.bios.abi.hpp>
+#include <myeos.bios/myeos.bios.wast.hpp>
+#include <myeos.bios/myeos.bios.abi.hpp>
 
 myeosio::chain::asset core_from_string(const std::string& s) {
   return myeosio::chain::asset::from_string(s + " " CORE_SYMBOL_NAME);

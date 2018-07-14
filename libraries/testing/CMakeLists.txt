@@ -14,7 +14,7 @@ target_include_directories( myeosio_testing
                                    "${CMAKE_BINARY_DIR}/contracts"
                             )
 
-add_dependencies( myeosio_testing enu.bios )
+add_dependencies( myeosio_testing myeos.bios )
 
 if(MSVC)
   set_source_files_properties( db_init.cpp db_block.cpp database.cpp block_log.cpp PROPERTIES COMPILE_FLAGS "/bigobj" )

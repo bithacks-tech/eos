@@ -152,12 +152,12 @@ for i in range(len(hosts)):
     Print("host %s: %s" % (hosts[i], trans))
 
 
-wastFile="contracts/enu.system/enu.system.wast"
-abiFile="contracts/enu.system/enu.system.abi"
+wastFile="contracts/myeos.system/myeos.system.wast"
+abiFile="contracts/myeos.system/myeos.system.abi"
 Print("\nPush system contract %s %s" % (wastFile, abiFile))
 trans=node0.publishContract(enu.names, wastFile, abiFile, waitForTransBlock=True)
 if trans is None:
-    Utils.errorExit("Failed to publish enu.system.")
+    Utils.errorExit("Failed to publish myeos.system.")
 else:
     Print("transaction id %s" % (node0.getTransId(trans)))
 

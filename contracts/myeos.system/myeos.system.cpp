@@ -1,4 +1,4 @@
-#include "enu.system.hpp"
+#include "myeos.system.hpp"
 #include <myeoslib/dispatcher.hpp>
 
 #include "producer_pay.cpp"
@@ -22,7 +22,7 @@ namespace myeosiosystem {
       auto itr = _rammarket.find(S(4,RAMCORE));
 
       if( itr == _rammarket.end() ) {
-         auto system_token_supply   = myeosio::token(N(enu.token)).get_supply(myeosio::symbol_type(system_token_symbol).name()).amount;
+         auto system_token_supply   = myeosio::token(N(myeos.token)).get_supply(myeosio::symbol_type(system_token_symbol).name()).amount;
          if( system_token_supply > 0 ) {
             itr = _rammarket.emplace( _self, [&]( auto& m ) {
                m.supply.amount = 100000000000000ll;
@@ -104,7 +104,7 @@ namespace myeosiosystem {
       myeosio_assert( bid.symbol == asset().symbol, "asset must be system token" );
       myeosio_assert( bid.amount > 0, "insufficient bid" );
 
-      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {bidder,N(active)},
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {bidder,N(active)},
                                                     { bidder, N(enu.names), bid, std::string("bid name ")+(name{newname}).to_string()  } );
 
       name_bid_table bids(_self,_self);
@@ -122,7 +122,7 @@ namespace myeosiosystem {
          myeosio_assert( bid.amount - current->high_bid > (current->high_bid / 10), "must increase bid by 10%" );
          myeosio_assert( current->high_bidder != bidder, "account is already highest bidder" );
 
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.names),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.names),N(active)},
                                                        { N(enu.names), current->high_bidder, asset(current->high_bid),
                                                        std::string("refund bid on name ")+(name{newname}).to_string()  } );
 
@@ -186,13 +186,13 @@ namespace myeosiosystem {
       set_resource_limits( newact, 0, 0, 0 );
    }
 
-} /// enu.system
+} /// myeos.system
 
 
 MYEOSIO_ABI( myeosiosystem::system_contract,
-     // native.hpp (newaccount definition is actually in enu.system.cpp)
+     // native.hpp (newaccount definition is actually in myeos.system.cpp)
      (newaccount)(updateauth)(deleteauth)(linkauth)(unlinkauth)(canceldelay)(onerror)
-     // enu.system.cpp
+     // myeos.system.cpp
      (setram)(setparams)(setpriv)(rmvproducer)(bidname)
      // delegate_bandwidth.cpp
      (buyrambytes)(buyram)(sellram)(delegatebw)(undelegatebw)(refund)

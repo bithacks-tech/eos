@@ -1,14 +1,14 @@
-# Smart Contract - `{{ enu.system }}`
+# Smart Contract - `{{ myeos.system }}`
 
-This is an overview of the actions for the `{{ enu.system }}` smart contract. This Contract is legally binding and can be used in the event of a dispute. Disputes shall be settled through the standard arbitration process established by MyEOSIO.
+This is an overview of the actions for the `{{ myeos.system }}` smart contract. This Contract is legally binding and can be used in the event of a dispute. Disputes shall be settled through the standard arbitration process established by MyEOSIO.
 
 ### Description
 
-The `{{ enu.system }}` contract...
+The `{{ myeos.system }}` contract...
 
 ### Actions, Inputs and Input Types
 
-The table below contains the `actions`, `inputs` and `input types` for the `{{ enu.system }}` contract.
+The table below contains the `actions`, `inputs` and `input types` for the `{{ myeos.system }}` contract.
 
 | Action | Input | Input Type |
 |:--|:--|:--|

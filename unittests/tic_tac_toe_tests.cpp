@@ -8,8 +8,8 @@
 
 #include <tic_tac_toe/tic_tac_toe.wast.hpp>
 #include <tic_tac_toe/tic_tac_toe.abi.hpp>
-#include <enu.system/enu.system.wast.hpp>
-#include <enu.system/enu.system.abi.hpp>
+#include <myeos.system/myeos.system.wast.hpp>
+#include <myeos.system/myeos.system.abi.hpp>
 
 #include <proxy/proxy.wast.hpp>
 #include <proxy/proxy.abi.hpp>

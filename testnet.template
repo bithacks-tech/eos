@@ -85,7 +85,7 @@ wcmd create -n ignition
 ###INSERT cacmd
 
 
-ecmd set contract myeosio contracts/enu.bios contracts/enu.bios/enu.bios.wast contracts/enu.bios/enu.bios.abi
+ecmd set contract myeosio contracts/myeos.bios contracts/myeos.bios/myeos.bios.wast contracts/myeos.bios/myeos.bios.abi
 
 #the setprods.json argument cannot pass through the function call due to embedded quotes
 echo ===== Start: $step ============ >> $logfile
@@ -95,7 +95,7 @@ programs/mycleos/mycleos  --wallet-url $wdurl --url http://$bioshost:$biosport p
 echo ==== End: $step ============== >> $logfile
 step=$(($step + 1))
 
-ecmd set contract myeosio contracts/enu.system contracts/enu.system/enu.system.wast contracts/enu.system/enu.system.abi
+ecmd set contract myeosio contracts/myeos.system contracts/myeos.system/myeos.system.wast contracts/myeos.system/myeos.system.abi
 
 echo ===== Start: $step ============ >> $logfile
 echo executing: mycleos  --wallet-url $wdurl --url http://$bioshost:$biosport push action myeosio issue '{"to":"myeosio","quantity":"1000000000.0000 MES","memo":"init"}' -p myeosio@active | tee -a $logfile

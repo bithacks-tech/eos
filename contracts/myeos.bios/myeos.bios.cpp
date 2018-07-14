@@ -1,3 +1,3 @@
-#include <enu.bios/enu.bios.hpp>
+#include <myeos.bios/myeos.bios.hpp>
 
 MYEOSIO_ABI( myeosio::bios, (setpriv)(setalimits)(setglimits)(setprods)(reqauth) )

@@ -737,7 +737,7 @@ class Node(object):
         """Returns MES currency0000 account balance from mycleos get table command. Returned balance is string following syntax "98.0311 MES". """
         assert isinstance(scope, str)
         if not self.enableMongo:
-            amount=self.getTableAccountBalance("enu.token", scope)
+            amount=self.getTableAccountBalance("myeos.token", scope)
             if Utils.Debug: Utils.Print("getNodeAccountEnuBalance %s %s" % (scope, amount))
             assert isinstance(amount, str)
             return amount

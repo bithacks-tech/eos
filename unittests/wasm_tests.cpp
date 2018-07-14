@@ -16,8 +16,8 @@
 #include <noop/noop.wast.hpp>
 #include <noop/noop.abi.hpp>
 
-#include <enu.system/enu.system.wast.hpp>
-#include <enu.system/enu.system.abi.hpp>
+#include <myeos.system/myeos.system.wast.hpp>
+#include <myeos.system/myeos.system.abi.hpp>
 
 #include <fc/io/fstream.hpp>
 

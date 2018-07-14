@@ -388,9 +388,9 @@ try:
     if hashNum != 0:
         errorExit("FAILURE - get code currency1111 failed", raw=True)
 
-    contractDir="contracts/enu.token"
-    wastFile="contracts/enu.token/enu.token.wast"
-    abiFile="contracts/enu.token/enu.token.abi"
+    contractDir="contracts/myeos.token"
+    wastFile="contracts/myeos.token/myeos.token.wast"
+    abiFile="contracts/myeos.token/myeos.token.abi"
     Print("Publish contract")
     trans=node.publishContract(currencyAccount.name, contractDir, wastFile, abiFile, waitForTransBlock=True)
     if trans is None:

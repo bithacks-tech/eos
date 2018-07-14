@@ -1,4 +1,4 @@
-#include <enu.msig/enu.msig.hpp>
+#include <myeos.msig/myeos.msig.hpp>
 #include <myeoslib/action.hpp>
 #include <myeoslib/permission.hpp>
 

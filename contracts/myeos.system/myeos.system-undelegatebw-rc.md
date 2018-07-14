@@ -1,4 +1,4 @@
-# enu.system undelegatebw
+# myeos.system undelegatebw
 
 ## undelegatebw 
     (account_name-from; 

@@ -1,8 +1,8 @@
 #include <myeosio/testing/tester.hpp>
 #include <fc/io/json.hpp>
 
-#include <enu.token/enu.token.wast.hpp>
-#include <enu.token/enu.token.abi.hpp>
+#include <myeos.token/myeos.token.wast.hpp>
+#include <myeos.token/myeos.token.abi.hpp>
 
 using namespace myeosio::chain;
 using namespace myeosio::testing;
@@ -31,14 +31,14 @@ int main( int argc, char** argv ) {
       wlog("set producer schedule to [dan,sam,pam]");
       c.produce_blocks(30);
 
-      auto r2 = c.create_accounts( {N(enu.token)} );
+      auto r2 = c.create_accounts( {N(myeos.token)} );
       wdump((fc::json::to_pretty_string(r2)));
-      c.set_code( N(enu.token), myeos_token_wast );
-      c.set_abi( N(enu.token), myeos_token_abi );
+      c.set_code( N(myeos.token), myeos_token_wast );
+      c.set_abi( N(myeos.token), myeos_token_abi );
       c.produce_blocks(10);
 
 
-      auto cr = c.push_action( N(enu.token), N(create), N(enu.token), mutable_variant_object()
+      auto cr = c.push_action( N(myeos.token), N(create), N(myeos.token), mutable_variant_object()
                  ("issuer",       "myeosio" )
                  ("maximum_supply", "10000000.0000 MES")
                  ("can_freeze", 0)
@@ -48,7 +48,7 @@ int main( int argc, char** argv ) {
 
       wdump((fc::json::to_pretty_string(cr)));
 
-      cr = c.push_action( N(enu.token), N(issue), N(myeosio), mutable_variant_object()
+      cr = c.push_action( N(myeos.token), N(issue), N(myeosio), mutable_variant_object()
                  ("to",       "dan" )
                  ("quantity", "100.0000 MES")
                  ("memo", "")
@@ -187,7 +187,7 @@ int main( int argc, char** argv ) {
 
       c.produce_blocks(3);
 
-      cr = c.push_action( N(enu.token), N(issue), N(myeosio), mutable_variant_object()
+      cr = c.push_action( N(myeos.token), N(issue), N(myeosio), mutable_variant_object()
                  ("to",       "unregistered" )
                  ("quantity", "100.0000 MES")
                  ("memo", "")

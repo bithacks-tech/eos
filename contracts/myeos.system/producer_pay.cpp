@@ -1,6 +1,6 @@
-#include "enu.system.hpp"
+#include "myeos.system.hpp"
 
-#include <enu.token/enu.token.hpp>
+#include <myeos.token/myeos.token.hpp>
 
 namespace myeosiosystem {
 
@@ -78,7 +78,7 @@ namespace myeosiosystem {
 
       myeosio_assert( ct - prod.last_claim_time > useconds_per_day, "already claimed rewards within past day" );
 
-      const asset token_supply   = token( N(enu.token)).get_supply(symbol_type(system_token_symbol).name() );
+      const asset token_supply   = token( N(myeos.token)).get_supply(symbol_type(system_token_symbol).name() );
       const auto usecs_since_last_fill = ct - _gstate.last_pervote_bucket_fill;
 
       if( usecs_since_last_fill > 0 && _gstate.last_pervote_bucket_fill > 0 ) {
@@ -89,16 +89,16 @@ namespace myeosiosystem {
          auto to_per_block_pay   = to_producers / 4;
          auto to_per_vote_pay    = to_producers - to_per_block_pay;
 
-         INLINE_ACTION_SENDER(myeosio::token, issue)( N(enu.token), {{N(myeosio),N(active)}},
+         INLINE_ACTION_SENDER(myeosio::token, issue)( N(myeos.token), {{N(myeosio),N(active)}},
                                                     {N(myeosio), asset(new_tokens), std::string("issue tokens for producer pay and savings")} );
 
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(myeosio),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeosio),N(active)},
                                                        { N(myeosio), N(enu.savings), asset(to_savings), "unallocated inflation" } );
 
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(myeosio),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeosio),N(active)},
                                                        { N(myeosio), N(enu.blockpay), asset(to_per_block_pay), "fund per-block bucket" } );
 
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(myeosio),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeosio),N(active)},
                                                        { N(myeosio), N(enu.votepay), asset(to_per_vote_pay), "fund per-vote bucket" } );
 
          _gstate.pervote_bucket  += to_per_vote_pay;
@@ -128,11 +128,11 @@ namespace myeosiosystem {
       });
 
       if( producer_per_block_pay > 0 ) {
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.blockpay),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.blockpay),N(active)},
                                                        { N(enu.blockpay), owner, asset(producer_per_block_pay), std::string("producer block pay") } );
       }
       if( producer_per_vote_pay > 0 ) {
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(enu.token), {N(enu.votepay),N(active)},
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.votepay),N(active)},
                                                        { N(enu.votepay), owner, asset(producer_per_vote_pay), std::string("producer vote pay") } );
       }
    }

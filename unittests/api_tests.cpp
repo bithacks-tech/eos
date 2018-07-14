@@ -44,8 +44,8 @@
 #include <test_api_db/test_api_db.wast.hpp>
 #include <test_api_multi_index/test_api_multi_index.wast.hpp>
 
-#include <enu.bios/enu.bios.wast.hpp>
-#include <enu.bios/enu.bios.abi.hpp>
+#include <myeos.bios/myeos.bios.wast.hpp>
+#include <myeos.bios/myeos.bios.abi.hpp>
 
 #define DISABLE_MESLIB_SERIALIZE
 #include <test_api/test_api_common.hpp>
