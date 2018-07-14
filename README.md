@@ -41,7 +41,7 @@ MyEOSIO currently supports the following operating systems:
 # Running
 To download MyEOSIO, the git clone command is:
 ```bash
-git clone -b myeosio https://github.com/bithacks-tech/myeosio --recursive
+git clone https://github.com/bithacks-tech/myeosio --recursive
 ```
 Then run the following script for the first time:
 ```bash
