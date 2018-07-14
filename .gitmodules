@@ -1,30 +1,30 @@
 [submodule "libraries/chainbase"]
 	path = libraries/chainbase
-	url = https://github.com/myeosio/chainbase
+	url = https://github.com/bithacks-tech/chainbase
         ignore = dirty
 [submodule "libraries/appbase"]
 	path = libraries/appbase
-	url = https://github.com/myeosio/appbase
+	url = https://github.com/bithacks-tech/appbase
         ignore = dirty
 [submodule "contracts/musl/upstream"]
 	path = contracts/musl/upstream
-	url = https://github.com/myeosio/musl.git
-	branch = myeosio
+	url = https://github.com/bithacks-tech/musl.git
+	branch = bithacks-tech
 [submodule "contracts/libc++/upstream"]
 	path = contracts/libc++/upstream
-	url = https://github.com/myeosio/libcxx.git
-	branch = myeosio
+	url = https://github.com/bithacks-tech/libcxx.git
+	branch = bithacks-tech
 [submodule "externals/binaryen"]
 	path = externals/binaryen
-	url = https://github.com/myeosio/binaryen
-	branch = myeosio
+	url = https://github.com/bithacks-tech/binaryen
+	branch = bithacks-tech
 
 [submodule "libraries/softfloat"]
 	path = libraries/softfloat
-	url = https://github.com/myeosio/berkeley-softfloat-3
+	url = https://github.com/bithacks-tech/berkeley-softfloat-3
 [submodule "externals/magic_get"]
 	path = externals/magic_get
-	url = https://github.com/myeosio/magic_get
+	url = https://github.com/bithacks-tech/magic_get
 [submodule "libraries/fc"]
 	path = libraries/fc
-	url = https://github.com/myeosio/fc
+	url = https://github.com/bithacks-tech/fc
