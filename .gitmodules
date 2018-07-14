@@ -9,15 +9,15 @@
 [submodule "contracts/musl/upstream"]
 	path = contracts/musl/upstream
 	url = https://github.com/bithacks-tech/musl.git
-	branch = bithacks-tech
+	branch = myeosio
 [submodule "contracts/libc++/upstream"]
 	path = contracts/libc++/upstream
 	url = https://github.com/bithacks-tech/libcxx.git
-	branch = bithacks-tech
+	branch = myeosio
 [submodule "externals/binaryen"]
 	path = externals/binaryen
 	url = https://github.com/bithacks-tech/binaryen
-	branch = bithacks-tech
+	branch = myeosio
 
 [submodule "libraries/softfloat"]
 	path = libraries/softfloat
