@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in enumivo/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <utility>
 #include <vector>
@@ -11,21 +11,21 @@
 #include <myeoslib/contract.hpp>
 #include <myeoslib/crypto.h>
 
-using enumivo::key256;
-using enumivo::indexed_by;
-using enumivo::const_mem_fun;
-using enumivo::asset;
-using enumivo::permission_level;
-using enumivo::action;
-using enumivo::print;
-using enumivo::name;
+using myeosio::key256;
+using myeosio::indexed_by;
+using myeosio::const_mem_fun;
+using myeosio::asset;
+using myeosio::permission_level;
+using myeosio::action;
+using myeosio::print;
+using myeosio::name;
 
-class dice : public enumivo::contract {
+class dice : public myeosio::contract {
    public:
       const uint32_t FIVE_MINUTES = 5*60;
 
       dice(account_name self)
-      :enumivo::contract(self),
+      :myeosio::contract(self),
        offers(_self, _self),
        games(_self, _self),
        global_dices(_self, _self),
@@ -35,15 +35,15 @@ class dice : public enumivo::contract {
       //@abi action
       void offerbet(const asset& bet, const account_name player, const checksum256& commitment) {
 
-         enumivo_assert( bet.symbol == CORE_SYMBOL, "only core token allowed" );
-         enumivo_assert( bet.is_valid(), "invalid bet" );
-         enumivo_assert( bet.amount > 0, "must bet positive quantity" );
+         myeosio_assert( bet.symbol == CORE_SYMBOL, "only core token allowed" );
+         myeosio_assert( bet.is_valid(), "invalid bet" );
+         myeosio_assert( bet.amount > 0, "must bet positive quantity" );
 
-         enumivo_assert( !has_offer( commitment ), "offer with this commitment already exist" );
+         myeosio_assert( !has_offer( commitment ), "offer with this commitment already exist" );
          require_auth( player );
 
          auto cur_player_itr = accounts.find( player );
-         enumivo_assert(cur_player_itr != accounts.end(), "unknown account");
+         myeosio_assert(cur_player_itr != accounts.end(), "unknown account");
 
          // Store new offer
          auto new_offer_itr = offers.emplace(_self, [&](auto& offer){
@@ -64,7 +64,7 @@ class dice : public enumivo::contract {
 
             // No matching bet found, update player's account
             accounts.modify( cur_player_itr, 0, [&](auto& acnt) {
-               enumivo_assert( acnt.enu_balance >= bet, "insufficient balance" );
+               myeosio_assert( acnt.enu_balance >= bet, "insufficient balance" );
                acnt.enu_balance -= bet;
                acnt.open_offers++;
             });
@@ -87,7 +87,7 @@ class dice : public enumivo::contract {
             auto game_itr = games.emplace(_self, [&](auto& new_game){
                new_game.id       = gdice_itr->nextgameid;
                new_game.bet      = new_offer_itr->bet;
-               new_game.deadline = enumivo::time_point_sec(0);
+               new_game.deadline = myeosio::time_point_sec(0);
 
                new_game.player1.commitment = matched_offer_itr->commitment;
                memset(&new_game.player1.reveal, 0, sizeof(checksum256));
@@ -114,7 +114,7 @@ class dice : public enumivo::contract {
             });
 
             accounts.modify( cur_player_itr, 0, [&](auto& acnt) {
-               enumivo_assert( acnt.enu_balance >= bet, "insufficient balance" );
+               myeosio_assert( acnt.enu_balance >= bet, "insufficient balance" );
                acnt.enu_balance -= bet;
                acnt.open_games++;
             });
@@ -127,8 +127,8 @@ class dice : public enumivo::contract {
          auto idx = offers.template get_index<N(commitment)>();
          auto offer_itr = idx.find( offer::get_commitment(commitment) );
 
-         enumivo_assert( offer_itr != idx.end(), "offer does not exists" );
-         enumivo_assert( offer_itr->gameid == 0, "unable to cancel offer" );
+         myeosio_assert( offer_itr != idx.end(), "offer does not exists" );
+         myeosio_assert( offer_itr->gameid == 0, "unable to cancel offer" );
          require_auth( offer_itr->owner );
 
          auto acnt_itr = accounts.find(offer_itr->owner);
@@ -148,8 +148,8 @@ class dice : public enumivo::contract {
          auto idx = offers.template get_index<N(commitment)>();
          auto curr_revealer_offer = idx.find( offer::get_commitment(commitment)  );
 
-         enumivo_assert(curr_revealer_offer != idx.end(), "offer not found");
-         enumivo_assert(curr_revealer_offer->gameid > 0, "unable to reveal");
+         myeosio_assert(curr_revealer_offer != idx.end(), "offer not found");
+         myeosio_assert(curr_revealer_offer->gameid > 0, "unable to reveal");
 
          auto game_itr = games.find( curr_revealer_offer->gameid );
 
@@ -160,7 +160,7 @@ class dice : public enumivo::contract {
             std::swap(curr_reveal, prev_reveal);
          }
 
-         enumivo_assert( is_zero(curr_reveal.reveal) == true, "player already revealed");
+         myeosio_assert( is_zero(curr_reveal.reveal) == true, "player already revealed");
 
          if( !is_zero(prev_reveal.reveal) ) {
 
@@ -185,7 +185,7 @@ class dice : public enumivo::contract {
                else
                   game.player2.reveal = source;
 
-               game.deadline = enumivo::time_point_sec(now() + FIVE_MINUTES);
+               game.deadline = myeosio::time_point_sec(now() + FIVE_MINUTES);
             });
          }
       }
@@ -195,18 +195,18 @@ class dice : public enumivo::contract {
 
          auto game_itr = games.find(gameid);
 
-         enumivo_assert(game_itr != games.end(), "game not found");
-         enumivo_assert(game_itr->deadline != enumivo::time_point_sec(0) && enumivo::time_point_sec(now()) > game_itr->deadline, "game not expired");
+         myeosio_assert(game_itr != games.end(), "game not found");
+         myeosio_assert(game_itr->deadline != myeosio::time_point_sec(0) && myeosio::time_point_sec(now()) > game_itr->deadline, "game not expired");
 
          auto idx = offers.template get_index<N(commitment)>();
          auto player1_offer = idx.find( offer::get_commitment(game_itr->player1.commitment) );
          auto player2_offer = idx.find( offer::get_commitment(game_itr->player2.commitment) );
 
          if( !is_zero(game_itr->player1.reveal) ) {
-            enumivo_assert( is_zero(game_itr->player2.reveal), "game error");
+            myeosio_assert( is_zero(game_itr->player2.reveal), "game error");
             pay_and_clean(*game_itr, *player1_offer, *player2_offer);
          } else {
-            enumivo_assert( is_zero(game_itr->player1.reveal), "game error");
+            myeosio_assert( is_zero(game_itr->player1.reveal), "game error");
             pay_and_clean(*game_itr, *player2_offer, *player1_offer);
          }
 
@@ -215,8 +215,8 @@ class dice : public enumivo::contract {
       //@abi action
       void deposit( const account_name from, const asset& quantity ) {
          
-         enumivo_assert( quantity.is_valid(), "invalid quantity" );
-         enumivo_assert( quantity.amount > 0, "must deposit positive quantity" );
+         myeosio_assert( quantity.is_valid(), "invalid quantity" );
+         myeosio_assert( quantity.amount > 0, "must deposit positive quantity" );
 
          auto itr = accounts.find(from);
          if( itr == accounts.end() ) {
@@ -240,14 +240,14 @@ class dice : public enumivo::contract {
       void withdraw( const account_name to, const asset& quantity ) {
          require_auth( to );
 
-         enumivo_assert( quantity.is_valid(), "invalid quantity" );
-         enumivo_assert( quantity.amount > 0, "must withdraw positive quantity" );
+         myeosio_assert( quantity.is_valid(), "invalid quantity" );
+         myeosio_assert( quantity.amount > 0, "must withdraw positive quantity" );
 
          auto itr = accounts.find( to );
-         enumivo_assert(itr != accounts.end(), "unknown account");
+         myeosio_assert(itr != accounts.end(), "unknown account");
 
          accounts.modify( itr, 0, [&]( auto& acnt ) {
-            enumivo_assert( acnt.enu_balance >= quantity, "insufficient balance" );
+            myeosio_assert( acnt.enu_balance >= quantity, "insufficient balance" );
             acnt.enu_balance -= quantity;
          });
 
@@ -285,7 +285,7 @@ class dice : public enumivo::contract {
          MYEOSLIB_SERIALIZE( offer, (id)(owner)(bet)(commitment)(gameid) )
       };
 
-      typedef enumivo::multi_index< N(offer), offer,
+      typedef myeosio::multi_index< N(offer), offer,
          indexed_by< N(bet), const_mem_fun<offer, uint64_t, &offer::by_bet > >,
          indexed_by< N(commitment), const_mem_fun<offer, key256,  &offer::by_commitment> >
       > offer_index;
@@ -301,7 +301,7 @@ class dice : public enumivo::contract {
       struct game {
          uint64_t id;
          asset    bet;
-         enumivo::time_point_sec deadline;
+         myeosio::time_point_sec deadline;
          player   player1;
          player   player2;
 
@@ -310,7 +310,7 @@ class dice : public enumivo::contract {
          MYEOSLIB_SERIALIZE( game, (id)(bet)(deadline)(player1)(player2) )
       };
 
-      typedef enumivo::multi_index< N(game), game> game_index;
+      typedef myeosio::multi_index< N(game), game> game_index;
 
       //@abi table global i64
       struct global_dice {
@@ -322,7 +322,7 @@ class dice : public enumivo::contract {
          MYEOSLIB_SERIALIZE( global_dice, (id)(nextgameid) )
       };
 
-      typedef enumivo::multi_index< N(global), global_dice> global_dice_index;
+      typedef myeosio::multi_index< N(global), global_dice> global_dice_index;
 
       //@abi table account i64
       struct account {
@@ -340,7 +340,7 @@ class dice : public enumivo::contract {
          MYEOSLIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
       };
 
-      typedef enumivo::multi_index< N(account), account> account_index;
+      typedef myeosio::multi_index< N(account), account> account_index;
 
       offer_index       offers;
       game_index        games;

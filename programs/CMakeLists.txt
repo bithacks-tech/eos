@@ -1,6 +1,6 @@
 add_subdirectory( myeosnode )
 add_subdirectory( mycleos )
 add_subdirectory( mykeosd )
-add_subdirectory( enulauncher )
+add_subdirectory( myeoslauncher )
 add_subdirectory( myeosapplesedemo )
 add_subdirectory( myeosgenabi )

@@ -20,7 +20,7 @@ class Utils:
     EnuServerName="myeosnode"
     EnuServerPath="programs/myeosnode/"+ EnuServerName
 
-    EnuLauncherPath="programs/enulauncher/enulauncher"
+    EnuLauncherPath="programs/myeoslauncher/myeoslauncher"
     MongoPath="mongo"
 
     @staticmethod

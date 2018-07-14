@@ -51,8 +51,8 @@ programs/data-dir
 programs/myeosgenabi/myeosgenabi
 programs/mycleos/config.hpp
 programs/myeosapplesedemo/myeosapplesedemo
-programs/enulauncher/config.hpp
-programs/enulauncher/enulauncher
+programs/myeoslauncher/config.hpp
+programs/myeoslauncher/myeoslauncher
 programs/mykeosd/mykeosd
 programs/myeosnode/config.hpp
 programs/myeosnode/myeosnode

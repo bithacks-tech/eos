@@ -66,7 +66,7 @@ verifyErrorCode()
 
 killAll()
 {
-  programs/enulauncher/enulauncher -k 15
+  programs/myeoslauncher/myeoslauncher -k 15
 }
 
 cleanup()
@@ -114,7 +114,7 @@ cleanup
 # stand up myeosnode cluster
 launcherOpts="-p $pnodes -n $total_nodes -s $topo -d $delay"
 echo Launcher options: --myeosnode \"--plugin myeosio::wallet_api_plugin\" $launcherOpts
-programs/enulauncher/enulauncher --myeosnode "--plugin myeosio::wallet_api_plugin" $launcherOpts
+programs/myeoslauncher/myeoslauncher --myeosnode "--plugin myeosio::wallet_api_plugin" $launcherOpts
 sleep 7
 
 startPort=8888

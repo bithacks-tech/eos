@@ -53,7 +53,7 @@ else
 fi
 
 total_nodes="${total_nodes:-`echo $pnodes`}"
-launcherPath="programs/enulauncher/enulauncher"
+launcherPath="programs/myeoslauncher/myeoslauncher"
 clientPath="programs/mycleos/mycleos"
 
 rm -rf etc/myeosio/node_* var/lib/* stage

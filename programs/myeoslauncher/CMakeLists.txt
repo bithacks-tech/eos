@@ -1,4 +1,4 @@
-add_executable( enulauncher main.cpp )
+add_executable( myeoslauncher main.cpp )
 if( UNIX AND NOT APPLE )
   set(rt_library rt )
 endif()
@@ -26,13 +26,13 @@ endif()
 
 configure_file(config.hpp.in config.hpp ESCAPE_QUOTES)
 
-target_include_directories(enulauncher PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(myeoslauncher PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(enulauncher
+target_link_libraries(myeoslauncher
                       PRIVATE myeosio_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
 
 install( TARGETS
-   enulauncher
+   myeoslauncher
 
    RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
