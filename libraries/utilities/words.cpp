@@ -17293,7 +17293,7 @@ const const_char_ptr word_list[] = {
 "genu",
 "genua",
 "genual",
-"genuine",
+"gmyeosine",
 "genus",
 "genys",
 "geo",

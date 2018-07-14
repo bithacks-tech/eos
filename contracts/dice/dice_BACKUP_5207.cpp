@@ -68,8 +68,8 @@ class dice : public myeosio::contract {
                myeosio_assert( acnt.myeos_balance >= bet, "insufficient balance" );
                acnt.myeos_balance -= bet;
 =======
-               myeosio_assert( acnt.enu_balance >= bet, "insufficient balance" );
-               acnt.enu_balance -= bet;
+               myeosio_assert( acnt.myeos_balance >= bet, "insufficient balance" );
+               acnt.myeos_balance -= bet;
 >>>>>>> 5e47000eb6cdc6b0ab84b4d490a761993f1eaec7
                acnt.open_offers++;
             });
@@ -123,8 +123,8 @@ class dice : public myeosio::contract {
                myeosio_assert( acnt.myeos_balance >= bet, "insufficient balance" );
                acnt.myeos_balance -= bet;
 =======
-               myeosio_assert( acnt.enu_balance >= bet, "insufficient balance" );
-               acnt.enu_balance -= bet;
+               myeosio_assert( acnt.myeos_balance >= bet, "insufficient balance" );
+               acnt.myeos_balance -= bet;
 >>>>>>> 5e47000eb6cdc6b0ab84b4d490a761993f1eaec7
                acnt.open_games++;
             });
@@ -261,8 +261,8 @@ class dice : public myeosio::contract {
             myeosio_assert( acnt.myeos_balance >= quantity, "insufficient balance" );
             acnt.myeos_balance -= quantity;
 =======
-            myeosio_assert( acnt.enu_balance >= quantity, "insufficient balance" );
-            acnt.enu_balance -= quantity;
+            myeosio_assert( acnt.myeos_balance >= quantity, "insufficient balance" );
+            acnt.myeos_balance -= quantity;
 >>>>>>> 5e47000eb6cdc6b0ab84b4d490a761993f1eaec7
          });
 
@@ -355,7 +355,7 @@ class dice : public myeosio::contract {
 <<<<<<< HEAD
          MYEOSLIB_SERIALIZE( account, (owner)(myeos_balance)(open_offers)(open_games) )
 =======
-         MYEOSLIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
+         MYEOSLIB_SERIALIZE( account, (owner)(myeos_balance)(open_offers)(open_games) )
 >>>>>>> 5e47000eb6cdc6b0ab84b4d490a761993f1eaec7
       };
 

@@ -130,10 +130,10 @@ msgstr ""
 msgid "[delete] NULL, [set/update] The permission name require for executing the given action"
 msgstr ""
 
-msgid "the host where enudaemon is running"
+msgid "the host where myeosdaemon is running"
 msgstr ""
 
-msgid "the port where enudaemon is running"
+msgid "the port where myeosdaemon is running"
 msgstr ""
 
 msgid "the host where mykeosdd is running"
@@ -496,7 +496,7 @@ msgstr ""
 msgid "The JSON array of the transactions to push"
 msgstr ""
 
-msgid "Failed to connect to enu at ${ip}:${port}; is enudaemon running?"
+msgid "Failed to connect to enu at ${ip}:${port}; is myeosdaemon running?"
 msgstr ""
 
 msgid "Failed to connect to mykeosdd at ${ip}:${port}; is mykeosdd running?"

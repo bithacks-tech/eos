@@ -758,7 +758,7 @@ try:
                     assertionsFound=True
 
         if assertionsFound:
-            # Too many assertion logs, hard to validate how many are genuine. Make this a warning
+            # Too many assertion logs, hard to validate how many are gmyeosine. Make this a warning
             #  for now, hopefully the logs will get cleaned up in future.
             Print("WARNING: Asserts in var/lib/node_00/stderr.txt")
             #errorExit("FAILURE - Assert in var/lib/node_00/stderr.txt")

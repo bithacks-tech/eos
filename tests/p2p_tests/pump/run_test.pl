@@ -10,7 +10,7 @@ use File::Path;
 use Cwd;
 
 my $myeos_home = defined $ENV{MES_HOME} ? $ENV{MES_HOME} : getcwd;
-my $enudaemon = $myeos_home . "/programs/enudaemon/enudaemon";
+my $myeosdaemon = $myeos_home . "/programs/myeosdaemon/myeosdaemon";
 my $mycleosent = $myeos_home . "/programs/mycleosent/mycleosent";
 
 my $nodes = defined $ENV{MES_TEST_RING} ? $ENV{MES_TEST_RING} : "1";
@@ -40,7 +40,7 @@ if (!GetOptions("nodes=i" => \$nodes,
                 "pnodes=i" => \$pnodes)) {
     print "usage: $ARGV[0] [--nodes=<n>] [--pnodes=<n>] [--topo=<ring|star>] [--first-pause=<n>] [--launch-pause=<n>] [--duration=<n>] [--time-stamp=<time> \n";
     print "where:\n";
-    print "--nodes=n (default = 1) sets the number of enudaemon instances to launch\n";
+    print "--nodes=n (default = 1) sets the number of myeosdaemon instances to launch\n";
     print "--pnodes=n (default = 1) sets the number nodes that will also be producers\n";
     print "--topo=s (default = ring) sets the network topology to either a ring shape or a star shape\n";
     print "--first-pause=n (default = 0) sets the seconds delay after starting the first instance\n";
@@ -199,7 +199,7 @@ sub launch_nodes {
     }
 
     for (my $i = 0; $i < $nodes;  $i++) {
-        my @cmdline = ($enudaemon,
+        my @cmdline = ($myeosdaemon,
                        $gtsarg,
                        "--data-dir=$data_dir[$i]",
                        "--verbose-http-errors");

@@ -39,7 +39,7 @@ fi
 
 prog=""
 RD=""
-for p in enudaemon myeosiod myeosnode; do
+for p in myeosdaemon myeosiod myeosnode; do
     prog=$p
     RD=bin
     if [ -f $RD/$prog ]; then
@@ -55,7 +55,7 @@ for p in enudaemon myeosiod myeosnode; do
 done
 
 if [ \( -z "$prog" \) -o \( -z "$RD" \) ]; then
-    echo unable to locate binary for enudaemon or myeosiod or myeosnode
+    echo unable to locate binary for myeosdaemon or myeosiod or myeosnode
     exit 1
 fi
 
