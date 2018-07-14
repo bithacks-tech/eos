@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 
 /**
  *  @defgroup tictactoecontract Tic Tac Toe Contract
@@ -79,7 +79,7 @@ namespace tic_tac_toe {
 
       auto primary_key() const { return challenger; }
 
-      MESLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board) )
+      MYEOSLIB_SERIALIZE( game, (challenger)(host)(turn)(winner)(board) )
    };
 
    /**
@@ -89,7 +89,7 @@ namespace tic_tac_toe {
       account_name   challenger;
       account_name   host;
 
-      MESLIB_SERIALIZE( create, (challenger)(host) )
+      MYEOSLIB_SERIALIZE( create, (challenger)(host) )
    };
 
    /**
@@ -100,7 +100,7 @@ namespace tic_tac_toe {
       account_name   host;
       account_name   by; // the account who wants to restart the game
 
-      MESLIB_SERIALIZE( restart, (challenger)(host)(by) )
+      MYEOSLIB_SERIALIZE( restart, (challenger)(host)(by) )
    };
 
    /**
@@ -110,7 +110,7 @@ namespace tic_tac_toe {
       account_name   challenger;
       account_name   host;
 
-      MESLIB_SERIALIZE( close, (challenger)(host) )
+      MYEOSLIB_SERIALIZE( close, (challenger)(host) )
    };
 
    /**
@@ -120,7 +120,7 @@ namespace tic_tac_toe {
       uint32_t    row;
       uint32_t    column;
 
-      MESLIB_SERIALIZE( movement, (row)(column) )
+      MYEOSLIB_SERIALIZE( movement, (row)(column) )
    };
 
    /**
@@ -132,7 +132,7 @@ namespace tic_tac_toe {
       account_name   by; // the account who wants to make the move
       movement       mvt;
 
-      MESLIB_SERIALIZE( move, (challenger)(host)(by)(mvt) )
+      MYEOSLIB_SERIALIZE( move, (challenger)(host)(by)(mvt) )
    };
 
    /**

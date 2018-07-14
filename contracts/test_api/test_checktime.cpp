@@ -3,7 +3,7 @@
  * @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/crypto.h>
 #include <myeoslib/print.h>
 #include "test_api.hpp"

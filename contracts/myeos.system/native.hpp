@@ -24,7 +24,7 @@ namespace myeosiosystem {
       weight_type       weight;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE( permission_level_weight, (permission)(weight) )
+      MYEOSLIB_SERIALIZE( permission_level_weight, (permission)(weight) )
    };
 
    struct key_weight {
@@ -32,7 +32,7 @@ namespace myeosiosystem {
       weight_type  weight;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE( key_weight, (key)(weight) )
+      MYEOSLIB_SERIALIZE( key_weight, (key)(weight) )
    };
 
    struct authority {
@@ -42,7 +42,7 @@ namespace myeosiosystem {
       std::vector<permission_level_weight>  accounts;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE( authority, (threshold)(delay_sec)(keys)(accounts) )
+      MYEOSLIB_SERIALIZE( authority, (threshold)(delay_sec)(keys)(accounts) )
    };
 
    struct block_header {
@@ -56,7 +56,7 @@ namespace myeosiosystem {
       myeosio::optional<myeosio::producer_schedule> new_producers;
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE(block_header, (timestamp)(producer)(confirmed)(previous)(transaction_mroot)(action_mroot)
+      MYEOSLIB_SERIALIZE(block_header, (timestamp)(producer)(confirmed)(previous)(transaction_mroot)(action_mroot)
                                      (schedule_version)(new_producers))
    };
 

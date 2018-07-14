@@ -1,5 +1,5 @@
 #pragma once
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/transaction.hpp>
 
 namespace myeosio {

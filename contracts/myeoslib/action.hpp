@@ -37,7 +37,7 @@ namespace myeosio {
     *    unsigned long long b; //8
     *    int  c; //4
     *
-    *    MESLIB_SERIALIZE( dummy_action, (a)(b)(c) )
+    *    MYEOSLIB_SERIALIZE( dummy_action, (a)(b)(c) )
     *  };
     *  dummy_action msg = unpack_action_data<dummy_action>();
     *  @endcode
@@ -86,7 +86,7 @@ namespace myeosio {
          return std::tie( a.actor, a.permission ) == std::tie( b.actor, b.permission );
       }
 
-      MESLIB_SERIALIZE( permission_level, (actor)(permission) )
+      MYEOSLIB_SERIALIZE( permission_level, (actor)(permission) )
    };
 
    void require_auth(const permission_level& level) {
@@ -162,7 +162,7 @@ namespace myeosio {
       action( vector<permission_level> auths, account_name a, action_name n, T&& value )
       :account(a), name(n), authorization(std::move(auths)), data(pack(std::forward<T>(value))) {}
 
-      MESLIB_SERIALIZE( action, (account)(name)(authorization)(data) )
+      MYEOSLIB_SERIALIZE( action, (account)(name)(authorization)(data) )
 
       void send() const {
          auto serialize = pack(*this);

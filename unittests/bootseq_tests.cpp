@@ -182,7 +182,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
     try {
 
         // Create myeos.msig and myeos.token
-        create_accounts({N(myeos.msig), N(myeos.token), N(enu.ram), N(enu.ramfee), N(enu.stake), N(enu.votepay), N(enu.blockpay), N(enu.savings) });
+        create_accounts({N(myeos.msig), N(myeos.token), N(myeos.ram), N(myeos.ramfee), N(myeos.stake), N(myeos.votepay), N(myeos.blockpay), N(myeos.savings) });
 
         // Set code for the following accounts:
         //  - myeosio (code: myeos.bios) (already set by tester constructor)
@@ -232,7 +232,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
            auto r = buyram(N(myeosio), a.aname, asset(ram));
            BOOST_REQUIRE( !r->except_ptr );
 
-           r = delegate_bandwidth(N(enu.stake), a.aname, asset(net), asset(cpu));
+           r = delegate_bandwidth(N(myeos.stake), a.aname, asset(net), asset(cpu));
            BOOST_REQUIRE( !r->except_ptr );
         }
 

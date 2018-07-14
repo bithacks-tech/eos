@@ -4,7 +4,7 @@
  */
 #include "myeos.system.hpp"
 
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/crypto.h>
 #include <myeoslib/print.hpp>
 #include <myeoslib/datastream.hpp>

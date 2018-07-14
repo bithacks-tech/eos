@@ -275,11 +275,11 @@ BOOST_FIXTURE_TEST_CASE(test_symbol, TESTER) try {
    }
 
    {
-      symbol enu(4, "MES");
-      BOOST_REQUIRE_EQUAL(SY(4,MES), enu.value());
-      BOOST_REQUIRE_EQUAL("4,MES", enu.to_string());
-      BOOST_REQUIRE_EQUAL("MES", enu.name());
-      BOOST_REQUIRE_EQUAL(4, enu.decimals());
+      symbol myeos(4, "MES");
+      BOOST_REQUIRE_EQUAL(SY(4,MES), myeos.value());
+      BOOST_REQUIRE_EQUAL("4,MES", myeos.to_string());
+      BOOST_REQUIRE_EQUAL("MES", myeos.name());
+      BOOST_REQUIRE_EQUAL(4, myeos.decimals());
    }
 
    // default is "4,${CORE_SYMBOL_NAME}"

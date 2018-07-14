@@ -3,7 +3,7 @@
  *    @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/print.hpp>
 #include <myeoslib/compiler_builtins.h>
 

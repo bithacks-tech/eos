@@ -20,7 +20,7 @@ namespace myeosiosystem {
          asset balance;
          double weight = .5;
 
-         MESLIB_SERIALIZE( connector, (balance)(weight) )
+         MYEOSLIB_SERIALIZE( connector, (balance)(weight) )
       };
 
       connector base;
@@ -32,7 +32,7 @@ namespace myeosiosystem {
       asset convert_from_exchange( connector& c, asset in );
       asset convert( asset from, symbol_type to );
 
-      MESLIB_SERIALIZE( exchange_state, (supply)(base)(quote) )
+      MYEOSLIB_SERIALIZE( exchange_state, (supply)(base)(quote) )
    };
 
    typedef myeosio::multi_index<N(rammarket), exchange_state> rammarket;

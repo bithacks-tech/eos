@@ -729,21 +729,21 @@ class Cluster(object):
                 return False
 
             myeosioRamAccount=copy.deepcopy(myeosioAccount)
-            myeosioRamAccount.name="enu.ram"
+            myeosioRamAccount.name="myeos.ram"
             trans=biosNode.createAccount(myeosioRamAccount, myeosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (myeosioRamAccount.name))
                 return False
 
             myeosioRamfeeAccount=copy.deepcopy(myeosioAccount)
-            myeosioRamfeeAccount.name="enu.ramfee"
+            myeosioRamfeeAccount.name="myeos.ramfee"
             trans=biosNode.createAccount(myeosioRamfeeAccount, myeosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (myeosioRamfeeAccount.name))
                 return False
 
             myeosioStakeAccount=copy.deepcopy(myeosioAccount)
-            myeosioStakeAccount.name="enu.stake"
+            myeosioStakeAccount.name="myeos.stake"
             trans=biosNode.createAccount(myeosioStakeAccount, myeosioAccount, 0)
             if trans is None:
                 Utils.Print("ERROR: Failed to create account %s" % (myeosioStakeAccount.name))

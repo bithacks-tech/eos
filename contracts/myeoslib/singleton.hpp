@@ -19,7 +19,7 @@ namespace  myeosio {
 
          uint64_t primary_key() const { return pk_value; }
 
-         MESLIB_SERIALIZE( row, (value) )
+         MYEOSLIB_SERIALIZE( row, (value) )
       };
 
       typedef myeosio::multi_index<SingletonName, row> table;

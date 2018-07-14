@@ -808,7 +808,7 @@ struct create_account_subcommand {
    string stake_net;
    string stake_cpu;
    uint32_t buy_ram_bytes_in_kbytes = 0;
-   string buy_ram_enu;
+   string buy_ram_mes;
    bool transfer;
    bool simple;
 
@@ -826,7 +826,7 @@ struct create_account_subcommand {
                                    (localized("The amount of MES delegated for CPU bandwidth")))->required();
          createAccount->add_option("--buy-ram-kbytes", buy_ram_bytes_in_kbytes,
                                    (localized("The amount of RAM bytes to purchase for the new account in kilobytes (KiB), default is 8 KiB")));
-         createAccount->add_option("--buy-ram", buy_ram_enu,
+         createAccount->add_option("--buy-ram", buy_ram_mes,
                                    (localized("The amount of RAM bytes to purchase for the new account in MES")));
          createAccount->add_flag("--transfer", transfer,
                                  (localized("Transfer voting power and right to unstake MES to receiver")));
@@ -846,11 +846,11 @@ struct create_account_subcommand {
             } MES_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid active public key: ${public_key}", ("public_key", active_key_str));
             auto create = create_newaccount(creator, account_name, owner_key, active_key);
             if (!simple) {
-               if ( buy_ram_enu.empty() && buy_ram_bytes_in_kbytes == 0) {
+               if ( buy_ram_mes.empty() && buy_ram_bytes_in_kbytes == 0) {
                   std::cerr << "ERROR: Either --buy-ram or --buy-ram-kbytes with non-zero value is required" << std::endl;
                   return;
                }
-               action buyram = !buy_ram_enu.empty() ? create_buyram(creator, account_name, to_asset(buy_ram_enu))
+               action buyram = !buy_ram_mes.empty() ? create_buyram(creator, account_name, to_asset(buy_ram_mes))
                   : create_buyrambytes(creator, account_name, buy_ram_bytes_in_kbytes * 1024);
                auto net = to_asset(stake_net);
                auto cpu = to_asset(stake_cpu);

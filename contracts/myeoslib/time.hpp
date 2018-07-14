@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 
 namespace myeosio {
   class microseconds {
@@ -24,7 +24,7 @@ namespace myeosio {
         int64_t to_seconds()const { return _count/1000000; }
 
         int64_t _count;
-        MESLIB_SERIALIZE( microseconds, (_count) )
+        MYEOSLIB_SERIALIZE( microseconds, (_count) )
     private:
         friend class time_point;
   };
@@ -55,7 +55,7 @@ namespace myeosio {
         time_point   operator - (const microseconds& m) const { return time_point(elapsed-m); }
         microseconds operator - (const time_point& m) const { return microseconds(elapsed.count() - m.elapsed.count()); }
         microseconds elapsed;
-        MESLIB_SERIALIZE( time_point, (elapsed) )
+        MYEOSLIB_SERIALIZE( time_point, (elapsed) )
   };
 
   /**
@@ -105,7 +105,7 @@ namespace myeosio {
         friend microseconds operator - ( const time_point& t, const time_point_sec& m ) { return time_point(t) - time_point(m); }
         uint32_t utc_seconds;
 
-        MESLIB_SERIALIZE( time_point_sec, (utc_seconds) )
+        MYEOSLIB_SERIALIZE( time_point_sec, (utc_seconds) )
   };
 
    /**
@@ -159,7 +159,7 @@ namespace myeosio {
          static constexpr int32_t block_interval_ms = 500;
          static constexpr int64_t block_timestamp_epoch = 946684800000ll;  // epoch is year 2000
 
-         MESLIB_SERIALIZE( block_timestamp, (slot) )
+         MYEOSLIB_SERIALIZE( block_timestamp, (slot) )
       private:
       
 

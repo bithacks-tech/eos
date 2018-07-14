@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 #include <string>
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/contract.hpp>
 
 #pragma clang diagnostic push
@@ -73,7 +73,7 @@ class test_ram_limit : public myeosio::contract {
 
          uint64_t primary_key()const { return key; }
 
-         MESLIB_SERIALIZE( test, (key)(data) )
+         MYEOSLIB_SERIALIZE( test, (key)(data) )
       };
       typedef myeosio::multi_index< N(test.table), test> test_table;
 };

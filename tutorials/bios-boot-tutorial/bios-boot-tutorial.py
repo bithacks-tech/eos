@@ -17,15 +17,15 @@ unlockTimeout = 999999999
 fastUnstakeSystem = './fast.refund/myeos.system/myeos.system.wasm'
 
 systemAccounts = [
-    'enu.blockpay',
+    'myeos.blockpay',
     'myeos.msig',
-    'enu.names',
-    'enu.ram',
-    'enu.ramfee',
-    'enu.savings',
-    'enu.stake',
+    'myeos.names',
+    'myeos.ram',
+    'myeos.ramfee',
+    'myeos.savings',
+    'myeos.stake',
     'myeos.token',
-    'enu.votepay',
+    'myeos.votepay',
 ]
 
 def jsonArg(a):

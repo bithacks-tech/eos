@@ -93,13 +93,13 @@ namespace myeosiosystem {
                                                     {N(myeosio), asset(new_tokens), std::string("issue tokens for producer pay and savings")} );
 
          INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeosio),N(active)},
-                                                       { N(myeosio), N(enu.savings), asset(to_savings), "unallocated inflation" } );
+                                                       { N(myeosio), N(myeos.savings), asset(to_savings), "unallocated inflation" } );
 
          INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeosio),N(active)},
-                                                       { N(myeosio), N(enu.blockpay), asset(to_per_block_pay), "fund per-block bucket" } );
+                                                       { N(myeosio), N(myeos.blockpay), asset(to_per_block_pay), "fund per-block bucket" } );
 
          INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeosio),N(active)},
-                                                       { N(myeosio), N(enu.votepay), asset(to_per_vote_pay), "fund per-vote bucket" } );
+                                                       { N(myeosio), N(myeos.votepay), asset(to_per_vote_pay), "fund per-vote bucket" } );
 
          _gstate.pervote_bucket  += to_per_vote_pay;
          _gstate.perblock_bucket += to_per_block_pay;
@@ -128,12 +128,12 @@ namespace myeosiosystem {
       });
 
       if( producer_per_block_pay > 0 ) {
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.blockpay),N(active)},
-                                                       { N(enu.blockpay), owner, asset(producer_per_block_pay), std::string("producer block pay") } );
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeos.blockpay),N(active)},
+                                                       { N(myeos.blockpay), owner, asset(producer_per_block_pay), std::string("producer block pay") } );
       }
       if( producer_per_vote_pay > 0 ) {
-         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.votepay),N(active)},
-                                                       { N(enu.votepay), owner, asset(producer_per_vote_pay), std::string("producer vote pay") } );
+         INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeos.votepay),N(active)},
+                                                       { N(myeos.votepay), owner, asset(producer_per_vote_pay), std::string("producer vote pay") } );
       }
    }
 

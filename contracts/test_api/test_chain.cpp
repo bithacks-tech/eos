@@ -4,7 +4,7 @@
  */
 #include <myeoslib/action.h>
 #include <myeoslib/chain.h>
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include "test_api.hpp"
 
 #pragma pack(push, 1)

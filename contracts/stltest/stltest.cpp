@@ -135,7 +135,7 @@
 #include <string>
 #include <stdexcept>
 */
-//include <myeoslib/enu.hpp>
+//include <myeoslib/myeos.hpp>
 #include <myeoslib/dispatcher.hpp>
 
 using namespace myeosio;

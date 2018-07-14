@@ -4,7 +4,7 @@
  */
 #include "myeos.system.hpp"
 
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/print.hpp>
 #include <myeoslib/datastream.hpp>
 #include <myeoslib/serialize.hpp>
@@ -40,7 +40,7 @@ namespace myeosiosystem {
       uint64_t primary_key()const { return owner; }
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE( user_resources, (owner)(net_weight)(cpu_weight)(ram_bytes) )
+      MYEOSLIB_SERIALIZE( user_resources, (owner)(net_weight)(cpu_weight)(ram_bytes) )
    };
 
 
@@ -56,7 +56,7 @@ namespace myeosiosystem {
       uint64_t  primary_key()const { return to; }
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE( delegated_bandwidth, (from)(to)(net_weight)(cpu_weight) )
+      MYEOSLIB_SERIALIZE( delegated_bandwidth, (from)(to)(net_weight)(cpu_weight) )
 
    };
 
@@ -69,7 +69,7 @@ namespace myeosiosystem {
       uint64_t  primary_key()const { return owner; }
 
       // explicit serialization macro is not necessary, used here only to improve compilation time
-      MESLIB_SERIALIZE( refund_request, (owner)(request_time)(net_amount)(cpu_amount) )
+      MYEOSLIB_SERIALIZE( refund_request, (owner)(request_time)(net_amount)(cpu_amount) )
    };
 
    /**
@@ -122,11 +122,11 @@ namespace myeosiosystem {
       // If quant.amount == 1, then quant_after_fee.amount == 0 and the next inline transfer will fail causing the buyram action to fail.
 
       INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {payer,N(active)},
-         { payer, N(enu.ram), quant_after_fee, std::string("buy ram") } );
+         { payer, N(myeos.ram), quant_after_fee, std::string("buy ram") } );
 
       if( fee.amount > 0 ) {
          INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {payer,N(active)},
-                                                       { payer, N(enu.ramfee), fee, std::string("ram fee") } );
+                                                       { payer, N(myeos.ramfee), fee, std::string("ram fee") } );
       }
 
       int64_t bytes_out;
@@ -192,15 +192,15 @@ namespace myeosiosystem {
       });
       set_resource_limits( res_itr->owner, res_itr->ram_bytes, res_itr->net_weight.amount, res_itr->cpu_weight.amount );
 
-      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.ram),N(active)},
-                                                       { N(enu.ram), account, asset(tokens_out), std::string("sell ram") } );
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeos.ram),N(active)},
+                                                       { N(myeos.ram), account, asset(tokens_out), std::string("sell ram") } );
 
       auto fee = ( tokens_out.amount + 199 ) / 200; /// .5% fee (round up)
       // since tokens_out.amount was asserted to be at least 2 earlier, fee.amount < tokens_out.amount
       
       if( fee > 0 ) {
          INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {account,N(active)},
-            { account, N(enu.ramfee), asset(fee), std::string("sell ram fee") } );
+            { account, N(myeos.ramfee), asset(fee), std::string("sell ram fee") } );
       }
    }
 
@@ -278,7 +278,7 @@ namespace myeosiosystem {
       } // tot_itr can be invalid, should go out of scope
 
       // create refund or update from existing refund
-      if ( N(enu.stake) != source_stake_from ) { //for myeosio both transfer and refund make no sense
+      if ( N(myeos.stake) != source_stake_from ) { //for myeosio both transfer and refund make no sense
          refunds_table refunds_tbl( _self, from );
          auto req = refunds_tbl.find( from );
 
@@ -355,7 +355,7 @@ namespace myeosiosystem {
          auto transfer_amount = net_balance + cpu_balance;
          if ( asset(0) < transfer_amount ) {
             INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {source_stake_from, N(active)},
-               { source_stake_from, N(enu.stake), asset(transfer_amount), std::string("stake bandwidth") } );
+               { source_stake_from, N(myeos.stake), asset(transfer_amount), std::string("stake bandwidth") } );
          }
       }
 
@@ -420,8 +420,8 @@ namespace myeosiosystem {
       // allow people to get their tokens earlier than the 3 day delay if the unstake happened immediately after many
       // consecutive missed blocks.
 
-      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(enu.stake),N(active)},
-                                                    { N(enu.stake), req->owner, req->net_amount + req->cpu_amount, std::string("unstake") } );
+      INLINE_ACTION_SENDER(myeosio::token, transfer)( N(myeos.token), {N(myeos.stake),N(active)},
+                                                    { N(myeos.stake), req->owner, req->net_amount + req->cpu_amount, std::string("unstake") } );
 
       refunds_tbl.erase( req );
    }

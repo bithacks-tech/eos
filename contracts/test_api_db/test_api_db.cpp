@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include "../test_api/test_api.hpp"
 
 #include "test_db.cpp"

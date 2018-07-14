@@ -151,7 +151,7 @@ namespace myeosio {
          symbol.print(false);
       }
 
-      MESLIB_SERIALIZE( asset, (amount)(symbol) )
+      MYEOSLIB_SERIALIZE( asset, (amount)(symbol) )
    };
 
    struct extended_asset : public asset {
@@ -184,7 +184,7 @@ namespace myeosio {
          return {r, a.contract};
       }
 
-      MESLIB_SERIALIZE( extended_asset, (amount)(symbol)(contract) )
+      MYEOSLIB_SERIALIZE( extended_asset, (amount)(symbol)(contract) )
    };
 
 

@@ -1,5 +1,5 @@
 #include <myeoslib/fixedpoint.hpp>
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 
 #include "test_api.hpp"
 

@@ -8,7 +8,7 @@
 #include <myeoslib/db.h>
 #include <myeoslib/crypto.h>
 #include <myeoslib/privileged.h>
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/datastream.hpp>
 #include <myeoslib/print.hpp>
 #include <myeoslib/compiler_builtins.h>

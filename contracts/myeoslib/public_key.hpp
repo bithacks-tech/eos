@@ -13,6 +13,6 @@ namespace myeosio {
       friend bool operator != ( const public_key& a, const public_key& b ) {
         return std::tie(a.type,a.data) != std::tie(b.type,b.data);
       }
-      MESLIB_SERIALIZE( public_key, (type)(data) )
+      MYEOSLIB_SERIALIZE( public_key, (type)(data) )
    };
 }

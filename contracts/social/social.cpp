@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <enu.hpp>
+#include <myeos.hpp>
 
 /**
  *  The purpose of this contract is to implement something like Steem on MES, this

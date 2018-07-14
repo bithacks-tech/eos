@@ -1,5 +1,5 @@
 #pragma once
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/asset.hpp>
 #include <myeoslib/multi_index.hpp>
 
@@ -26,7 +26,7 @@ namespace myeosio {
             uint8_t                issuer_can_whitelist  = true;
 
             /*(issuer_agreement_hash)*/
-            MESLIB_SERIALIZE( create, (issuer)(maximum_supply)(issuer_can_freeze)(issuer_can_recall)(issuer_can_whitelist) )
+            MYEOSLIB_SERIALIZE( create, (issuer)(maximum_supply)(issuer_can_freeze)(issuer_can_recall)(issuer_can_whitelist) )
          };
 
          struct transfer
@@ -36,7 +36,7 @@ namespace myeosio {
             asset        quantity;
             string       memo;
 
-            MESLIB_SERIALIZE( transfer, (from)(to)(quantity)(memo) )
+            MYEOSLIB_SERIALIZE( transfer, (from)(to)(quantity)(memo) )
          };
 
          struct issue {
@@ -44,14 +44,14 @@ namespace myeosio {
             asset        quantity;
             string       memo;
 
-            MESLIB_SERIALIZE( issue, (to)(quantity)(memo) )
+            MYEOSLIB_SERIALIZE( issue, (to)(quantity)(memo) )
          };
 
          struct fee_schedule {
             uint64_t primary_key()const { return 0; }
 
             array<extended_asset,7> fee_per_length;
-            MESLIB_SERIALIZE( fee_schedule, (fee_per_length) )
+            MYEOSLIB_SERIALIZE( fee_schedule, (fee_per_length) )
          };
 
          struct account {
@@ -61,7 +61,7 @@ namespace myeosio {
 
             uint64_t primary_key()const { return balance.symbol.name(); }
 
-            MESLIB_SERIALIZE( account, (balance)(frozen)(whitelist) )
+            MYEOSLIB_SERIALIZE( account, (balance)(frozen)(whitelist) )
          };
 
          struct currency_stats {
@@ -76,7 +76,7 @@ namespace myeosio {
 
             uint64_t primary_key()const { return supply.symbol.name(); }
 
-            MESLIB_SERIALIZE( currency_stats, (supply)(max_supply)(issuer)(can_freeze)(can_recall)(can_whitelist)(is_frozen)(enforce_whitelist) )
+            MYEOSLIB_SERIALIZE( currency_stats, (supply)(max_supply)(issuer)(can_freeze)(can_recall)(can_whitelist)(is_frozen)(enforce_whitelist) )
          };
 
          typedef myeosio::multi_index<N(accounts), account> accounts;

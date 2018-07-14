@@ -1,4 +1,4 @@
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/dispatcher.hpp>
 #include <myeoslib/multi_index.hpp>
 
@@ -17,7 +17,7 @@ struct limit_order {
       uint64_t get_expiration()const { return expiration; }
       uint128_t get_price()const { return price; }
 
-      MESLIB_SERIALIZE( limit_order, (id)(price)(expiration)(owner) )
+      MYEOSLIB_SERIALIZE( limit_order, (id)(price)(expiration)(owner) )
    };
 
    struct test_k256 {
@@ -27,7 +27,7 @@ struct limit_order {
       auto primary_key()const { return id; }
       key256 get_val()const { return val; }
 
-      MESLIB_SERIALIZE( test_k256, (id)(val) )
+      MYEOSLIB_SERIALIZE( test_k256, (id)(val) )
    };
 
    class multi_index_test {
@@ -39,7 +39,7 @@ struct limit_order {
 
             uint32_t what;
 
-            MESLIB_SERIALIZE(trigger, (what))
+            MYEOSLIB_SERIALIZE(trigger, (what))
          };
 
          static void on(const trigger& act)

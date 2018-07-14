@@ -19,7 +19,7 @@
 #include <test_ram_limit/test_ram_limit.abi.hpp>
 #include <test_ram_limit/test_ram_limit.wast.hpp>
 
-#define DISABLE_MESLIB_SERIALIZE
+#define DISABLE_MYEOSLIB_SERIALIZE
 #include <test_api/test_api_common.hpp>
 
 /*
@@ -42,7 +42,7 @@ BOOST_FIXTURE_TEST_CASE(ram_tests, myeos_system::myeos_system_tester) { try {
    create_account_with_resources(N(testram11111),N(myeosio), init_request_bytes + 40);
    create_account_with_resources(N(testram22222),N(myeosio), init_request_bytes + 1190);
    produce_blocks(10);
-   BOOST_REQUIRE_EQUAL( success(), stake( "enu.stake", "testram11111", core_from_string("10.0000"), core_from_string("5.0000") ) );
+   BOOST_REQUIRE_EQUAL( success(), stake( "myeos.stake", "testram11111", core_from_string("10.0000"), core_from_string("5.0000") ) );
    produce_blocks(10);
 
    for (auto i = 0; i < 10; ++i) {

@@ -1585,7 +1585,7 @@ BOOST_FIXTURE_TEST_CASE(abgigen_myeosioabi_macro, abi_gen_helper)
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Wpointer-bool-conversion"
 
-      #include <myeoslib/enu.hpp>
+      #include <myeoslib/myeos.hpp>
       #include <myeoslib/print.hpp>
 
 
@@ -1644,7 +1644,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_contract_inheritance, abi_gen_helper)
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Wpointer-bool-conversion"
 
-      #include <myeoslib/enu.hpp>
+      #include <myeoslib/myeos.hpp>
       #include <myeoslib/print.hpp>
 
 
@@ -1716,7 +1716,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_no_myeosioabi_macro, abi_gen_helper)
    const char* abigen_no_myeosioabi_macro = R"=====(
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Wpointer-bool-conversion"
-      #include <myeoslib/enu.hpp>
+      #include <myeoslib/myeos.hpp>
       #include <myeoslib/print.hpp>
       #pragma GCC diagnostic pop
 

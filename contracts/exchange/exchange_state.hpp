@@ -45,7 +45,7 @@ namespace myeosio {
          return result;
       }
 
-      MESLIB_SERIALIZE( margin_state, (total_lendable)(total_lent)(least_collateralized)(interest_shares) )
+      MYEOSLIB_SERIALIZE( margin_state, (total_lendable)(total_lent)(least_collateralized)(interest_shares) )
    };
 
    /**
@@ -64,7 +64,7 @@ namespace myeosio {
 
          margin_state   peer_margin; /// peer_connector collateral lending balance
 
-         MESLIB_SERIALIZE( connector, (balance)(weight)(peer_margin) )
+         MYEOSLIB_SERIALIZE( connector, (balance)(weight)(peer_margin) )
       };
 
       connector base;
@@ -79,7 +79,7 @@ namespace myeosio {
       bool requires_margin_call( const exchange_state::connector& con )const;
       bool requires_margin_call()const;
 
-      MESLIB_SERIALIZE( exchange_state, (manager)(supply)(fee)(base)(quote) )
+      MYEOSLIB_SERIALIZE( exchange_state, (manager)(supply)(fee)(base)(quote) )
    };
 
    typedef myeosio::multi_index<N(markets), exchange_state> markets;

@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 #include <string>
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/time.hpp>
 #include <myeoslib/asset.hpp>
 #include <myeoslib/contract.hpp>
@@ -297,7 +297,7 @@ class dice : public myeosio::contract {
             return key256::make_from_word_sequence<uint64_t>(p64[0], p64[1], p64[2], p64[3]);
          }
 
-         MESLIB_SERIALIZE( offer, (id)(owner)(bet)(commitment)(gameid) )
+         MYEOSLIB_SERIALIZE( offer, (id)(owner)(bet)(commitment)(gameid) )
       };
 
       typedef myeosio::multi_index< N(offer), offer,
@@ -309,7 +309,7 @@ class dice : public myeosio::contract {
          checksum256 commitment;
          checksum256 reveal;
 
-         MESLIB_SERIALIZE( player, (commitment)(reveal) )
+         MYEOSLIB_SERIALIZE( player, (commitment)(reveal) )
       };
 
       //@abi table game i64
@@ -322,7 +322,7 @@ class dice : public myeosio::contract {
 
          uint64_t primary_key()const { return id; }
 
-         MESLIB_SERIALIZE( game, (id)(bet)(deadline)(player1)(player2) )
+         MYEOSLIB_SERIALIZE( game, (id)(bet)(deadline)(player1)(player2) )
       };
 
       typedef myeosio::multi_index< N(game), game> game_index;
@@ -334,7 +334,7 @@ class dice : public myeosio::contract {
 
          uint64_t primary_key()const { return id; }
 
-         MESLIB_SERIALIZE( global_dice, (id)(nextgameid) )
+         MYEOSLIB_SERIALIZE( global_dice, (id)(nextgameid) )
       };
 
       typedef myeosio::multi_index< N(global), global_dice> global_dice_index;
@@ -353,9 +353,9 @@ class dice : public myeosio::contract {
          uint64_t primary_key()const { return owner; }
 
 <<<<<<< HEAD
-         MESLIB_SERIALIZE( account, (owner)(myeos_balance)(open_offers)(open_games) )
+         MYEOSLIB_SERIALIZE( account, (owner)(myeos_balance)(open_offers)(open_games) )
 =======
-         MESLIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
+         MYEOSLIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
 >>>>>>> 5e47000eb6cdc6b0ab84b4d490a761993f1eaec7
       };
 

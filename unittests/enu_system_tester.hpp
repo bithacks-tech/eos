@@ -46,8 +46,8 @@ public:
 
       produce_blocks( 2 );
 
-      create_accounts({ N(myeos.token), N(enu.ram), N(enu.ramfee), N(enu.stake),
-               N(enu.blockpay), N(enu.votepay), N(enu.savings), N(enu.names) });
+      create_accounts({ N(myeos.token), N(myeos.ram), N(myeos.ramfee), N(myeos.stake),
+               N(myeos.blockpay), N(myeos.votepay), N(myeos.savings), N(myeos.names) });
 
 
       produce_blocks( 100 );
@@ -82,7 +82,7 @@ public:
       create_account_with_resources( N(bob111111111), config::system_account_name, core_from_string("0.4500"), false );
       create_account_with_resources( N(carol1111111), config::system_account_name, core_from_string("1.0000"), false );
 
-      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance("myeosio")  + get_balance("enu.ramfee") + get_balance("enu.stake") + get_balance("enu.ram") );
+      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance("myeosio")  + get_balance("myeos.ramfee") + get_balance("myeos.stake") + get_balance("myeos.ram") );
    }
 
 

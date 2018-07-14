@@ -85,7 +85,7 @@ namespace myeosio {
          }
       }
 
-      MESLIB_SERIALIZE( symbol_type, (value) )
+      MYEOSLIB_SERIALIZE( symbol_type, (value) )
    };
 
    struct extended_symbol : public symbol_type
@@ -106,7 +106,7 @@ namespace myeosio {
       friend bool operator != ( const extended_symbol& a, const extended_symbol& b ) {
         return std::tie( a.value, a.contract ) != std::tie( b.value, b.contract );
       }
-      MESLIB_SERIALIZE( extended_symbol, (value)(contract) )
+      MYEOSLIB_SERIALIZE( extended_symbol, (value)(contract) )
    };
 
 } /// namespace myeosio

@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 #include <myeoslib/token.hpp>
 #include <myeoslib/reflect.hpp>
 #include <myeoslib/generic_currency.hpp>

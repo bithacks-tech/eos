@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include <myeoslib/enu.hpp>
+#include <myeoslib/myeos.hpp>
 
 namespace proxy {
 
@@ -13,7 +13,7 @@ namespace proxy {
       account_name owner;
       uint32_t     delay;
 
-      MESLIB_SERIALIZE( set_owner, (owner)(delay) )
+      MYEOSLIB_SERIALIZE( set_owner, (owner)(delay) )
    };
 
    //@abi table

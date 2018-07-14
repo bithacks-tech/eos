@@ -17,7 +17,7 @@ namespace identity {
       uint8_t           confidence = 1; ///< used to define liability for lies,
       /// 0 to delete
 
-      MESLIB_SERIALIZE( certvalue, (property)(type)(data)(memo)(confidence) )
+      MYEOSLIB_SERIALIZE( certvalue, (property)(type)(data)(memo)(confidence) )
    };
 
    struct certrow {
@@ -41,7 +41,7 @@ namespace identity {
       }
       myeosio::key256 get_key() const { return key(property, trusted, certifier); }
 
-      MESLIB_SERIALIZE( certrow , (property)(trusted)(certifier)(confidence)(type)(data)(id) )
+      MYEOSLIB_SERIALIZE( certrow , (property)(trusted)(certifier)(confidence)(type)(data)(id) )
    };
 
    struct identrow {
@@ -50,7 +50,7 @@ namespace identity {
 
       uint64_t primary_key() const { return identity; }
 
-      MESLIB_SERIALIZE( identrow , (identity)(creator) )
+      MYEOSLIB_SERIALIZE( identrow , (identity)(creator) )
    };
 
    struct trustrow {
@@ -58,7 +58,7 @@ namespace identity {
 
       uint64_t primary_key() const { return account; }
 
-      MESLIB_SERIALIZE( trustrow, (account) )
+      MYEOSLIB_SERIALIZE( trustrow, (account) )
    };
 
    typedef myeosio::multi_index<N(certs), certrow,

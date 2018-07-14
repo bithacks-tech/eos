@@ -47,7 +47,7 @@
 #include <myeos.bios/myeos.bios.wast.hpp>
 #include <myeos.bios/myeos.bios.abi.hpp>
 
-#define DISABLE_MESLIB_SERIALIZE
+#define DISABLE_MYEOSLIB_SERIALIZE
 #include <test_api/test_api_common.hpp>
 
 FC_REFLECT( dummy_action, (a)(b)(c) )
