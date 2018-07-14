@@ -80,4 +80,4 @@ class test_ram_limit : public myeosio::contract {
 
 #pragma clang diagnostic pop
 
-ENUMIVO_ABI( test_ram_limit, (setentry)(rmentry)(printentry) )
+MYEOSIO_ABI( test_ram_limit, (setentry)(rmentry)(printentry) )

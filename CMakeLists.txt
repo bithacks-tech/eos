@@ -191,11 +191,11 @@ endif()
 
 message( STATUS "Using '${CORE_SYMBOL_NAME}' as CORE symbol name" )
 
-if ("${ENUMIVO_ROOT_KEY}" STREQUAL "")
-   set(ENUMIVO_ROOT_KEY "MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
+if ("${MYEOSIO_ROOT_KEY}" STREQUAL "")
+   set(MYEOSIO_ROOT_KEY "MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
 endif()
 
-message( STATUS "Using '${ENUMIVO_ROOT_KEY}' as public key for 'myeosio' account" )
+message( STATUS "Using '${MYEOSIO_ROOT_KEY}' as public key for 'myeosio' account" )
 
 include(wasm)
 

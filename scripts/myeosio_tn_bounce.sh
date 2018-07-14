@@ -11,7 +11,7 @@
 # in most cases, simply running ./myeosio_tn_bounce.sh is sufficient.
 #
 
-pushd $ENUMIVO_HOME
+pushd $MYEOSIO_HOME
 
 if [ ! -f programs/myeosnode/myeosnode ]; then
     echo unable to locate binary for myeosnode
@@ -19,20 +19,20 @@ if [ ! -f programs/myeosnode/myeosnode ]; then
 fi
 
 config_base=etc/myeosio/node_
-if [ -z "$ENUMIVO_NODE" ]; then
+if [ -z "$MYEOSIO_NODE" ]; then
     DD=`ls -d ${config_base}[012]?`
     ddcount=`echo $DD | wc -w`
     if [ $ddcount -ne 1 ]; then
         echo $HOSTNAME has $ddcount config directories, bounce not possible. Set environment variable
-        echo ENUMIVO_NODE to the 2-digit node id number to specify which node to bounce. For example:
-        echo ENUMIVO_NODE=06 $0 \<options\>
+        echo MYEOSIO_NODE to the 2-digit node id number to specify which node to bounce. For example:
+        echo MYEOSIO_NODE=06 $0 \<options\>
         cd -
         exit 1
     fi
     OFS=$((${#DD}-2))
-    export ENUMIVO_NODE=${DD:$OFS}
+    export MYEOSIO_NODE=${DD:$OFS}
 else
-    DD=${config_base}$ENUMIVO_NODE
+    DD=${config_base}$MYEOSIO_NODE
     if [ ! \( -d $DD \) ]; then
         echo no directory named $PWD/$DD
         cd -
@@ -40,5 +40,5 @@ else
     fi
 fi
 
-bash $ENUMIVO_HOME/scripts/myeosio_tn_down.sh
-bash $ENUMIVO_HOME/scripts/myeosio_tn_up.sh $*
+bash $MYEOSIO_HOME/scripts/myeosio_tn_down.sh
+bash $MYEOSIO_HOME/scripts/myeosio_tn_up.sh $*

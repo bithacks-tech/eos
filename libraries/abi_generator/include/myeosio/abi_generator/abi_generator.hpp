@@ -366,7 +366,7 @@ namespace myeosio {
 
                auto* id = token.getIdentifierInfo();
                if( id == nullptr ) return;
-               if( id->getName() != "ENUMIVO_ABI" ) return;
+               if( id->getName() != "MYEOSIO_ABI" ) return;
 
                const auto& sm = compiler_instance.getSourceManager();
                auto file_name = sm.getFilename(range.getBegin());
@@ -380,7 +380,7 @@ namespace myeosio {
                clang::SourceLocation e(clang::Lexer::getLocForEndOfToken(_e, 0, sm, compiler_instance.getLangOpts()));
                auto macrostr = string(sm.getCharacterData(b), sm.getCharacterData(e)-sm.getCharacterData(b));
 
-               regex r(R"(ENUMIVO_ABI\s*\(\s*(.+?)\s*,((?:.+?)*)\s*\))");
+               regex r(R"(MYEOSIO_ABI\s*\(\s*(.+?)\s*,((?:.+?)*)\s*\))");
                smatch smatch;
                auto res = regex_search(macrostr, smatch, r);
                ABI_ASSERT( res );

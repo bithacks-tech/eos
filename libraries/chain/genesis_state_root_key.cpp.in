@@ -7,6 +7,6 @@
 
 namespace myeosio { namespace chain {
 
-const string genesis_state::myeosio_root_key = "${ENUMIVO_ROOT_KEY}";
+const string genesis_state::myeosio_root_key = "${MYEOSIO_ROOT_KEY}";
 
 } } // namespace myeosio::chain

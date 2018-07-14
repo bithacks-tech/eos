@@ -209,9 +209,9 @@ void chain_plugin::plugin_initialize(const variables_map& options) {
    ilog("initializing chain plugin");
 
    try {
-      genesis_state gs; // Check if ENUMIVO_ROOT_KEY is bad
+      genesis_state gs; // Check if MYEOSIO_ROOT_KEY is bad
    } catch( const fc::exception& ) {
-      elog( "ENUMIVO_ROOT_KEY ('${root_key}') is invalid. Recompile with a valid public key.",
+      elog( "MYEOSIO_ROOT_KEY ('${root_key}') is invalid. Recompile with a valid public key.",
             ("root_key", genesis_state::myeosio_root_key) );
       throw;
    }

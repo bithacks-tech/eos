@@ -18,6 +18,6 @@ namespace myeosio {
          }
    };
 
-   ENUMIVO_ABI( noop, ( anyaction ) )
+   MYEOSIO_ABI( noop, ( anyaction ) )
 
 } /// myeosio     

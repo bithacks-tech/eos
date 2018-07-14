@@ -407,4 +407,4 @@ class dice : public myeosio::contract {
       }
 };
 
-ENUMIVO_ABI( dice, (offerbet)(canceloffer)(reveal)(claimexpired)(deposit)(withdraw) )
+MYEOSIO_ABI( dice, (offerbet)(canceloffer)(reveal)(claimexpired)(deposit)(withdraw) )

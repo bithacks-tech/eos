@@ -10,8 +10,8 @@ rundir=programs/myeosnode
 prog=myeosnode
 
 
-if [ "$PWD" != "$ENUMIVO_HOME" ]; then
-    echo $0 must only be run from $ENUMIVO_HOME
+if [ "$PWD" != "$MYEOSIO_HOME" ]; then
+    echo $0 must only be run from $MYEOSIO_HOME
     exit -1
 fi
 
@@ -20,12 +20,12 @@ if [ ! -e $rundir/$prog ]; then
     exit -1
 fi
 
-if [ -z "$ENUMIVO_NODE" ]; then
+if [ -z "$MYEOSIO_NODE" ]; then
     echo data directory not set
     exit -1
 fi
 
-datadir=var/lib/node_$ENUMIVO_NODE
+datadir=var/lib/node_$MYEOSIO_NODE
 now=`date +'%Y_%m_%d_%H_%M_%S'`
 log=stderr.$now.txt
 touch $datadir/$log
@@ -33,8 +33,8 @@ rm $datadir/stderr.txt
 ln -s $log $datadir/stderr.txt
 
 relaunch() {
-    echo "$rundir/$prog $* --data-dir $datadir --config-dir etc/myeosio/node_$ENUMIVO_NODE > $datadir/stdout.txt  2>> $datadir/$log "
-    nohup $rundir/$prog $* --data-dir $datadir --config-dir etc/myeosio/node_$ENUMIVO_NODE > $datadir/stdout.txt  2>> $datadir/$log &
+    echo "$rundir/$prog $* --data-dir $datadir --config-dir etc/myeosio/node_$MYEOSIO_NODE > $datadir/stdout.txt  2>> $datadir/$log "
+    nohup $rundir/$prog $* --data-dir $datadir --config-dir etc/myeosio/node_$MYEOSIO_NODE > $datadir/stdout.txt  2>> $datadir/$log &
     pid=$!
     echo pid = $pid
     echo $pid > $datadir/$prog.pid
@@ -54,26 +54,26 @@ relaunch() {
     done
 }
 
-if [ -z "$ENUMIVO_LEVEL" ]; then
+if [ -z "$MYEOSIO_LEVEL" ]; then
     echo starting with no modifiers
     relaunch $*
     if [ "$connected" -eq 0 ]; then
-        ENUMIVO_LEVEL=replay
+        MYEOSIO_LEVEL=replay
     else
         exit 0
     fi
 fi
 
-if [ "$ENUMIVO_LEVEL" == replay ]; then
+if [ "$MYEOSIO_LEVEL" == replay ]; then
     echo starting with replay
     relaunch $* --replay
     if [  "$connected" -eq 0 ]; then
-        ENUMIVO_LEVEL=resync
+        MYEOSIO_LEVEL=resync
     else
         exit 0
     fi
 fi
-if [ "$ENUMIVO_LEVEL" == resync ]; then
+if [ "$MYEOSIO_LEVEL" == resync ]; then
     echo starting wih resync
     relaunch $* --resync
 fi

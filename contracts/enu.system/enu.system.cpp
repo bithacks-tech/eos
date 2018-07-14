@@ -189,7 +189,7 @@ namespace myeosiosystem {
 } /// enu.system
 
 
-ENUMIVO_ABI( myeosiosystem::system_contract,
+MYEOSIO_ABI( myeosiosystem::system_contract,
      // native.hpp (newaccount definition is actually in enu.system.cpp)
      (newaccount)(updateauth)(deleteauth)(linkauth)(unlinkauth)(canceldelay)(onerror)
      // enu.system.cpp

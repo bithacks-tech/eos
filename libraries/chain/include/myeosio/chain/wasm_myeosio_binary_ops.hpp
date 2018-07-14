@@ -652,9 +652,9 @@ using namespace IR;
 // Decodes an operator from an input stream and dispatches by opcode.
 // This code is from wasm-jit/Include/IR/Operators.h
 template <class Op_Types>
-struct ENUMIVO_OperatorDecoderStream
+struct MYEOSIO_OperatorDecoderStream
 {
-   ENUMIVO_OperatorDecoderStream(const std::vector<U8>& codeBytes)
+   MYEOSIO_OperatorDecoderStream(const std::vector<U8>& codeBytes)
    : start(codeBytes.data()), nextByte(codeBytes.data()), end(codeBytes.data()+codeBytes.size()) {
      if(!_cached_ops)
         _cached_ops = cached_ops<Op_Types>::get_cached_ops();
@@ -701,7 +701,7 @@ private:
 };
 
 template <class Op_Types>
-const std::vector<instr*>* ENUMIVO_OperatorDecoderStream<Op_Types>::_cached_ops;
+const std::vector<instr*>* MYEOSIO_OperatorDecoderStream<Op_Types>::_cached_ops;
 
 }}} // namespace myeosio, chain, wasm_ops
 

@@ -218,7 +218,7 @@ namespace myeosio {
 
       auto& thiscontract = *this;
       switch( act ) {
-         ENUMIVO_API( exchange, (createx)(deposit)(withdraw)(lend)(unlend) )
+         MYEOSIO_API( exchange, (createx)(deposit)(withdraw)(lend)(unlend) )
       };
 
       switch( act ) {

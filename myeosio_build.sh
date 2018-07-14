@@ -263,7 +263,7 @@
 	printf "\\tMyEOSIO Community: https://myeosio.com/\\n"
 	printf "\\tMyEOSIO Wiki: https://github.com/myeosio/myeosio/wiki\\n\\n\\n"
 				
-	if [ "x${ENUMIVO_BUILD_PACKAGE}" != "x" ]; then
+	if [ "x${MYEOSIO_BUILD_PACKAGE}" != "x" ]; then
 	  # Build MyEOSIO package
 		if ! "$CMAKE" -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" -DCMAKE_CXX_COMPILER="${CXX_COMPILER}" \
 			-DCMAKE_C_COMPILER="${C_COMPILER}" -DWASM_ROOT="${WASM_ROOT}" \

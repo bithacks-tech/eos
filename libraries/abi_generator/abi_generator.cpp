@@ -122,7 +122,7 @@ bool abi_generator::inspect_type_methods_for_actions(const Decl* decl) { try {
       raw_comment_is_action = smatch.size() == 3;
     }
 
-    // Check if current method is listed the ENUMIVO_ABI macro
+    // Check if current method is listed the MYEOSIO_ABI macro
     bool is_action_from_macro = rec_decl->getName().str() == target_contract && std::find(target_actions.begin(), target_actions.end(), method_name) != target_actions.end();
     
     if(!raw_comment_is_action && !is_action_from_macro) {
@@ -202,7 +202,7 @@ void abi_generator::handle_decl(const Decl* decl) { try {
     return;
   }
 
-  // Check if the current declaration has actions (ENUMIVO_ABI, or explicit)
+  // Check if the current declaration has actions (MYEOSIO_ABI, or explicit)
   bool type_has_actions = inspect_type_methods_for_actions(decl);
   if( type_has_actions ) return;
 
@@ -215,7 +215,7 @@ void abi_generator::handle_decl(const Decl* decl) { try {
   string raw_text = raw_comment->getRawText(source_manager);
   regex r;
 
-  // If ENUMIVO_ABI macro was found, we will only check if the current Decl
+  // If MYEOSIO_ABI macro was found, we will only check if the current Decl
   // is intented to be an ABI table record, otherwise we check for both (action or table)
   if( target_contract.size() )
     r = regex(R"(@abi (table)((?: [a-z0-9]+)*))");

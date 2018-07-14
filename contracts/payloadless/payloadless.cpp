@@ -11,4 +11,4 @@ class payloadless : public myeosio::contract {
       }
 };
 
-ENUMIVO_ABI( payloadless, (doit) )
+MYEOSIO_ABI( payloadless, (doit) )

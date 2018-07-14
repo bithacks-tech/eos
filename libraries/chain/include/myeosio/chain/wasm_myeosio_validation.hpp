@@ -338,7 +338,7 @@ namespace myeosio { namespace chain { namespace wasm_validations {
          void validate() {
             _module_validators.validate( *_module );
             for ( auto& fd : _module->functions.defs ) {
-               wasm_ops::ENUMIVO_OperatorDecoderStream<op_constrainers> decoder(fd.code);
+               wasm_ops::MYEOSIO_OperatorDecoderStream<op_constrainers> decoder(fd.code);
                while ( decoder ) {
                   wasm_ops::instruction_stream new_code(0);
                   auto op = decoder.decodeOp();

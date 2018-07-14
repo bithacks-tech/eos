@@ -1604,7 +1604,7 @@ BOOST_FIXTURE_TEST_CASE(abgigen_myeosioabi_macro, abi_gen_helper)
             }
       };
 
-      ENUMIVO_ABI(hello,(hi))
+      MYEOSIO_ABI(hello,(hi))
 
       #pragma GCC diagnostic pop
 
@@ -1667,7 +1667,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_contract_inheritance, abi_gen_helper)
             }
       };
 
-      ENUMIVO_ABI(new_hello,(hi)(bye))
+      MYEOSIO_ABI(new_hello,(hi)(bye))
 
       #pragma GCC diagnostic pop
    )=====";
@@ -1739,7 +1739,7 @@ BOOST_FIXTURE_TEST_CASE(abigen_no_myeosioabi_macro, abi_gen_helper)
            void apply( account_name contract, account_name act ) {
               auto& thiscontract = *this;
               switch( act ) {
-                 ENUMIVO_API( hello, (hi)(bye))
+                 MYEOSIO_API( hello, (hi)(bye))
               };
            }
       };

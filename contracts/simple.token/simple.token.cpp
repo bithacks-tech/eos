@@ -46,4 +46,4 @@ class simpletoken : public myeosio::contract {
       }
 };
 
-ENUMIVO_ABI( simpletoken, (transfer)(issue) )
+MYEOSIO_ABI( simpletoken, (transfer)(issue) )

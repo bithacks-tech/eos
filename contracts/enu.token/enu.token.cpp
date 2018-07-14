@@ -122,4 +122,4 @@ void token::add_balance( account_name owner, asset value, account_name ram_payer
 
 } /// namespace myeosio
 
-ENUMIVO_ABI( myeosio::token, (create)(issue)(transfer) )
+MYEOSIO_ABI( myeosio::token, (create)(issue)(transfer) )

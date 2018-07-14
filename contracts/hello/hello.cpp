@@ -11,4 +11,4 @@ class hello : public myeosio::contract {
       }
 };
 
-ENUMIVO_ABI( hello, (hi) )
+MYEOSIO_ABI( hello, (hi) )

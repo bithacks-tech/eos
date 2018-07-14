@@ -58,4 +58,4 @@ extern "C" {
    }
 }
 
-//ENUMIVO_ABI( deferred_test, (defercall)(deferfunc) )
+//MYEOSIO_ABI( deferred_test, (defercall)(deferfunc) )

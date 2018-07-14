@@ -32,4 +32,4 @@ namespace identity_test {
 
 } /// namespace identity
 
-ENUMIVO_ABI( identity_test::contract, (getowner)(getidentity) );
+MYEOSIO_ABI( identity_test::contract, (getowner)(getidentity) );

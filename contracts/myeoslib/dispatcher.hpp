@@ -63,15 +63,15 @@ namespace myeosio {
       return true;
    }
 
-#define ENUMIVO_API_CALL( r, OP, elem ) \
+#define MYEOSIO_API_CALL( r, OP, elem ) \
    case ::myeosio::string_to_name( BOOST_PP_STRINGIZE(elem) ): \
       myeosio::execute_action( &thiscontract, &OP::elem ); \
       break;
 
-#define ENUMIVO_API( TYPE,  MEMBERS ) \
-   BOOST_PP_SEQ_FOR_EACH( ENUMIVO_API_CALL, TYPE, MEMBERS )
+#define MYEOSIO_API( TYPE,  MEMBERS ) \
+   BOOST_PP_SEQ_FOR_EACH( MYEOSIO_API_CALL, TYPE, MEMBERS )
 
-#define ENUMIVO_ABI( TYPE, MEMBERS ) \
+#define MYEOSIO_ABI( TYPE, MEMBERS ) \
 extern "C" { \
    void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
       auto self = receiver; \
@@ -82,7 +82,7 @@ extern "C" { \
       if( code == self || action == N(onerror) ) { \
          TYPE thiscontract( self ); \
          switch( action ) { \
-            ENUMIVO_API( TYPE, MEMBERS ) \
+            MYEOSIO_API( TYPE, MEMBERS ) \
          } \
          /* does not allow destructor of thiscontract to run: myeosio_exit(0); */ \
       } \
