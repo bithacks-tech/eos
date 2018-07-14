@@ -282,7 +282,7 @@ class dice : public enumivo::contract {
             return key256::make_from_word_sequence<uint64_t>(p64[0], p64[1], p64[2], p64[3]);
          }
 
-         ENULIB_SERIALIZE( offer, (id)(owner)(bet)(commitment)(gameid) )
+         MESLIB_SERIALIZE( offer, (id)(owner)(bet)(commitment)(gameid) )
       };
 
       typedef enumivo::multi_index< N(offer), offer,
@@ -294,7 +294,7 @@ class dice : public enumivo::contract {
          checksum256 commitment;
          checksum256 reveal;
 
-         ENULIB_SERIALIZE( player, (commitment)(reveal) )
+         MESLIB_SERIALIZE( player, (commitment)(reveal) )
       };
 
       //@abi table game i64
@@ -307,7 +307,7 @@ class dice : public enumivo::contract {
 
          uint64_t primary_key()const { return id; }
 
-         ENULIB_SERIALIZE( game, (id)(bet)(deadline)(player1)(player2) )
+         MESLIB_SERIALIZE( game, (id)(bet)(deadline)(player1)(player2) )
       };
 
       typedef enumivo::multi_index< N(game), game> game_index;
@@ -319,7 +319,7 @@ class dice : public enumivo::contract {
 
          uint64_t primary_key()const { return id; }
 
-         ENULIB_SERIALIZE( global_dice, (id)(nextgameid) )
+         MESLIB_SERIALIZE( global_dice, (id)(nextgameid) )
       };
 
       typedef enumivo::multi_index< N(global), global_dice> global_dice_index;
@@ -337,7 +337,7 @@ class dice : public enumivo::contract {
 
          uint64_t primary_key()const { return owner; }
 
-         ENULIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
+         MESLIB_SERIALIZE( account, (owner)(enu_balance)(open_offers)(open_games) )
       };
 
       typedef enumivo::multi_index< N(account), account> account_index;
