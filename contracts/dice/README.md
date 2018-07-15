@@ -263,7 +263,7 @@ mycleos push action dice withdraw '[ "alice", "103.0000 MES" ]' -p alice
 
 ##### Balance of alice after withdraw
 ````bash
-mycleos get currency balance myeos.token alice enu
+mycleos get currency balance myeos.token alice myeos
 1003.0000 MES
 ````
 

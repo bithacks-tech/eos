@@ -1625,7 +1625,7 @@ class compiler_builtins : public context_aware_api {
 
 
 /*
- * This api will be removed with fix for `enu #2561`
+ * This api will be removed with fix for `myeos #2561`
  */
 class call_depth_api : public context_aware_api {
    public:
