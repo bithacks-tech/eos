@@ -72,7 +72,7 @@ try:
         Print("Stand up cluster")
         if cluster.launch(prodCount=prodCount, onlyBios=onlyBios, dontKill=dontKill) is False:
             cmdError("launcher")
-            errorExit("Failed to stand up enu cluster.")
+            errorExit("Failed to stand up myeos cluster.")
     else:
         cluster.initializeNodes(defproduceraPrvtKey=defproduceraPrvtKey, defproducerbPrvtKey=defproducerbPrvtKey)
         killEnuInstances=False

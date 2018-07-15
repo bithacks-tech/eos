@@ -496,7 +496,7 @@ msgstr ""
 msgid "The JSON array of the transactions to push"
 msgstr ""
 
-msgid "Failed to connect to enu at ${ip}:${port}; is myeosdaemon running?"
+msgid "Failed to connect to myeos at ${ip}:${port}; is myeosdaemon running?"
 msgstr ""
 
 msgid "Failed to connect to mykeosdd at ${ip}:${port}; is mykeosdd running?"

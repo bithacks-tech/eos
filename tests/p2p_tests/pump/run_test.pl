@@ -246,7 +246,7 @@ sub perform_work {
         my $stoptime = time () + $run_duration;
         my $counter = 0;
         while (time () < $stoptime) {
-            `$mycleosent transfer enu inita 10 >> mycleosent.out 2>> mycleosent.err`;
+            `$mycleosent transfer myeos inita 10 >> mycleosent.out 2>> mycleosent.err`;
             $counter++;
             if ($counter % 1000 == 0) {
                 print "$counter client iterations\n";

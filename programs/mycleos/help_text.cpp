@@ -264,7 +264,7 @@ const std::map<int64_t, std::string> error_advice = {
 namespace myeosio { namespace client { namespace help {
 
 bool print_recognized_errors(const fc::exception& e, const bool verbose_errors) {
-   // enu recognized error code is from 3000000
+   // myeos recognized error code is from 3000000
    // refer to libraries/chain/include/myeosio/chain/exceptions.hpp
    if (e.code() >= chain_exception::code_value) {
       std::string advice, explanation, stack_trace;

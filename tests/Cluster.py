@@ -36,11 +36,11 @@ class Cluster(object):
         """Cluster container.
         mykeosdd [True|False] Is wallet mykeosd running. If not load the wallet plugin
         localCluster [True|False] Is cluster local to host.
-        host: enu server host
-        port: enu server port
-        walletHost: enu wallet host
+        host: myeos server host
+        port: myeos server port
+        walletHost: myeos wallet host
         walletPort: wos wallet port
-        enableMongo: Include mongoDb support, configures enu mongo plugin
+        enableMongo: Include mongoDb support, configures myeos mongo plugin
         mongoHost: MongoDB host
         mongoPort: MongoDB port
         defproduceraPrvtKey: Defproducera account private key
@@ -382,7 +382,7 @@ class Cluster(object):
         node=self.nodes[0]
         fromm=source
         to=accounts[0]
-        Utils.Print("Transfer %s units from account %s to %s on enu server port %d" % (
+        Utils.Print("Transfer %s units from account %s to %s on myeos server port %d" % (
             transferAmountStr, fromm.name, to.name, node.port))
         trans=node.transferFunds(fromm, to, transferAmountStr)
         assert(trans)
@@ -419,7 +419,7 @@ class Cluster(object):
             transferAmountStr=Node.currencyIntToStr(transferAmount, CORE_SYMBOL)
             fromm=account
             to=accounts[i+1] if i < (count-1) else source
-            Utils.Print("Transfer %s units from account %s to %s on enu server port %d." %
+            Utils.Print("Transfer %s units from account %s to %s on myeos server port %d." %
                     (transferAmountStr, fromm.name, to.name, node.port))
 
             trans=node.transferFunds(fromm, to, transferAmountStr)
@@ -458,7 +458,7 @@ class Cluster(object):
                                         (Utils.EnuServerName, node.port))
 
             if node.validateFunds(initialBalances, transferAmount, source, accounts) is False:
-                Utils.Print("ERROR: Failed to validate funds on enu node port: %d" % (node.port))
+                Utils.Print("ERROR: Failed to validate funds on myeos node port: %d" % (node.port))
                 return False
 
         return True
@@ -941,14 +941,14 @@ class Cluster(object):
         cmd="%s -k 9" % (Utils.EnuLauncherPath)
         if Utils.Debug: Utils.Print("cmd: %s" % (cmd))
         if 0 != subprocess.call(cmd.split(), stdout=Utils.FNull):
-            if not silent: Utils.Print("Launcher failed to shut down enu cluster.")
+            if not silent: Utils.Print("Launcher failed to shut down myeos cluster.")
 
         if allInstances:
-            # ocassionally the launcher cannot kill the enu server
+            # ocassionally the launcher cannot kill the myeos server
             cmd="pkill -9 %s" % (Utils.EnuServerName)
             if Utils.Debug: Utils.Print("cmd: %s" % (cmd))
             if 0 != subprocess.call(cmd.split(), stdout=Utils.FNull):
-                if not silent: Utils.Print("Failed to shut down enu cluster.")
+                if not silent: Utils.Print("Failed to shut down myeos cluster.")
 
         # another explicit nodes shutdown
         for node in self.nodes:

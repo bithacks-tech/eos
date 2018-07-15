@@ -251,7 +251,7 @@ def myTest(transWillEnterBlock):
         delay=0
         Print("Stand up cluster")
         if cluster.launch(pnodes, total_nodes, topo, delay) is False:
-            error("Failed to stand up enu cluster.")
+            error("Failed to stand up myeos cluster.")
             return False
 
         accounts=testUtils.Cluster.createAccountKeys(1)

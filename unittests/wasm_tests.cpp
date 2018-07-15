@@ -1169,7 +1169,7 @@ BOOST_FIXTURE_TEST_CASE(myeosio_abi, TESTER) try {
    auto result = push_transaction( trx );
 
    fc::variant pretty_output;
-   // verify to_variant works on enu native contract type: newaccount
+   // verify to_variant works on myeos native contract type: newaccount
    // see abi_serializer::to_abi()
    abi_serializer::to_variant(*result, pretty_output, get_resolver());
 

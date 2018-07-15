@@ -815,7 +815,7 @@ BOOST_FIXTURE_TEST_CASE( vote_for_producer, myeos_system_tester, * boost::unit_t
    //should decrease alice1111111's total_votes
    prod = get_producer_info( "alice1111111" );
    BOOST_TEST_REQUIRE( stake2votes(core_from_string("20.2220")) == prod["total_votes"].as_double() );
-   //but enu should still be at stake
+   //but myeos should still be at stake
    BOOST_REQUIRE_EQUAL( core_from_string("1955.5556"), get_balance( "bob111111111" ) );
 
    //carol1111111 unstakes rest of enu

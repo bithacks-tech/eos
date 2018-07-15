@@ -72,7 +72,7 @@ try:
 
     Print("Stand up cluster")
     if cluster.launch(pnodes, total_nodes, topo=topo, delay=delay, dontBootstrap=True) is False:
-        errorExit("Failed to stand up enu cluster.")
+        errorExit("Failed to stand up myeos cluster.")
 
     node=cluster.getNode(0)
     if node is None:
