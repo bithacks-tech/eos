@@ -883,7 +883,7 @@ class Cluster(object):
 
         return nodes
 
-    # Kills a percentange of Enu instances starting from the tail and update enuInstanceInfos state
+    # Kills a percentange of MyEOS instances starting from the tail and update myeosInstanceInfos state
     def killSomeEnuInstances(self, killCount, killSignalStr=Utils.SigKillTag):
         killSignal=signal.SIGKILL
         if killSignalStr == Utils.SigTermTag:

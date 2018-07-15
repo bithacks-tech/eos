@@ -88,9 +88,9 @@ namespace myeosiosystem {
    void system_contract::buyrambytes( account_name payer, account_name receiver, uint32_t bytes ) {
       auto itr = _rammarket.find(S(4,RAMCORE));
       auto tmp = *itr;
-      auto enuout = tmp.convert( asset(bytes,S(0,RAM)), CORE_SYMBOL );
+      auto myeosout = tmp.convert( asset(bytes,S(0,RAM)), CORE_SYMBOL );
 
-      buyram( payer, receiver, enuout );
+      buyram( payer, receiver, myeosout );
    }
 
 

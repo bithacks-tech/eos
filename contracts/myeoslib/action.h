@@ -36,7 +36,7 @@ extern "C" {
     * @code
     * // Assume this action is used for the following examples:
     * // {
-    * //  "code": "enu",
+    * //  "code": "myeos",
     * //  "type": "transfer",
     * //  "authorization": [{ "account": "inita", "permission": "active" }],
     * //  "data": {
