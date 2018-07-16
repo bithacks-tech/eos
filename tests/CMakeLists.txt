@@ -16,14 +16,16 @@ include_directories("${CMAKE_SOURCE_DIR}/plugins/wallet_plugin/include")
 file(GLOB UNIT_TESTS "wallet_tests.cpp")
 
 add_executable( plugin_test ${UNIT_TESTS} ${WASM_UNIT_TESTS} main.cpp)
-target_link_libraries( plugin_test eosio_testing eosio_chain chainbase eos_utilities chain_plugin wallet_plugin abi_generator fc ${PLATFORM_SPECIFIC_LIBS} )
-
+target_link_libraries( plugin_test myeosio_testing myeosio_chain chainbase myeos_utilities chain_plugin wallet_plugin abi_generator fc ${PLATFORM_SPECIFIC_LIBS} )
 target_include_directories( plugin_test PUBLIC ${CMAKE_SOURCE_DIR}/plugins/net_plugin/include )
-add_dependencies(plugin_test asserter test_api test_api_mem test_api_db test_api_multi_index exchange proxy identity identity_test stltest infinite eosio.system eosio.token eosio.bios test.inline multi_index_test noop dice eosio.msig)
+add_dependencies(plugin_test asserter test_api test_api_mem test_api_db test_api_multi_index exchange proxy identity identity_test stltest infinite myeos.system myeos.token myeos.bios test.inline multi_index_test noop dice myeos.msig)
 
 #
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core_symbol.py.in ${CMAKE_CURRENT_BINARY_DIR}/core_symbol.py)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/testUtils.py ${CMAKE_CURRENT_BINARY_DIR}/testUtils.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/WalletMgr.py ${CMAKE_CURRENT_BINARY_DIR}/WalletMgr.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Node.py ${CMAKE_CURRENT_BINARY_DIR}/Node.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Cluster.py ${CMAKE_CURRENT_BINARY_DIR}/Cluster.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TestHelper.py ${CMAKE_CURRENT_BINARY_DIR}/TestHelper.py COPYONLY)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/p2p_tests/dawn_515/test.sh ${CMAKE_CURRENT_BINARY_DIR}/p2p_tests/dawn_515/test.sh COPYONLY)
@@ -31,19 +33,19 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/distributed-transactions-test.py ${CM
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/distributed-transactions-remote-test.py ${CMAKE_CURRENT_BINARY_DIR}/distributed-transactions-remote-test.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/sample-cluster-map.json ${CMAKE_CURRENT_BINARY_DIR}/sample-cluster-map.json COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/restart-scenarios-test.py ${CMAKE_CURRENT_BINARY_DIR}/restart-scenarios-test.py COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/nodeos_run_test.py ${CMAKE_CURRENT_BINARY_DIR}/nodeos_run_test.py COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/nodeos_run_remote_test.py ${CMAKE_CURRENT_BINARY_DIR}/nodeos_run_remote_test.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/myeosnode_run_test.py ${CMAKE_CURRENT_BINARY_DIR}/myeosnode_run_test.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/myeosnode_run_remote_test.py ${CMAKE_CURRENT_BINARY_DIR}/myeosnode_run_remote_test.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/consensus-validation-malicious-producers.py ${CMAKE_CURRENT_BINARY_DIR}/consensus-validation-malicious-producers.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/validate-dirty-db.py ${CMAKE_CURRENT_BINARY_DIR}/validate-dirty-db.py COPYONLY)
 
 #To run plugin_test with all log from blockchain displayed, put --verbose after --, i.e. plugin_test -- --verbose
 add_test(NAME plugin_test COMMAND plugin_test --report_level=detailed --color_output)
 
-add_test(NAME nodeos_run_test COMMAND tests/nodeos_run_test.py -v --clean-run --dump-error-detail WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+add_test(NAME myeosnode_run_test COMMAND tests/myeosnode_run_test.py -v --clean-run --dump-error-detail WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_test(NAME p2p_dawn515_test COMMAND tests/p2p_tests/dawn_515/test.sh WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 #if(BUILD_MONGO_DB_PLUGIN)
-#   add_test(NAME nodeos_run_test-mongodb COMMAND tests/nodeos_run_test.py --mongodb -v --dump-error-detail WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+#   add_test(NAME myeosnode_run_test-mongodb COMMAND tests/myeosnode_run_test.py --mongodb -v --dump-error-detail WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 #endif()
 
 # TODO: Tests removed until working again on master.
@@ -71,8 +73,8 @@ if(ENABLE_COVERAGE_TESTING)
   endif() # NOT GENHTML_PATH
 
   # no spaces allowed within tests list
-  set(ctest_tests 'plugin_test|p2p_dawn515_test|nodeos_run_test|distributed-transactions-test|restart-scenarios-test_resync')
-  set(ctest_exclude_tests 'nodeos_run_remote_test|nodeos_run_test-mongodb|distributed-transactions-remote-test|restart-scenarios-test_replay')
+  set(ctest_tests 'plugin_test|p2p_dawn515_test|myeosnode_run_test|distributed-transactions-test|restart-scenarios-test_resync')
+  set(ctest_exclude_tests 'myeosnode_run_remote_test|myeosnode_run_test-mongodb|distributed-transactions-remote-test|restart-scenarios-test_replay')
 
   # Setup target
   add_custom_target(${Coverage_NAME}

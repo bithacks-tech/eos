@@ -1,20 +1,20 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <algorithm>
 #include <vector>
 #include <iterator>
 #include <boost/test/unit_test.hpp>
 
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/permission_object.hpp>
-#include <eosio/chain/global_property_object.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/permission_object.hpp>
+#include <myeosio/chain/global_property_object.hpp>
 
-#include <eosio/testing/tester.hpp>
+#include <myeosio/testing/tester.hpp>
 
-#include <eosio/utilities/tempdir.hpp>
+#include <myeosio/utilities/tempdir.hpp>
 
 #include <fc/crypto/digest.hpp>
 
@@ -23,9 +23,9 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/permutation.hpp>
 
-using namespace eosio;
+using namespace myeosio;
 using namespace chain;
-using tester = eosio::testing::tester;
+using tester = myeosio::testing::tester;
 
 BOOST_AUTO_TEST_SUITE(special_account_tests)
 

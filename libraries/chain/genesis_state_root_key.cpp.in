@@ -1,12 +1,12 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <eosio/chain/genesis_state.hpp>
+#include <myeosio/chain/genesis_state.hpp>
 
-namespace eosio { namespace chain {
+namespace myeosio { namespace chain {
 
-const string genesis_state::eosio_root_key = "${EOSIO_ROOT_KEY}";
+const string genesis_state::myeosio_root_key = "${MYEOSIO_ROOT_KEY}";
 
-} } // namespace eosio::chain
+} } // namespace myeosio::chain

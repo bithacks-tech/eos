@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
-#include <eosio/testing/tester.hpp>
-#include <eosio/chain/global_property_object.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/global_property_object.hpp>
 #include <boost/range/algorithm.hpp>
 
 #ifdef NON_VALIDATING_TEST
@@ -9,8 +9,8 @@
 #define TESTER validating_tester
 #endif
 
-using namespace eosio::testing;
-using namespace eosio::chain;
+using namespace myeosio::testing;
+using namespace myeosio::chain;
 using mvo = fc::mutable_variant_object;
 
 BOOST_AUTO_TEST_SUITE(producer_schedule_tests)

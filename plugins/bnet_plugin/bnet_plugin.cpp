@@ -45,10 +45,10 @@
  *
  */
 
-#include <eosio/bnet_plugin/bnet_plugin.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/trace.hpp>
-#include <eosio/chain_plugin/chain_plugin.hpp>
+#include <myeosio/bnet_plugin/bnet_plugin.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/trace.hpp>
+#include <myeosio/chain_plugin/chain_plugin.hpp>
 
 #include <fc/io/json.hpp>
 
@@ -61,17 +61,17 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-#include <eosio/chain/plugin_interface.hpp>
+#include <myeosio/chain/plugin_interface.hpp>
 
 using tcp = boost::asio::ip::tcp;
 namespace ws  = boost::beast::websocket;
 
-namespace eosio {
+namespace myeosio {
    using namespace chain;
 
    static appbase::abstract_plugin& _bnet_plugin = app().register_plugin<bnet_plugin>();
 
-} /// namespace eosio
+} /// namespace myeosio
 
 namespace fc {
    extern std::unordered_map<std::string,logger>& get_logger_map();
@@ -106,14 +106,14 @@ std::string peer_log_format;
   FC_MULTILINE_MACRO_END
 
 
-using eosio::public_key_type;
-using eosio::chain_id_type;
-using eosio::block_id_type;
-using eosio::block_timestamp_type;
+using myeosio::public_key_type;
+using myeosio::chain_id_type;
+using myeosio::block_id_type;
+using myeosio::block_timestamp_type;
 using std::string;
-using eosio::sha256;
-using eosio::signed_block_ptr;
-using eosio::packed_transaction_ptr;
+using myeosio::sha256;
+using myeosio::signed_block_ptr;
+using myeosio::packed_transaction_ptr;
 using std::vector;
 
 struct hello {
@@ -183,7 +183,7 @@ struct by_num;
 struct by_received;
 struct by_expired;
 
-namespace eosio {
+namespace myeosio {
   using namespace chain::plugin_interface;
 
   class bnet_plugin_impl;
@@ -1533,4 +1533,4 @@ namespace eosio {
 
    }
 
-} /// namespace eosio
+} /// namespace myeosio

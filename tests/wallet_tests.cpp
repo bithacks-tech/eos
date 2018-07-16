@@ -1,26 +1,26 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/utilities/key_conversion.hpp>
-#include <eosio/utilities/rand.hpp>
-#include <eosio/chain/genesis_state.hpp>
-#include <eosio/wallet_plugin/wallet.hpp>
-#include <eosio/wallet_plugin/wallet_manager.hpp>
+#include <myeosio/utilities/key_conversion.hpp>
+#include <myeosio/utilities/rand.hpp>
+#include <myeosio/chain/genesis_state.hpp>
+#include <myeosio/wallet_plugin/wallet.hpp>
+#include <myeosio/wallet_plugin/wallet_manager.hpp>
 
 #include <boost/test/unit_test.hpp>
-#include <eosio/chain/authority.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <myeosio/chain/authority.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
-namespace eosio {
+namespace myeosio {
 
 BOOST_AUTO_TEST_SUITE(wallet_tests)
 
 /// Test creating the wallet
 BOOST_AUTO_TEST_CASE(wallet_test)
 { try {
-   using namespace eosio::wallet;
-   using namespace eosio::utilities;
+   using namespace myeosio::wallet;
+   using namespace myeosio::utilities;
 
    wallet_data d;
    soft_wallet wallet(d);
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(wallet_test)
 /// Test wallet manager
 BOOST_AUTO_TEST_CASE(wallet_manager_test)
 { try {
-   using namespace eosio::wallet;
+   using namespace myeosio::wallet;
 
    if (fc::exists("test.wallet")) fc::remove("test.wallet");
    if (fc::exists("test2.wallet")) fc::remove("test2.wallet");
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(wallet_manager_test)
 /// Test wallet manager
 BOOST_AUTO_TEST_CASE(wallet_manager_create_test) {
    try {
-      using namespace eosio::wallet;
+      using namespace myeosio::wallet;
 
       if (fc::exists("test.wallet")) fc::remove("test.wallet");
 
@@ -271,4 +271,4 @@ BOOST_AUTO_TEST_CASE(wallet_manager_create_test) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
-} // namespace eos
+} // namespace myeosio

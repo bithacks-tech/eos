@@ -1,10 +1,10 @@
-#include <eosio/chain/webassembly/binaryen.hpp>
-#include <eosio/chain/apply_context.hpp>
+#include <myeosio/chain/webassembly/binaryen.hpp>
+#include <myeosio/chain/apply_context.hpp>
 
 #include <wasm-binary.h>
 
 
-namespace eosio { namespace chain { namespace webassembly { namespace binaryen {
+namespace myeosio { namespace chain { namespace webassembly { namespace binaryen {
 
 class binaryen_instantiated_module : public wasm_instantiated_module_interface {
    public:

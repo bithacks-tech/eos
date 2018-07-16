@@ -1,13 +1,13 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/mongo_db_plugin/mongo_db_plugin.hpp>
-#include <eosio/chain/eosio_contract.hpp>
-#include <eosio/chain/config.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/transaction.hpp>
-#include <eosio/chain/types.hpp>
+#include <myeosio/mongo_db_plugin/mongo_db_plugin.hpp>
+#include <myeosio/chain/myeosio_contract.hpp>
+#include <myeosio/chain/config.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/transaction.hpp>
+#include <myeosio/chain/types.hpp>
 
 #include <fc/io/json.hpp>
 #include <fc/variant.hpp>
@@ -28,7 +28,7 @@
 
 namespace fc { class variant; }
 
-namespace eosio {
+namespace myeosio {
 
 using chain::account_name;
 using chain::action_name;
@@ -57,7 +57,7 @@ public:
    void init();
    void wipe_database();
 
-   static abi_def eos_abi; // cached for common use
+   static abi_def myeos_abi; // cached for common use
 
    bool configured{false};
    bool wipe_database_on_startup{false};
@@ -249,7 +249,7 @@ namespace {
         }
         abi_serializer abis;
         if (msg.account == chain::config::system_account_name) {
-           abi = chain::eosio_contract_abi(abi);
+           abi = chain::myeosio_contract_abi(abi);
         }
         abis.set_abi(abi);
         auto v = abis.binary_to_variant(abis.get_action_type(msg.name), msg.data);
@@ -259,8 +259,8 @@ namespace {
            msg_doc.append(kvp("data", value));
            return;
         } catch (std::exception& e) {
-           elog("Unable to convert EOS JSON to MongoDB JSON: ${e}", ("e", e.what()));
-           elog("  EOS JSON: ${j}", ("j", json));
+           elog("Unable to convert MES JSON to MongoDB JSON: ${e}", ("e", e.what()));
+           elog("  MES JSON: ${j}", ("j", json));
         }
      } catch (fc::exception& e) {
         elog("Unable to convert action.data to ABI: ${s} :: ${n}, what: ${e}", ("s", msg.account)("n", msg.name)("e", e.to_string()));
@@ -618,7 +618,7 @@ void mongo_db_plugin_impl::_process_irreversible_block(const signed_block& block
 
 }
 
-// For now providing some simple account processing to maintain eos_balance
+// For now providing some simple account processing to maintain myeos_balance
 void mongo_db_plugin_impl::update_account(const chain::action& msg) {
    using bsoncxx::builder::basic::kvp;
    using bsoncxx::builder::stream::document;
@@ -635,8 +635,8 @@ void mongo_db_plugin_impl::update_account(const chain::action& msg) {
             std::chrono::microseconds{fc::time_point::now().time_since_epoch().count()});
 
       abi_serializer abis;
-      auto eosio_account = find_account(accounts, msg.account);
-      auto abi = fc::json::from_string(bsoncxx::to_json(eosio_account.view()["abi"].get_document())).as<abi_def>();
+      auto myeosio_account = find_account(accounts, msg.account);
+      auto abi = fc::json::from_string(bsoncxx::to_json(myeosio_account.view()["abi"].get_document())).as<abi_def>();
       abis.set_abi(abi);
       auto transfer = abis.binary_to_variant(abis.get_action_type(msg.name), msg.data);
       auto from_name = transfer["from"].as<name>().to_string();
@@ -644,19 +644,19 @@ void mongo_db_plugin_impl::update_account(const chain::action& msg) {
       auto from_account = find_account(accounts, from_name);
       auto to_account = find_account(accounts, to_name);
 
-      asset from_balance = asset::from_string(from_account.view()["eos_balance"].get_utf8().value.to_string());
-      asset to_balance = asset::from_string(to_account.view()["eos_balance"].get_utf8().value.to_string());
+      asset from_balance = asset::from_string(from_account.view()["myeos_balance"].get_utf8().value.to_string());
+      asset to_balance = asset::from_string(to_account.view()["myeos_balance"].get_utf8().value.to_string());
       auto asset_quantity = transfer["quantity"].as<asset>();
       edump((from_balance)(to_balance)(asset_quantity));
       from_balance -= asset_quantity;
       to_balance += asset_quantity;
 
       document update_from{};
-      update_from << "$set" << open_document << "eos_balance" << from_balance.to_string()
+      update_from << "$set" << open_document << "myeos_balance" << from_balance.to_string()
                   << "updatedAt" << b_date{now}
                   << close_document;
       document update_to{};
-      update_to << "$set" << open_document << "eos_balance" << to_balance.to_string()
+      update_to << "$set" << open_document << "myeos_balance" << to_balance.to_string()
                 << "updatedAt" << b_date{now}
                 << close_document;
 
@@ -671,7 +671,7 @@ void mongo_db_plugin_impl::update_account(const chain::action& msg) {
       // create new account
       bsoncxx::builder::stream::document doc{};
       doc << "name" << newaccount.name.to_string()
-          << "eos_balance" << asset().to_string()
+          << "myeos_balance" << asset().to_string()
           << "staked_balance" << asset().to_string()
           << "unstaking_balance" << asset().to_string()
           << "createdAt" << b_date{now}
@@ -740,7 +740,7 @@ void mongo_db_plugin_impl::init() {
       auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::microseconds{fc::time_point::now().time_since_epoch().count()});
       doc << "name" << name(chain::config::system_account_name).to_string()
-          << "eos_balance" << asset().to_string()
+          << "myeos_balance" << asset().to_string()
           << "staked_balance" << asset().to_string()
           << "unstaking_balance" << asset().to_string()
           << "createdAt" << b_date{now}
@@ -790,10 +790,10 @@ void mongo_db_plugin::set_program_options(options_description& cli, options_desc
 {
    cfg.add_options()
          ("mongodb-queue-size,q", bpo::value<uint>()->default_value(256),
-         "The queue size between nodeos and MongoDB plugin thread.")
+         "The queue size between myeosnode and MongoDB plugin thread.")
          ("mongodb-uri,m", bpo::value<std::string>(),
          "MongoDB URI connection string, see: https://docs.mongodb.com/master/reference/connection-string/."
-               " If not specified then plugin is disabled. Default database 'EOS' is used if not specified in URI.")
+               " If not specified then plugin is disabled. Default database 'MES' is used if not specified in URI.")
          ;
 }
 
@@ -822,7 +822,7 @@ void mongo_db_plugin::plugin_initialize(const variables_map& options)
       mongocxx::uri uri = mongocxx::uri{uri_str};
       my->db_name = uri.database();
       if (my->db_name.empty())
-         my->db_name = "EOS";
+         my->db_name = "MES";
       my->mongo_conn = mongocxx::client{uri};
 
       // add callback to chain_controller config
@@ -838,7 +838,7 @@ void mongo_db_plugin::plugin_initialize(const variables_map& options)
       }
       my->init();
    } else {
-      wlog("eosio::mongo_db_plugin configured, but no --mongodb-uri specified.");
+      wlog("myeosio::mongo_db_plugin configured, but no --mongodb-uri specified.");
       wlog("mongo_db_plugin disabled.");
    }
 }
@@ -860,4 +860,4 @@ void mongo_db_plugin::plugin_shutdown()
    my.reset();
 }
 
-} // namespace eosio
+} // namespace myeosio

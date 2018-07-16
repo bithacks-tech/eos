@@ -1,18 +1,18 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/chain/types.hpp>
+#include <myeosio/chain/types.hpp>
 
-#include <eosio/net_plugin/net_plugin.hpp>
-#include <eosio/net_plugin/protocol.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/block.hpp>
-#include <eosio/chain/plugin_interface.hpp>
-#include <eosio/producer_plugin/producer_plugin.hpp>
-#include <eosio/utilities/key_conversion.hpp>
-#include <eosio/chain/contract_types.hpp>
+#include <myeosio/net_plugin/net_plugin.hpp>
+#include <myeosio/net_plugin/protocol.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/block.hpp>
+#include <myeosio/chain/plugin_interface.hpp>
+#include <myeosio/producer_plugin/producer_plugin.hpp>
+#include <myeosio/utilities/key_conversion.hpp>
+#include <myeosio/chain/contract_types.hpp>
 
 #include <fc/network/message_buffer.hpp>
 #include <fc/network/ip.hpp>
@@ -29,13 +29,13 @@
 #include <boost/asio/steady_timer.hpp>
 #include <boost/intrusive/set.hpp>
 
-using namespace eosio::chain::plugin_interface::compat;
+using namespace myeosio::chain::plugin_interface::compat;
 
 namespace fc {
    extern std::unordered_map<std::string,logger>& get_logger_map();
 }
 
-namespace eosio {
+namespace myeosio {
    static appbase::abstract_plugin& _net_plugin = app().register_plugin<net_plugin>();
 
    using std::vector;
@@ -48,7 +48,7 @@ namespace eosio {
 
    using fc::time_point;
    using fc::time_point_sec;
-   using eosio::chain::transaction_id_type;
+   using myeosio::chain::transaction_id_type;
    namespace bip = boost::interprocess;
 
    class connection;
@@ -416,22 +416,22 @@ namespace eosio {
       void operator() (struct transaction_state &ts) {
          ts.requested_time = time_point::now();
       }
-      void operator () (struct eosio::peer_block_state &bs) {
+      void operator () (struct myeosio::peer_block_state &bs) {
          bs.requested_time = time_point::now();
       }
    } set_request_time;
 
    typedef multi_index_container<
-      eosio::peer_block_state,
+      myeosio::peer_block_state,
       indexed_by<
-         ordered_unique< tag<by_id>, member<eosio::peer_block_state, block_id_type, &eosio::peer_block_state::id > >,
-         ordered_unique< tag<by_block_num>, member<eosio::peer_block_state, uint32_t, &eosio::peer_block_state::block_num > >
+         ordered_unique< tag<by_id>, member<myeosio::peer_block_state, block_id_type, &myeosio::peer_block_state::id > >,
+         ordered_unique< tag<by_block_num>, member<myeosio::peer_block_state, uint32_t, &myeosio::peer_block_state::block_num > >
          >
       > peer_block_state_index;
 
 
    struct update_known_by_peer {
-      void operator() (eosio::peer_block_state& bs) {
+      void operator() (myeosio::peer_block_state& bs) {
          bs.is_known = true;
       }
       void operator() (transaction_state& ts) {
@@ -2543,9 +2543,10 @@ namespace eosio {
       chain_plug->accept_transaction(msg, [=](const static_variant<fc::exception_ptr, transaction_trace_ptr>& result) {
          if (result.contains<fc::exception_ptr>()) {
             auto e_ptr = result.get<fc::exception_ptr>();
-            if (e_ptr->code() != tx_duplicate::code_value && e_ptr->code() != expired_tx_exception::code_value)
+            if (e_ptr->code() != tx_duplicate::code_value && e_ptr->code() != expired_tx_exception::code_value) {
                elog("accept txn threw  ${m}",("m",result.get<fc::exception_ptr>()->to_detail_string()));
                peer_elog(c, "bad packed_transaction : ${m}", ("m",result.get<fc::exception_ptr>()->what()));
+            }
          } else {
             auto trace = result.get<transaction_trace_ptr>();
             if (!trace->except) {
@@ -2914,7 +2915,7 @@ namespace eosio {
          ( "p2p-server-address", bpo::value<string>(), "An externally accessible host:port for identifying this node. Defaults to p2p-listen-endpoint.")
          ( "p2p-peer-address", bpo::value< vector<string> >()->composing(), "The public endpoint of a peer node to connect to. Use multiple p2p-peer-address options as needed to compose a network.")
          ( "p2p-max-nodes-per-host", bpo::value<int>()->default_value(def_max_nodes_per_host), "Maximum number of client0nodes from any single IP address")
-         ( "agent-name", bpo::value<string>()->default_value("\"EOS Test Agent\""), "The name supplied to identify this node amongst the peers.")
+         ( "agent-name", bpo::value<string>()->default_value("\"MyEOSIO Test Agent\""), "The name supplied to identify this node amongst the peers.")
          ( "allowed-connection", bpo::value<vector<string>>()->multitoken()->default_value({"any"}, "any"), "Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined.")
          ( "peer-key", bpo::value<vector<string>>()->composing()->multitoken(), "Optional public key of peer allowed to connect.  May be used multiple times.")
          ( "peer-private-key", boost::program_options::value<vector<string>>()->composing()->multitoken(),

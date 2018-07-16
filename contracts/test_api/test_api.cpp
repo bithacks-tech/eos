@@ -1,9 +1,9 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/transaction.hpp>
+#include <myeoslib/myeos.hpp>
+#include <myeoslib/transaction.hpp>
 
 #include "test_api.hpp"
 #include "test_action.cpp"
@@ -22,9 +22,9 @@ account_name global_receiver;
 
 extern "C" {
    void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
-      if( code == N(eosio) && action == N(onerror) ) {
-         auto error = eosio::onerror::from_current_action();
-         eosio::print("onerror called\n");
+      if( code == N(myeosio) && action == N(onerror) ) {
+         auto error = myeosio::onerror::from_current_action();
+         myeosio::print("onerror called\n");
          auto error_trx = error.unpack_sent_trx();
          auto error_action = error_trx.actions.at(0).name;
 
@@ -180,7 +180,7 @@ extern "C" {
       WASM_TEST_HANDLER_EX(test_permission, test_account_creation_time);
 
       //unhandled test call
-      eosio_assert(false, "Unknown Test");
+      myeosio_assert(false, "Unknown Test");
 
    }
 }

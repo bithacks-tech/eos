@@ -1,11 +1,11 @@
 The following steps must be taken for the example script to work.
 
 0. Create wallet
-0. Create account for eosio.token
+0. Create account for myeos.token
 0. Create account for scott
 0. Create account for exchange
-0. Set token contract on eosio.token
-0. Create EOS token
+0. Set token contract on myeos.token
+0. Create MES token
 0. Issue initial tokens to scott
 
 **Note**:
@@ -13,24 +13,24 @@ Deleting the `transactions.txt` file will prevent replay from working.
 
 
 ### Create wallet
-`cleos wallet create`
+`mycleos wallet create`
 
 ### Create account steps
-`cleos create key`
+`mycleos create key`
 
-`cleos create key`
+`mycleos create key`
 
-`cleos wallet import <private key from step 1>`
+`mycleos wallet import <private key from step 1>`
 
-`cleos wallet import <private key from step 2>`
+`mycleos wallet import <private key from step 2>`
 
-`cleos create account eosio <account_name> <public key from step 1> <public key from step 2>`
+`mycleos create account myeosio <account_name> <public key from step 1> <public key from step 2>`
 
 ### Set contract steps
-`cleos set contract eosio.token /contracts/eosio.token -p eosio.token@active`
+`mycleos set contract myeos.token /contracts/myeos.token -p myeos.token@active`
 
-### Create EOS token steps
-`cleos push action eosio.token create '{"issuer": "eosio.token", "maximum_supply": "100000.0000 EOS", "can_freeze": 1, "can_recall": 1, "can_whitelist": 1}' -p eosio.token@active`
+### Create MES token steps
+`mycleos push action myeos.token create '{"issuer": "myeos.token", "maximum_supply": "100000.0000 MES", "can_freeze": 1, "can_recall": 1, "can_whitelist": 1}' -p myeos.token@active`
 
 ### Issue token steps
-`cleos push action eosio.token issue '{"to": "scott", "quantity": "900.0000 EOS", "memo": "testing"}' -p eosio.token@active`
+`mycleos push action myeos.token issue '{"to": "scott", "quantity": "900.0000 MES", "memo": "testing"}' -p myeos.token@active`

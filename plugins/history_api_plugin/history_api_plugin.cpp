@@ -1,15 +1,15 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/history_api_plugin/history_api_plugin.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <myeosio/history_api_plugin/history_api_plugin.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
 #include <fc/io/json.hpp>
 
-namespace eosio {
+namespace myeosio {
 
-using namespace eosio;
+using namespace myeosio;
 
 static appbase::abstract_plugin& _history_api_plugin = app().register_plugin<history_api_plugin>();
 

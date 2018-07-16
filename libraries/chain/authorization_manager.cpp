@@ -1,19 +1,19 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <eosio/chain/authorization_manager.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/permission_object.hpp>
-#include <eosio/chain/permission_link_object.hpp>
-#include <eosio/chain/authority_checker.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/contract_types.hpp>
-#include <eosio/chain/generated_transaction_object.hpp>
+#include <myeosio/chain/authorization_manager.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/permission_object.hpp>
+#include <myeosio/chain/permission_link_object.hpp>
+#include <myeosio/chain/authority_checker.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/global_property_object.hpp>
+#include <myeosio/chain/contract_types.hpp>
+#include <myeosio/chain/generated_transaction_object.hpp>
 
-namespace eosio { namespace chain {
+namespace myeosio { namespace chain {
 
    authorization_manager::authorization_manager(controller& c, database& d)
    :_control(c),_db(d){}
@@ -92,7 +92,7 @@ namespace eosio { namespace chain {
    void authorization_manager::remove_permission( const permission_object& permission ) {
       const auto& index = _db.template get_index<permission_index, by_parent>();
       auto range = index.equal_range(permission.id);
-      EOS_ASSERT( range.first == range.second, action_validate_exception,
+      MES_ASSERT( range.first == range.second, action_validate_exception,
                   "Cannot remove a permission which has children. Remove the children first.");
 
       _db.get_mutable_index<permission_usage_index>().remove_object( permission.usage_id._id );
@@ -114,13 +114,13 @@ namespace eosio { namespace chain {
    { try {
       FC_ASSERT( !level.actor.empty() && !level.permission.empty(), "Invalid permission" );
       return _db.find<permission_object, by_owner>( boost::make_tuple(level.actor,level.permission) );
-   } EOS_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
+   } MES_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
 
    const permission_object&  authorization_manager::get_permission( const permission_level& level )const
    { try {
       FC_ASSERT( !level.actor.empty() && !level.permission.empty(), "Invalid permission" );
       return _db.get<permission_object, by_owner>( boost::make_tuple(level.actor,level.permission) );
-   } EOS_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
+   } MES_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
 
    optional<permission_name> authorization_manager::lookup_linked_permission( account_name authorizer_account,
                                                                               account_name scope,
@@ -167,7 +167,7 @@ namespace eosio { namespace chain {
          if( !linked_permission )
             return config::active_name;
 
-         if( *linked_permission == config::eosio_any_name )
+         if( *linked_permission == config::myeosio_any_name )
             return optional<permission_name>();
 
          return linked_permission;
@@ -178,10 +178,10 @@ namespace eosio { namespace chain {
                                                                const vector<permission_level>& auths
                                                              )const
    {
-      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      MES_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "updateauth action should only have one declared authorization" );
       const auto& auth = auths[0];
-      EOS_ASSERT( auth.actor == update.account, irrelevant_auth_exception,
+      MES_ASSERT( auth.actor == update.account, irrelevant_auth_exception,
                   "the owner of the affected permission needs to be the actor of the declared authorization" );
 
       const auto* min_permission = find_permission({update.account, update.permission});
@@ -189,7 +189,7 @@ namespace eosio { namespace chain {
          min_permission = &get_permission({update.account, update.parent});
       }
 
-      EOS_ASSERT( get_permission(auth).satisfies( *min_permission,
+      MES_ASSERT( get_permission(auth).satisfies( *min_permission,
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
                   "updateauth action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -200,15 +200,15 @@ namespace eosio { namespace chain {
                                                                const vector<permission_level>& auths
                                                              )const
    {
-      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      MES_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "deleteauth action should only have one declared authorization" );
       const auto& auth = auths[0];
-      EOS_ASSERT( auth.actor == del.account, irrelevant_auth_exception,
+      MES_ASSERT( auth.actor == del.account, irrelevant_auth_exception,
                   "the owner of the permission to delete needs to be the actor of the declared authorization" );
 
       const auto& min_permission = get_permission({del.account, del.permission});
 
-      EOS_ASSERT( get_permission(auth).satisfies( min_permission,
+      MES_ASSERT( get_permission(auth).satisfies( min_permission,
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
                   "updateauth action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -219,29 +219,29 @@ namespace eosio { namespace chain {
                                                              const vector<permission_level>& auths
                                                            )const
    {
-      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      MES_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "link action should only have one declared authorization" );
       const auto& auth = auths[0];
-      EOS_ASSERT( auth.actor == link.account, irrelevant_auth_exception,
+      MES_ASSERT( auth.actor == link.account, irrelevant_auth_exception,
                   "the owner of the linked permission needs to be the actor of the declared authorization" );
 
-      EOS_ASSERT( link.type != updateauth::get_name(),  action_validate_exception,
-                  "Cannot link eosio::updateauth to a minimum permission" );
-      EOS_ASSERT( link.type != deleteauth::get_name(),  action_validate_exception,
-                  "Cannot link eosio::deleteauth to a minimum permission" );
-      EOS_ASSERT( link.type != linkauth::get_name(),    action_validate_exception,
-                  "Cannot link eosio::linkauth to a minimum permission" );
-      EOS_ASSERT( link.type != unlinkauth::get_name(),  action_validate_exception,
-                  "Cannot link eosio::unlinkauth to a minimum permission" );
-      EOS_ASSERT( link.type != canceldelay::get_name(), action_validate_exception,
-                  "Cannot link eosio::canceldelay to a minimum permission" );
+      MES_ASSERT( link.type != updateauth::get_name(),  action_validate_exception,
+                  "Cannot link myeosio::updateauth to a minimum permission" );
+      MES_ASSERT( link.type != deleteauth::get_name(),  action_validate_exception,
+                  "Cannot link myeosio::deleteauth to a minimum permission" );
+      MES_ASSERT( link.type != linkauth::get_name(),    action_validate_exception,
+                  "Cannot link myeosio::linkauth to a minimum permission" );
+      MES_ASSERT( link.type != unlinkauth::get_name(),  action_validate_exception,
+                  "Cannot link myeosio::unlinkauth to a minimum permission" );
+      MES_ASSERT( link.type != canceldelay::get_name(), action_validate_exception,
+                  "Cannot link myeosio::canceldelay to a minimum permission" );
 
       const auto linked_permission_name = lookup_minimum_permission(link.account, link.code, link.type);
 
-      if( !linked_permission_name ) // if action is linked to eosio.any permission
+      if( !linked_permission_name ) // if action is linked to myeosio.any permission
          return;
 
-      EOS_ASSERT( get_permission(auth).satisfies( get_permission({link.account, *linked_permission_name}),
+      MES_ASSERT( get_permission(auth).satisfies( get_permission({link.account, *linked_permission_name}),
                                                   _db.get_index<permission_index>().indices()              ),
                   irrelevant_auth_exception,
                   "link action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -252,21 +252,21 @@ namespace eosio { namespace chain {
                                                                const vector<permission_level>& auths
                                                              )const
    {
-      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      MES_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "unlink action should only have one declared authorization" );
       const auto& auth = auths[0];
-      EOS_ASSERT( auth.actor == unlink.account, irrelevant_auth_exception,
+      MES_ASSERT( auth.actor == unlink.account, irrelevant_auth_exception,
                   "the owner of the linked permission needs to be the actor of the declared authorization" );
 
       const auto unlinked_permission_name = lookup_linked_permission(unlink.account, unlink.code, unlink.type);
-      EOS_ASSERT( unlinked_permission_name.valid(), transaction_exception,
+      MES_ASSERT( unlinked_permission_name.valid(), transaction_exception,
                   "cannot unlink non-existent permission link of account '${account}' for actions matching '${code}::${action}'",
                   ("account", unlink.account)("code", unlink.code)("action", unlink.type) );
 
-      if( *unlinked_permission_name == config::eosio_any_name )
+      if( *unlinked_permission_name == config::myeosio_any_name )
          return;
 
-      EOS_ASSERT( get_permission(auth).satisfies( get_permission({unlink.account, *unlinked_permission_name}),
+      MES_ASSERT( get_permission(auth).satisfies( get_permission({unlink.account, *unlinked_permission_name}),
                                                   _db.get_index<permission_index>().indices()                  ),
                   irrelevant_auth_exception,
                   "unlink action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -277,11 +277,11 @@ namespace eosio { namespace chain {
                                                                             const vector<permission_level>& auths
                                                                           )const
    {
-      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      MES_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "canceldelay action should only have one declared authorization" );
       const auto& auth = auths[0];
 
-      EOS_ASSERT( get_permission(auth).satisfies( get_permission(cancel.canceling_auth),
+      MES_ASSERT( get_permission(auth).satisfies( get_permission(cancel.canceling_auth),
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
                   "canceldelay action declares irrelevant authority '${auth}'; specified authority to satisfy is ${min}",
@@ -308,7 +308,7 @@ namespace eosio { namespace chain {
          if( found ) break;
       }
 
-      EOS_ASSERT( found, action_validate_exception,
+      MES_ASSERT( found, action_validate_exception,
                   "canceling_auth in canceldelay action was not found as authorization in the original delayed transaction" );
 
       return (itr->delay_until - itr->published);
@@ -371,9 +371,9 @@ namespace eosio { namespace chain {
 
             if( !special_case ) {
                auto min_permission_name = lookup_minimum_permission(declared_auth.actor, act.account, act.name);
-               if( min_permission_name ) { // since special cases were already handled, it should only be false if the permission is eosio.any
+               if( min_permission_name ) { // since special cases were already handled, it should only be false if the permission is myeosio.any
                   const auto& min_permission = get_permission({declared_auth.actor, *min_permission_name});
-                  EOS_ASSERT( get_permission(declared_auth).satisfies( min_permission,
+                  MES_ASSERT( get_permission(declared_auth).satisfies( min_permission,
                                                                        _db.get_index<permission_index>().indices() ),
                               irrelevant_auth_exception,
                               "action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -397,7 +397,7 @@ namespace eosio { namespace chain {
       // ascending order of the actor name with ties broken by ascending order of the permission name.
       for( const auto& p : permissions_to_satisfy ) {
          checktime(); // TODO: this should eventually move into authority_checker instead
-         EOS_ASSERT( checker.satisfied( p.first, p.second ), unsatisfied_authorization,
+         MES_ASSERT( checker.satisfied( p.first, p.second ), unsatisfied_authorization,
                      "transaction declares authority '${auth}', "
                      "but does not have signatures for it under a provided delay of ${provided_delay} ms, "
                      "provided permissions ${provided_permissions}, and provided keys ${provided_keys}",
@@ -411,7 +411,7 @@ namespace eosio { namespace chain {
       }
 
       if( !allow_unused_keys ) {
-         EOS_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
+         MES_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
                      "transaction bears irrelevant signatures from these keys: ${keys}",
                      ("keys", checker.unused_keys()) );
       }
@@ -439,7 +439,7 @@ namespace eosio { namespace chain {
                                         checktime
                                       );
 
-      EOS_ASSERT( checker.satisfied({account, permission}), unsatisfied_authorization,
+      MES_ASSERT( checker.satisfied({account, permission}), unsatisfied_authorization,
                   "permission '${auth}' was not satisfied under a provided delay of ${provided_delay} ms, "
                   "provided permissions ${provided_permissions}, and provided keys ${provided_keys}",
                   ("auth", permission_level{account, permission})
@@ -450,7 +450,7 @@ namespace eosio { namespace chain {
                 );
 
       if( !allow_unused_keys ) {
-         EOS_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
+         MES_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
                      "irrelevant keys provided: ${keys}",
                      ("keys", checker.unused_keys()) );
       }
@@ -471,7 +471,7 @@ namespace eosio { namespace chain {
 
       for (const auto& act : trx.actions ) {
          for (const auto& declared_auth : act.authorization) {
-            EOS_ASSERT( checker.satisfied(declared_auth), unsatisfied_authorization,
+            MES_ASSERT( checker.satisfied(declared_auth), unsatisfied_authorization,
                         "transaction declares authority '${auth}', but does not have signatures for it.",
                         ("auth", declared_auth) );
          }
@@ -480,4 +480,4 @@ namespace eosio { namespace chain {
       return checker.used_keys();
    }
 
-} } /// namespace eosio::chain
+} } /// namespace myeosio::chain

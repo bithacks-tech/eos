@@ -1,11 +1,11 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <eosiolib/eosio.hpp>
+#include <myeoslib/myeos.hpp>
 
-namespace eosio {
+namespace myeosio {
 
    class noop: public contract {
       public:
@@ -18,6 +18,6 @@ namespace eosio {
          }
    };
 
-   EOSIO_ABI( noop, ( anyaction ) )
+   MYEOSIO_ABI( noop, ( anyaction ) )
 
-} /// eosio     
+} /// myeosio     

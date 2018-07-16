@@ -1,12 +1,12 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/http_client_plugin/http_client_plugin.hpp>
+#include <myeosio/http_client_plugin/http_client_plugin.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 
-namespace eosio {
+namespace myeosio {
 
 http_client_plugin::http_client_plugin():my(new http_client()){}
 http_client_plugin::~http_client_plugin(){}

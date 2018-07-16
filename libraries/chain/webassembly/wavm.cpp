@@ -1,8 +1,8 @@
-#include <eosio/chain/webassembly/wavm.hpp>
-#include <eosio/chain/wasm_eosio_constraints.hpp>
-#include <eosio/chain/wasm_eosio_injection.hpp>
-#include <eosio/chain/apply_context.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <myeosio/chain/webassembly/wavm.hpp>
+#include <myeosio/chain/wasm_myeosio_constraints.hpp>
+#include <myeosio/chain/wasm_myeosio_injection.hpp>
+#include <myeosio/chain/apply_context.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
 #include "IR/Module.h"
 #include "Platform/Platform.h"
@@ -17,7 +17,7 @@
 using namespace IR;
 using namespace Runtime;
 
-namespace eosio { namespace chain { namespace webassembly { namespace wavm {
+namespace myeosio { namespace chain { namespace webassembly { namespace wavm {
 
 running_instance_context the_running_instance_context;
 
@@ -114,12 +114,12 @@ std::unique_ptr<wasm_instantiated_module_interface> wavm_runtime::instantiate_mo
       Serialization::MemoryInputStream stream((const U8*)code_bytes, code_size);
       WASM::serialize(stream, *module);
    } catch(const Serialization::FatalSerializationException& e) {
-      EOS_ASSERT(false, wasm_serialization_error, e.message.c_str());
+      MES_ASSERT(false, wasm_serialization_error, e.message.c_str());
    } catch(const IR::ValidationException& e) {
-      EOS_ASSERT(false, wasm_serialization_error, e.message.c_str());
+      MES_ASSERT(false, wasm_serialization_error, e.message.c_str());
    }
 
-   eosio::chain::webassembly::common::root_resolver resolver;
+   myeosio::chain::webassembly::common::root_resolver resolver;
    LinkResult link_result = linkModule(*module, resolver);
    ModuleInstance *instance = instantiateModule(*module, std::move(link_result.resolvedImports));
    FC_ASSERT(instance != nullptr);

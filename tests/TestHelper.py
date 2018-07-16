@@ -1,6 +1,6 @@
 from testUtils import Utils
-from testUtils import Cluster
-from testUtils import WalletMgr
+from Cluster import Cluster
+from WalletMgr import WalletMgr
 
 import argparse
 
@@ -39,17 +39,17 @@ class TestHelper(object):
             parser.add_argument("--kill-sig", type=str, choices=[Utils.SigKillTag, Utils.SigTermTag], help="kill signal.",
                     default=Utils.SigKillTag)
         if "--kill-count" in includeArgs:
-            parser.add_argument("--kill-count", type=int, help="nodeos instances to kill", default=-1)
+            parser.add_argument("--kill-count", type=int, help="myeosnode instances to kill", default=-1)
         if "--p2p-plugin" in includeArgs:
             parser.add_argument("--p2p-plugin", choices=["net", "bnet"], help="select a p2p plugin to use. Defaults to net.", default="net")
         if "--seed" in includeArgs:
             parser.add_argument("--seed", type=int, help="random seed", default=1)
 
         if "--host" in includeArgs:
-            parser.add_argument("-h", "--host", type=str, help="%s host name" % (Utils.EosServerName),
+            parser.add_argument("-h", "--host", type=str, help="%s host name" % (Utils.EnuServerName),
                                      default=TestHelper.LOCAL_HOST)
         if "--port" in includeArgs:
-            parser.add_argument("-p", "--port", type=int, help="%s host port" % Utils.EosServerName,
+            parser.add_argument("-p", "--port", type=int, help="%s host port" % Utils.EnuServerName,
                                      default=TestHelper.DEFAULT_PORT)
         if "--prod-count" in includeArgs:
             parser.add_argument("-c", "--prod-count", type=int, help="Per node producer count", default=1)
@@ -61,7 +61,7 @@ class TestHelper(object):
             parser.add_argument("--mongodb", help="Configure a MongoDb instance", action='store_true')
         if "--dump-error-details" in includeArgs:
             parser.add_argument("--dump-error-details",
-                                     help="Upon error print etc/eosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
+                                     help="Upon error print etc/myeosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
                                      action='store_true')
         if "--dont-launch" in includeArgs:
             parser.add_argument("--dont-launch", help="Don't launch own node. Assume node is already running.",
@@ -76,21 +76,21 @@ class TestHelper(object):
         if "--only-bios" in includeArgs:
             parser.add_argument("--only-bios", help="Limit testing to bios node.", action='store_true')
         if "--clean-run" in includeArgs:
-            parser.add_argument("--clean-run", help="Kill all nodeos and kleos instances", action='store_true')
+            parser.add_argument("--clean-run", help="Kill all myeosnode and mykeosd instances", action='store_true')
 
         args = parser.parse_args()
         return args
 
     @staticmethod
     # pylint: disable=too-many-arguments
-    def shutdown(cluster, walletMgr, testSuccessful=True, killEosInstances=True, killWallet=True, keepLogs=False, cleanRun=True, dumpErrorDetails=False):
+    def shutdown(cluster, walletMgr, testSuccessful=True, killEnuInstances=True, killWallet=True, keepLogs=False, cleanRun=True, dumpErrorDetails=False):
         """Cluster and WalletMgr shutdown and cleanup."""
         assert(cluster)
         assert(isinstance(cluster, Cluster))
         if walletMgr:
             assert(isinstance(walletMgr, WalletMgr))
         assert(isinstance(testSuccessful, bool))
-        assert(isinstance(killEosInstances, bool))
+        assert(isinstance(killEnuInstances, bool))
         assert(isinstance(killWallet, bool))
         assert(isinstance(cleanRun, bool))
         assert(isinstance(dumpErrorDetails, bool))
@@ -105,7 +105,7 @@ class TestHelper(object):
                 walletMgr.dumpErrorDetails()
             Utils.Print("== Errors see above ==")
 
-        if killEosInstances:
+        if killEnuInstances:
             Utils.Print("Shut down the cluster.")
             cluster.killall(allInstances=cleanRun)
             if testSuccessful and not keepLogs:

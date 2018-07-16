@@ -1,20 +1,20 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
-#include <eosio/utilities/tempdir.hpp>
+#include <myeosio/utilities/tempdir.hpp>
 
 #include <cstdlib>
 
-namespace eosio { namespace utilities {
+namespace myeosio { namespace utilities {
 
 fc::path temp_directory_path()
 {
-   const char* eos_tempdir = getenv("EOS_TEMPDIR");
-   if( eos_tempdir != nullptr )
-      return fc::path( eos_tempdir );
-   return fc::temp_directory_path() / "eos-tmp";
+   const char* myeos_tempdir = getenv("MES_TEMPDIR");
+   if( myeos_tempdir != nullptr )
+      return fc::path( myeos_tempdir );
+   return fc::temp_directory_path() / "myeos-tmp";
 }
 
-} } // eosio::utilities
+} } // myeosio::utilities

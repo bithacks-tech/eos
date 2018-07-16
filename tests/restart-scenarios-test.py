@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import testUtils
+from testUtils import Utils
+from Cluster import Cluster
+from WalletMgr import WalletMgr
 from TestHelper import TestHelper
 
 import random
@@ -15,14 +17,14 @@ import traceback
 # -d <delay between nodes startup>
 # -v <verbose logging>
 # --kill-sig <kill signal [term|kill]>
-# --kill-count <nodeos instances to kill>
+# --kill-count <myeosnode instances to kill>
 # --dont-kill <Leave cluster running after test finishes>
-# --dump-error-details <Upon error print etc/eosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout>
+# --dump-error-details <Upon error print etc/myeosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout>
 # --keep-logs <Don't delete var/lib/node_* folders upon test completion>
 ###############################################################
 
 
-Print=testUtils.Utils.Print
+Print=Utils.Print
 
 def errorExit(msg="", errorCode=1):
     Print("ERROR:", msg)
@@ -39,19 +41,19 @@ debug=args.v
 total_nodes = pnodes
 killCount=args.kill_count if args.kill_count > 0 else 1
 killSignal=args.kill_sig
-killEosInstances= not args.leave_running
+killEnuInstances= not args.leave_running
 dumpErrorDetails=args.dump_error_details
 keepLogs=args.keep_logs
 killAll=args.clean_run
 p2pPlugin=args.p2p_plugin
 
 seed=1
-testUtils.Utils.Debug=debug
+Utils.Debug=debug
 testSuccessful=False
 
 random.seed(seed) # Use a fixed seed for repeatability.
-cluster=testUtils.Cluster(walletd=True)
-walletMgr=testUtils.WalletMgr(True)
+cluster=Cluster(mykeosdd=True)
+walletMgr=WalletMgr(True)
 
 try:
     cluster.setChainStrategy(chainSyncStrategyStr)
@@ -67,23 +69,23 @@ try:
 
     Print("Stand up cluster")
     if cluster.launch(pnodes, total_nodes, topo=topo, delay=delay, p2pPlugin=p2pPlugin) is False:
-        errorExit("Failed to stand up eos cluster.")
+        errorExit("Failed to stand up myeos cluster.")
 
     Print ("Wait for Cluster stabilization")
     # wait for cluster to start producing blocks
     if not cluster.waitOnClusterBlockNumSync(3):
         errorExit("Cluster never stabilized")
 
-    Print("Stand up EOS wallet keosd")
+    Print("Stand up MES wallet mykeosd")
     walletMgr.killall(allInstances=killAll)
     walletMgr.cleanup()
     if walletMgr.launch() is False:
-        errorExit("Failed to stand up keosd.")
+        errorExit("Failed to stand up mykeosd.")
 
     accountsCount=total_nodes
     walletName="MyWallet"
     Print("Creating wallet %s if one doesn't already exist." % walletName)
-    wallet=walletMgr.create(walletName, [cluster.eosioAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
+    wallet=walletMgr.create(walletName, [cluster.myeosioAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
     if wallet is None:
         errorExit("Failed to create wallet %s" % (walletName))
 
@@ -92,14 +94,14 @@ try:
         errorExit("Wallet initialization failed.")
 
     defproduceraAccount=cluster.defproduceraAccount
-    eosioAccount=cluster.eosioAccount
+    myeosioAccount=cluster.myeosioAccount
 
     Print("Importing keys for account %s into wallet %s." % (defproduceraAccount.name, wallet.name))
     if not walletMgr.importKey(defproduceraAccount, wallet):
         errorExit("Failed to import key for account %s" % (defproduceraAccount.name))
 
     Print("Create accounts.")
-    if not cluster.createAccounts(eosioAccount):
+    if not cluster.createAccounts(myeosioAccount):
         errorExit("Accounts creation failed.")
 
     Print("Wait on cluster sync.")
@@ -107,9 +109,9 @@ try:
         errorExit("Cluster sync wait failed.")
 
     Print("Kill %d cluster node instances." % (killCount))
-    if cluster.killSomeEosInstances(killCount, killSignal) is False:
-        errorExit("Failed to kill Eos instances")
-    Print("nodeos instances killed.")
+    if cluster.killSomeEnuInstances(killCount, killSignal) is False:
+        errorExit("Failed to kill Enu instances")
+    Print("myeosnode instances killed.")
 
     Print("Spread funds and validate")
     if not cluster.spreadFundsAndValidate(10):
@@ -120,9 +122,9 @@ try:
         errorExit("Cluster sync wait failed.")
 
     Print ("Relaunch dead cluster nodes instances.")
-    if cluster.relaunchEosInstances() is False:
-        errorExit("Failed to relaunch Eos instances")
-    Print("nodeos instances relaunched.")
+    if cluster.relaunchEnuInstances() is False:
+        errorExit("Failed to relaunch Enu instances")
+    Print("myeosnode instances relaunched.")
 
     Print ("Resyncing cluster nodes.")
     if not cluster.waitOnClusterSync():
@@ -139,6 +141,6 @@ try:
 
     testSuccessful=True
 finally:
-    TestHelper.shutdown(cluster, walletMgr, testSuccessful, killEosInstances, killEosInstances, keepLogs, killAll, dumpErrorDetails)
+    TestHelper.shutdown(cluster, walletMgr, testSuccessful, killEnuInstances, killEnuInstances, keepLogs, killAll, dumpErrorDetails)
 
 exit(0)

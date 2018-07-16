@@ -1,7 +1,7 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosiolib/eosio.hpp>
+#include <myeoslib/myeos.hpp>
 
 

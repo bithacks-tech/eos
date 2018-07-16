@@ -1,12 +1,12 @@
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/eosio/chain/core_symbol.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/eosio/chain/core_symbol.hpp)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/myeosio/chain/core_symbol.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/myeosio/chain/core_symbol.hpp)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/genesis_state_root_key.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/genesis_state_root_key.cpp)
 
-file(GLOB HEADERS "include/eosio/chain/*.hpp"
-                  "include/eosio/chain/contracts/*.hpp"
-                  "${CMAKE_CURRENT_BINARY_DIR}/include/eosio/chain/core_symbol.hpp" )
+file(GLOB HEADERS "include/myeosio/chain/*.hpp"
+                  "include/myeosio/chain/contracts/*.hpp"
+                  "${CMAKE_CURRENT_BINARY_DIR}/include/myeosio/chain/core_symbol.hpp" )
 
 ## SORT .cpp by most likely to change / break compile
-add_library( eosio_chain
+add_library( myeosio_chain
              merkle.cpp
              name.cpp
              transaction.cpp
@@ -19,8 +19,8 @@ add_library( eosio_chain
              resource_limits.cpp
              block_log.cpp
              transaction_context.cpp
-             eosio_contract.cpp
-             eosio_contract_abi.cpp
+             myeosio_contract.cpp
+             myeosio_contract_abi.cpp
              chain_config.cpp
              chain_id_type.cpp
              genesis_state.cpp
@@ -30,8 +30,8 @@ add_library( eosio_chain
 #             block_trace.cpp
               wast_to_wasm.cpp
               wasm_interface.cpp
-              wasm_eosio_validation.cpp
-              wasm_eosio_injection.cpp
+              wasm_myeosio_validation.cpp
+              wasm_myeosio_injection.cpp
               apply_context.cpp
               abi_serializer.cpp
               asset.cpp
@@ -49,23 +49,23 @@ add_library( eosio_chain
              ${HEADERS}
              )
 
-target_link_libraries( eosio_chain eos_utilities fc chainbase Logging IR WAST WASM Runtime
+target_link_libraries( myeosio_chain myeos_utilities fc chainbase Logging IR WAST WASM Runtime
       wasm asmjs passes cfg ast emscripten-optimizer support softfloat builtins
                      )
-target_include_directories( eosio_chain
+target_include_directories( myeosio_chain
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                                    "${CMAKE_CURRENT_SOURCE_DIR}/../wasm-jit/Include"
                                    "${CMAKE_CURRENT_SOURCE_DIR}/../../externals/binaryen/src"
                             )
 
-set_target_properties( eosio_chain PROPERTIES PUBLIC_HEADER "${HEADERS}" )
-install( TARGETS eosio_chain 
+set_target_properties( myeosio_chain PROPERTIES PUBLIC_HEADER "${HEADERS}" )
+install( TARGETS myeosio_chain 
    RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
    ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
-   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/eosio/chain
+   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/myeosio/chain
 )
-install_directory_permissions( DIRECTORY ${CMAKE_INSTALL_FULL_INCLUDEDIR}/eosio/chain )
+install_directory_permissions( DIRECTORY ${CMAKE_INSTALL_FULL_INCLUDEDIR}/myeosio/chain )
 #if(MSVC)
 #  set_source_files_properties( db_init.cpp db_block.cpp database.cpp block_log.cpp PROPERTIES COMPILE_FLAGS "/bigobj" )
 #endif(MSVC)

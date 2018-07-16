@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 // include entire libc
 #include <alloca.h>
@@ -135,10 +135,10 @@
 #include <string>
 #include <stdexcept>
 */
-//include <eosiolib/eos.hpp>
-#include <eosiolib/dispatcher.hpp>
+//include <myeoslib/myeos.hpp>
+#include <myeoslib/dispatcher.hpp>
 
-using namespace eosio;
+using namespace myeosio;
 /*
 namespace std {
    extern ios_base __start_std_streams;
@@ -195,7 +195,7 @@ namespace stltest {
            */
            /*
            prints("STD string: "); prints(s.c_str());
-           prints("\nEOS string: "); prints_l(s2.get_data(), s2.get_size());
+           prints("\nMES string: "); prints_l(s2.get_data(), s2.get_size());
            */
            prints("STL test start\n");
            /* doesn't work with WASM::serializeWithInjection
@@ -253,11 +253,11 @@ namespace stltest {
         }
 
         static void apply( account_name c, action_name act) {
-            eosio::dispatch<stltest::contract, message>(c,act);
+            myeosio::dispatch<stltest::contract, message>(c,act);
         }
     };
 
-} /// namespace eosio
+} /// namespace myeosio
 
 
 extern "C" {

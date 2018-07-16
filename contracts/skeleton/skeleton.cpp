@@ -1,8 +1,8 @@
-#include <eosiolib/eosio.hpp>
+#include <myeoslib/myeos.hpp>
 
-using namespace eosio;
+using namespace myeosio;
 
-class hello : public eosio::contract {
+class hello : public myeosio::contract {
   public:
       using contract::contract;
 
@@ -12,4 +12,4 @@ class hello : public eosio::contract {
       }
 };
 
-EOSIO_ABI( hello, (hi) )
+MYEOSIO_ABI( hello, (hi) )

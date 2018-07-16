@@ -1,18 +1,18 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/account_history_plugin/account_history_plugin.hpp>
-#include <eosio/account_history_plugin/account_control_history_object.hpp>
-#include <eosio/account_history_plugin/account_transaction_history_object.hpp>
-#include <eosio/account_history_plugin/public_key_history_object.hpp>
-#include <eosio/account_history_plugin/transaction_history_object.hpp>
-#include <eosio/chain/account_object.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/config.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/transaction.hpp>
-#include <eosio/chain/types.hpp>
+#include <myeosio/account_history_plugin/account_history_plugin.hpp>
+#include <myeosio/account_history_plugin/account_control_history_object.hpp>
+#include <myeosio/account_history_plugin/account_transaction_history_object.hpp>
+#include <myeosio/account_history_plugin/public_key_history_object.hpp>
+#include <myeosio/account_history_plugin/transaction_history_object.hpp>
+#include <myeosio/chain/account_object.hpp>
+#include <myeosio/chain/controller.hpp>
+#include <myeosio/chain/config.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/transaction.hpp>
+#include <myeosio/chain/types.hpp>
 
 #include <fc/crypto/sha256.hpp>
 #include <fc/io/json.hpp>
@@ -20,14 +20,14 @@
 
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/mem_fun.hpp>
-#include <eosio/chain/multi_index_includes.hpp>
+#include <myeosio/chain/multi_index_includes.hpp>
 #include <boost/range/adaptors.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/algorithm_ext.hpp>
 
 namespace fc { class variant; }
 
-namespace eosio {
+namespace myeosio {
 
 using chain::account_name;
 using chain::block_id_type;
@@ -530,4 +530,4 @@ read_only::get_controlled_accounts_results read_only::get_controlled_accounts(co
 }
 
 } // namespace account_history_apis
-} // namespace eosio
+} // namespace myeosio

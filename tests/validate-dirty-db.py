@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import testUtils
+from testUtils import Utils
+from Cluster import Cluster
 from TestHelper import TestHelper
 
 import random
@@ -8,11 +9,11 @@ import subprocess
 import signal
 
 ###############################################################
-# Test for validating the dirty db flag sticks repeated nodeos restart attempts
+# Test for validating the dirty db flag sticks repeated myeosnode restart attempts
 ###############################################################
 
 
-Print=testUtils.Utils.Print
+Print=Utils.Print
 
 def errorExit(msg="", errorCode=1):
     Print("ERROR:", msg)
@@ -23,24 +24,24 @@ debug=args.v
 pnodes=1
 topo="mesh"
 delay=1
-chainSyncStrategyStr=testUtils.Utils.SyncResyncTag
+chainSyncStrategyStr=Utils.SyncResyncTag
 total_nodes = pnodes
 killCount=1
-killSignal=testUtils.Utils.SigKillTag
+killSignal=Utils.SigKillTag
 
-killEosInstances= not args.leave_running
+killEnuInstances= not args.leave_running
 dumpErrorDetails=args.dump_error_details
 keepLogs=args.keep_logs
 killAll=args.clean_run
 
 seed=1
-testUtils.Utils.Debug=debug
+Utils.Debug=debug
 testSuccessful=False
 
-def runNodeosAndGetOutput(myNodeId, myTimeout=3):
-    """Startup nodeos, wait for timeout (before forced shutdown) and collect output. Stdout, stderr and return code are returned in a dictionary."""
-    Print("Launching nodeos process id: %d" % (myNodeId))
-    cmd="programs/nodeos/nodeos --config-dir etc/eosio/node_bios --data-dir var/lib/node_bios --verbose-http-errors"
+def runEnunodeAndGetOutput(myNodeId, myTimeout=3):
+    """Startup myeosnode, wait for timeout (before forced shutdown) and collect output. Stdout, stderr and return code are returned in a dictionary."""
+    Print("Launching myeosnode process id: %d" % (myNodeId))
+    cmd="programs/myeosnode/myeosnode --config-dir etc/myeosio/node_bios --data-dir var/lib/node_bios --verbose-http-errors"
     Print("cmd: %s" % (cmd))
     proc=subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -51,14 +52,14 @@ def runNodeosAndGetOutput(myNodeId, myTimeout=3):
         output["stderr"] = errs.decode("utf-8")
         output["returncode"] = proc.returncode
     except (subprocess.TimeoutExpired) as _:
-        Print("ERROR: Nodeos is running beyond the defined wait time. Hard killing nodeos instance.")
+        Print("ERROR: Enunode is running beyond the defined wait time. Hard killing myeosnode instance.")
         proc.send_signal(signal.SIGKILL)
         return (False, None)
 
     return (True, output)
 
 random.seed(seed) # Use a fixed seed for repeatability.
-cluster=testUtils.Cluster(walletd=True)
+cluster=Cluster(mykeosdd=True)
 
 try:
     cluster.setChainStrategy(chainSyncStrategyStr)
@@ -71,7 +72,7 @@ try:
 
     Print("Stand up cluster")
     if cluster.launch(pnodes, total_nodes, topo=topo, delay=delay, dontBootstrap=True) is False:
-        errorExit("Failed to stand up eos cluster.")
+        errorExit("Failed to stand up myeos cluster.")
 
     node=cluster.getNode(0)
     if node is None:
@@ -80,13 +81,13 @@ try:
     Print("Kill cluster nodes.")
     cluster.killall(allInstances=killAll)
     
-    Print("Restart nodeos repeatedly to ensure dirty database flag sticks.")
+    Print("Restart myeosnode repeatedly to ensure dirty database flag sticks.")
     nodeId=0
     timeout=3
     
     for i in range(0,3):
         Print("Attempt %d." % (i))
-        ret = runNodeosAndGetOutput(nodeId, timeout)
+        ret = runEnunodeAndGetOutput(nodeId, timeout)
         assert(ret)
         assert(isinstance(ret, tuple))
         if not ret or not ret[0]:
@@ -102,6 +103,6 @@ try:
 
     testSuccessful=True
 finally:
-    TestHelper.shutdown(cluster, None, testSuccessful, killEosInstances, False, keepLogs, killAll, dumpErrorDetails)
+    TestHelper.shutdown(cluster, None, testSuccessful, killEnuInstances, False, keepLogs, killAll, dumpErrorDetails)
 
 exit(0)

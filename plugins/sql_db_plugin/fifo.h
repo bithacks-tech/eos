@@ -1,6 +1,6 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #pragma once
@@ -12,7 +12,7 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 
-namespace eosio {
+namespace myeosio {
 
 template<typename T>
 class fifo : public boost::noncopyable

@@ -98,12 +98,12 @@ p2p-server-address = localhost:9876
 allowed-connection = any
 p2p-peer-address = localhost:9877
 required-participation = true
-private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+private-key = ["MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 producer-name = initu
-plugin = eosio::producer_plugin
-plugin = eosio::chain_api_plugin
-plugin = eosio::account_history_plugin
-plugin = eosio::account_history_api_plugin"""
+plugin = myeosio::producer_plugin
+plugin = myeosio::chain_api_plugin
+plugin = myeosio::account_history_plugin
+plugin = myeosio::account_history_api_plugin"""
 
 
 config01="""genesis-json = ./genesis.json
@@ -118,12 +118,12 @@ p2p-server-address = localhost:9877
 allowed-connection = any
 p2p-peer-address = localhost:9876
 required-participation = true
-private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+private-key = ["MES6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 producer-name = defproducerb
-plugin = eosio::producer_plugin
-plugin = eosio::chain_api_plugin
-plugin = eosio::account_history_plugin
-plugin = eosio::account_history_api_plugin"""
+plugin = myeosio::producer_plugin
+plugin = myeosio::chain_api_plugin
+plugin = myeosio::account_history_plugin
+plugin = myeosio::account_history_api_plugin"""
 
 
 producers="""producer-name = defproducerd
@@ -180,7 +180,7 @@ def stageScenario(stagedNodeInfos):
     os.makedirs(stagingDir)
     count=0
     for stagedNodeInfo in stagedNodeInfos:
-        configPath=os.path.join(stagingDir, "etc/eosio/node_%02d" % (count))
+        configPath=os.path.join(stagingDir, "etc/myeosio/node_%02d" % (count))
         os.makedirs(configPath)
         with open(os.path.join(configPath, "config.ini"), "w") as textFile:
             print(stagedNodeInfo.config,file=textFile)
@@ -207,7 +207,7 @@ parser.add_argument("-t", "--tests", type=str, help="1|2|3 1=run no malicious pr
 parser.add_argument("-w", type=int, help="system wait time", default=testUtils.Utils.systemWaitTimeout)
 parser.add_argument("-v", help="verbose logging", action='store_true')
 parser.add_argument("--dump-error-details",
-                    help="Upon error print etc/eosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
+                    help="Upon error print etc/myeosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
                     action='store_true')
 parser.add_argument("--keep-logs", help="Don't delete var/lib/node_* folders upon test completion",
                     action='store_true')
@@ -221,7 +221,7 @@ waitTimeout=args.w
 dumpErrorDetails=args.dump-error-details
 keepLogs=args.keep-logs
 amINoon=not args.not_noon
-killEosInstances= not args.dont-kill
+killEnuInstances= not args.dont-kill
 killWallet= not args.dont-kill
 
 testUtils.Utils.Debug=debug
@@ -236,7 +236,7 @@ testUtils.Utils.iAmNotNoon()
 def myTest(transWillEnterBlock):
     testSuccessful=False
 
-    cluster=testUtils.Cluster(walletd=True, staging=True)
+    cluster=testUtils.Cluster(mykeosdd=True, staging=True)
     walletMgr=testUtils.WalletMgr(True)
 
     try:
@@ -251,7 +251,7 @@ def myTest(transWillEnterBlock):
         delay=0
         Print("Stand up cluster")
         if cluster.launch(pnodes, total_nodes, topo, delay) is False:
-            error("Failed to stand up eos cluster.")
+            error("Failed to stand up myeos cluster.")
             return False
 
         accounts=testUtils.Cluster.createAccountKeys(1)
@@ -261,9 +261,9 @@ def myTest(transWillEnterBlock):
         currencyAccount=accounts[0]
         currencyAccount.name="currency0000"
 
-        Print("Stand up walletd")
+        Print("Stand up mykeosdd")
         if walletMgr.launch() is False:
-            error("Failed to stand up eos walletd.")
+            error("Failed to stand up mykeosdd.")
             return False
 
         testWalletName="test"
@@ -373,7 +373,7 @@ def myTest(transWillEnterBlock):
             walletMgr.dumpErrorDetails()
             Print("== Errors see above ==")
 
-        if killEosInstances:
+        if killEnuInstances:
             Print("Shut down the cluster%s" % (" and cleanup." if (testSuccessful and not keepLogs) else "."))
             cluster.killall()
             walletMgr.killall()

@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include <eosio/testing/tester.hpp>
+#include <myeosio/testing/tester.hpp>
 
 #include <multi_index_test/multi_index_test.wast.hpp>
 #include <multi_index_test/multi_index_test.abi.hpp>
@@ -15,7 +15,7 @@
 #define TESTER validating_tester
 #endif
 
-using namespace eosio::testing;
+using namespace myeosio::testing;
 
 BOOST_AUTO_TEST_SUITE(multi_index_tests)
 

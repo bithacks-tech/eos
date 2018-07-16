@@ -37,7 +37,7 @@ parser.add_argument("--wallet_port", type=int, help="wallet port", default=8899)
 parser.add_argument("--impaired_network", help="test impaired network", action='store_true')
 parser.add_argument("--lossy_network", help="test lossy network", action='store_true')
 parser.add_argument("--stress_network", help="test load/stress network", action='store_true')
-parser.add_argument("--not_kill_wallet", help="not killing walletd", action='store_true')
+parser.add_argument("--not_kill_wallet", help="not killing mykeosdd", action='store_true')
 
 args = parser.parse_args()
 enableMongo=False
@@ -55,7 +55,7 @@ elif args.stress_network:
 else:
     errorExit("one of impaired_network, lossy_network or stress_network must be set. Please also check peer configs in p2p_test_peers.py.")
 
-cluster=testUtils.Cluster(walletd=True, enableMongo=enableMongo, defproduceraPrvtKey=defproduceraPrvtKey, defproducerbPrvtKey=defproducerbPrvtKey, walletHost=args.wallet_host, walletPort=args.wallet_port)
+cluster=testUtils.Cluster(mykeosdd=True, enableMongo=enableMongo, defproduceraPrvtKey=defproduceraPrvtKey, defproducerbPrvtKey=defproducerbPrvtKey, walletHost=args.wallet_host, walletPort=args.wallet_port)
 
 print("BEGIN")
 
@@ -103,16 +103,16 @@ testeraAccount.activePublicKey=currencyAccount.activePublicKey=PUB_KEY3
 exchangeAccount.ownerPrivateKey=PRV_KEY2
 exchangeAccount.ownerPublicKey=PUB_KEY2
 
-print("Stand up walletd")
+print("Stand up mykeosdd")
 if walletMgr.launch() is False:
-    cmdError("%s" % (WalletdName))
-    errorExit("Failed to stand up eos walletd.")
+    cmdError("%s" % (EnuWalletDName))
+    errorExit("Failed to stand up mykeosdd.")
 
 testWalletName="test"
 Print("Creating wallet \"%s\"." % (testWalletName))
 testWallet=walletMgr.create(testWalletName)
 if testWallet is None:
-    cmdError("eos wallet create")
+    cmdError("myeos wallet create")
     errorExit("Failed to create wallet %s." % (testWalletName))
 
 for account in accounts:
@@ -125,7 +125,7 @@ defproduceraWalletName="defproducera"
 Print("Creating wallet \"%s\"." % (defproduceraWalletName))
 defproduceraWallet=walletMgr.create(defproduceraWalletName)
 if defproduceraWallet is None:
-    cmdError("eos wallet create")
+    cmdError("myeos wallet create")
     errorExit("Failed to create wallet %s." % (defproduceraWalletName))
 
 defproduceraAccount=testUtils.Cluster.defproduceraAccount
@@ -140,31 +140,31 @@ node0=cluster.getNode(0)
 if node0 is None:
     errorExit("cluster in bad state, received None node")
 
-# eosio should have the same key as defproducera
-eosio = copy.copy(defproduceraAccount)
-eosio.name = "eosio"
+# myeosio should have the same key as defproducera
+myeosio = copy.copy(defproduceraAccount)
+myeos.names = "myeosio"
 
 Print("Info of each node:")
 for i in range(len(hosts)):
     node = cluster.getNode(0)
-    cmd="%s %s get info" % (testUtils.Utils.EosClientPath, node.endpointArgs)
+    cmd="%s %s get info" % (testUtils.Utils.EnuClientPath, node.endpointArgs)
     trans = node.runCmdReturnJson(cmd)
     Print("host %s: %s" % (hosts[i], trans))
 
 
-wastFile="contracts/eosio.system/eosio.system.wast"
-abiFile="contracts/eosio.system/eosio.system.abi"
+wastFile="contracts/myeos.system/myeos.system.wast"
+abiFile="contracts/myeos.system/myeos.system.abi"
 Print("\nPush system contract %s %s" % (wastFile, abiFile))
-trans=node0.publishContract(eosio.name, wastFile, abiFile, waitForTransBlock=True)
+trans=node0.publishContract(myeos.names, wastFile, abiFile, waitForTransBlock=True)
 if trans is None:
-    Utils.errorExit("Failed to publish eosio.system.")
+    Utils.errorExit("Failed to publish myeos.system.")
 else:
     Print("transaction id %s" % (node0.getTransId(trans)))
 
 try:
     maxIndex = module.maxIndex()
     for cmdInd in range(maxIndex):
-        (transIdList, checkacct, expBal, errmsg) = module.execute(cmdInd, node0, testeraAccount, eosio)
+        (transIdList, checkacct, expBal, errmsg) = module.execute(cmdInd, node0, testeraAccount, myeosio)
 
         if len(transIdList) == 0 and len(checkacct) == 0:
             errorExit("failed to execute command in host %s:%s" % (hosts[0], errmsg))

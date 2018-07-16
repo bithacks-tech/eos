@@ -1,9 +1,9 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/http_plugin/http_plugin.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <myeosio/http_plugin/http_plugin.hpp>
+#include <myeosio/chain/exceptions.hpp>
 
 #include <fc/network/ip.hpp>
 #include <fc/log/logger_config.hpp>
@@ -24,7 +24,7 @@
 #include <thread>
 #include <memory>
 
-namespace eosio {
+namespace myeosio {
 
    static appbase::abstract_plugin& _http_plugin = app().register_plugin<http_plugin>();
 

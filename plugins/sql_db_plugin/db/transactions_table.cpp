@@ -1,6 +1,6 @@
 #include "transactions_table.h"
 
-namespace eosio {
+namespace myeosio {
 
 transactions_table::transactions_table()
 {

@@ -1,11 +1,11 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <stdint.h>
-#include <eosio/utilities/words.hpp>
+#include <myeosio/utilities/words.hpp>
 
-namespace eosio { namespace words {
+namespace myeosio { namespace words {
 
 const const_char_ptr word_list[] = { 
 "a",
@@ -17293,7 +17293,7 @@ const const_char_ptr word_list[] = {
 "genu",
 "genua",
 "genual",
-"genuine",
+"gmyeosine",
 "genus",
 "genys",
 "geo",
@@ -49761,4 +49761,4 @@ void hide_unused_warning() {
   (void)word_list; 
 }
 
-} } // eosio::words
+} } // myeosio::words

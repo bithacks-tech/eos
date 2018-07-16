@@ -1,13 +1,13 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #pragma once
 
 #include <vector>
 
-namespace eosio {
+namespace myeosio {
 
 template<typename T>
 class consumer_core {

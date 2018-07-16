@@ -1,8 +1,8 @@
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/print.hpp>
-using namespace eosio;
+#include <myeoslib/myeos.hpp>
+#include <myeoslib/print.hpp>
+using namespace myeosio;
 
-class payloadless : public eosio::contract {
+class payloadless : public myeosio::contract {
   public:
       using contract::contract;
 
@@ -11,4 +11,4 @@ class payloadless : public eosio::contract {
       }
 };
 
-EOSIO_ABI( payloadless, (doit) )
+MYEOSIO_ABI( payloadless, (doit) )

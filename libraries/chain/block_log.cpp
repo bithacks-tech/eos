@@ -1,15 +1,15 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
-#include <eosio/chain/block_log.hpp>
+#include <myeosio/chain/block_log.hpp>
 #include <fstream>
 #include <fc/io/raw.hpp>
 
 #define LOG_READ  (std::ios::in | std::ios::binary)
 #define LOG_WRITE (std::ios::out | std::ios::binary | std::ios::app)
 
-namespace eosio { namespace chain {
+namespace myeosio { namespace chain {
 
    const uint32_t block_log::supported_version = 1;
 
@@ -480,4 +480,4 @@ namespace eosio { namespace chain {
       return gs;
    }
 
-} } /// eosio::chain
+} } /// myeosio::chain

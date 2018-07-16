@@ -1,7 +1,7 @@
 #ifndef TRANSACTIONS_TABLE_H
 #define TRANSACTIONS_TABLE_H
 
-namespace eosio {
+namespace myeosio {
 
 class transactions_table
 {

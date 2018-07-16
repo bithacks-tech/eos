@@ -1,14 +1,14 @@
 /**
  *  @file
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 
 #include <boost/test/unit_test.hpp>
-#include <eosio/chain/block_timestamp.hpp>
+#include <myeosio/chain/block_timestamp.hpp>
 #include <fc/time.hpp>
 #include <fc/exception/exception.hpp>
 
-using namespace eosio;
+using namespace myeosio;
 using namespace chain;
 
 

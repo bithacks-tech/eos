@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
-import testUtils
+from testUtils import Utils
+from Cluster import Cluster
+from WalletMgr import WalletMgr
 from TestHelper import TestHelper
 
 import random
 
-Print=testUtils.Utils.Print
+Print=Utils.Print
 
 def errorExit(msg="", errorCode=1):
     Print("ERROR:", msg)
@@ -26,16 +28,16 @@ dumpErrorDetails=args.dump_error_details
 killAll=args.clean_run
 
 killWallet=not dontKill
-killEosInstances=not dontKill
+killEnuInstances=not dontKill
 if nodesFile is not None:
-    killEosInstances=False
+    killEnuInstances=False
 
-testUtils.Utils.Debug=debug
+Utils.Debug=debug
 testSuccessful=False
 
 random.seed(seed) # Use a fixed seed for repeatability.
-cluster=testUtils.Cluster(walletd=True)
-walletMgr=testUtils.WalletMgr(True)
+cluster=Cluster(mykeosdd=True)
+walletMgr=WalletMgr(True)
 
 try:
     cluster.setWalletMgr(walletMgr)
@@ -58,23 +60,23 @@ try:
 
         Print("Stand up cluster")
         if cluster.launch(pnodes, total_nodes, topo=topo, delay=delay) is False:
-            errorExit("Failed to stand up eos cluster.")
+            errorExit("Failed to stand up myeos cluster.")
 
         Print ("Wait for Cluster stabilization")
         # wait for cluster to start producing blocks
         if not cluster.waitOnClusterBlockNumSync(3):
             errorExit("Cluster never stabilized")
 
-    Print("Stand up EOS wallet keosd")
+    Print("Stand up MES wallet mykeosd")
     walletMgr.killall(allInstances=killAll)
     walletMgr.cleanup()
     if walletMgr.launch() is False:
-        errorExit("Failed to stand up keosd.")
+        errorExit("Failed to stand up mykeosd.")
 
     accountsCount=total_nodes
     walletName="MyWallet-%d" % (random.randrange(10000))
     Print("Creating wallet %s if one doesn't already exist." % walletName)
-    wallet=walletMgr.create(walletName, [cluster.eosioAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
+    wallet=walletMgr.create(walletName, [cluster.myeosioAccount,cluster.defproduceraAccount,cluster.defproducerbAccount])
     if wallet is None:
         errorExit("Failed to create wallet %s" % (walletName))
 
@@ -84,10 +86,10 @@ try:
 
     defproduceraAccount=cluster.defproduceraAccount
     defproducerbAccount=cluster.defproducerbAccount
-    eosioAccount=cluster.eosioAccount
+    myeosioAccount=cluster.myeosioAccount
 
     Print("Create accounts.")
-    if not cluster.createAccounts(eosioAccount):
+    if not cluster.createAccounts(myeosioAccount):
         errorExit("Accounts creation failed.")
 
     Print("Spread funds and validate")
@@ -98,6 +100,6 @@ try:
     
     testSuccessful=True
 finally:
-    TestHelper.shutdown(cluster, walletMgr, testSuccessful, killEosInstances, killWallet, False, killAll, dumpErrorDetails)
+    TestHelper.shutdown(cluster, walletMgr, testSuccessful, killEnuInstances, killWallet, False, killAll, dumpErrorDetails)
 
 exit(0)

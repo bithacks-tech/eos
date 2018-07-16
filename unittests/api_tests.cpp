@@ -1,6 +1,6 @@
 /**
  *  @file api_tests.cpp
- *  @copyright defined in eos/LICENSE.txt
+ *  @copyright defined in myeosio/LICENSE.txt
  */
 #include <algorithm>
 #include <random>
@@ -18,14 +18,14 @@
 #include <boost/iostreams/stream_buffer.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <eosio/testing/tester.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/account_object.hpp>
-#include <eosio/chain/contract_table_objects.hpp>
-#include <eosio/chain/block_summary_object.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/wasm_interface.hpp>
-#include <eosio/chain/resource_limits.hpp>
+#include <myeosio/testing/tester.hpp>
+#include <myeosio/chain/exceptions.hpp>
+#include <myeosio/chain/account_object.hpp>
+#include <myeosio/chain/contract_table_objects.hpp>
+#include <myeosio/chain/block_summary_object.hpp>
+#include <myeosio/chain/global_property_object.hpp>
+#include <myeosio/chain/wasm_interface.hpp>
+#include <myeosio/chain/resource_limits.hpp>
 
 #include <fc/crypto/digest.hpp>
 #include <fc/crypto/sha256.hpp>
@@ -44,10 +44,10 @@
 #include <test_api_db/test_api_db.wast.hpp>
 #include <test_api_multi_index/test_api_multi_index.wast.hpp>
 
-#include <eosio.bios/eosio.bios.wast.hpp>
-#include <eosio.bios/eosio.bios.abi.hpp>
+#include <myeos.bios/myeos.bios.wast.hpp>
+#include <myeos.bios/myeos.bios.abi.hpp>
 
-#define DISABLE_EOSLIB_SERIALIZE
+#define DISABLE_MYEOSLIB_SERIALIZE
 #include <test_api/test_api_common.hpp>
 
 FC_REFLECT( dummy_action, (a)(b)(c) )
@@ -62,8 +62,8 @@ FC_REFLECT( invalid_access_action, (code)(val)(index)(store) )
 #define TESTER validating_tester
 #endif
 
-using namespace eosio;
-using namespace eosio::testing;
+using namespace myeosio;
+using namespace myeosio::testing;
 using namespace chain;
 using namespace fc;
 
@@ -182,7 +182,7 @@ transaction_trace_ptr CallFunction(TESTER& test, T ac, const vector<char>& data,
 }
 
 #define CALL_TEST_FUNCTION(_TESTER, CLS, MTH, DATA) CallFunction(_TESTER, test_api_action<TEST_METHOD(CLS, MTH)>{}, DATA)
-#define CALL_TEST_FUNCTION_SYSTEM(_TESTER, CLS, MTH, DATA) CallFunction(_TESTER, test_chain_action<TEST_METHOD(CLS, MTH)>{}, DATA, {N(eosio)} )
+#define CALL_TEST_FUNCTION_SYSTEM(_TESTER, CLS, MTH, DATA) CallFunction(_TESTER, test_chain_action<TEST_METHOD(CLS, MTH)>{}, DATA, {N(myeosio)} )
 #define CALL_TEST_FUNCTION_SCOPE(_TESTER, CLS, MTH, DATA, ACCOUNT) CallFunction(_TESTER, test_api_action<TEST_METHOD(CLS, MTH)>{}, DATA, ACCOUNT)
 #define CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION(_TESTER, CLS, MTH, DATA, EXC, EXC_MESSAGE) \
 BOOST_CHECK_EXCEPTION( \
@@ -197,7 +197,7 @@ bool is_access_violation(fc::unhandled_exception const & e) {
    try {
       std::rethrow_exception(e.get_inner_exception());
     }
-    catch (const eosio::chain::wasm_execution_error& e) {
+    catch (const myeosio::chain::wasm_execution_error& e) {
        return true;
     } catch (...) {
 
@@ -209,7 +209,7 @@ bool is_access_violation(const Runtime::Exception& e) { return true; }
 bool is_assert_exception(fc::assert_exception const & e) { return true; }
 bool is_page_memory_error(page_memory_error const &e) { return true; }
 bool is_unsatisfied_authorization(unsatisfied_authorization const & e) { return true;}
-bool is_wasm_execution_error(eosio::chain::wasm_execution_error const& e) {return true;}
+bool is_wasm_execution_error(myeosio::chain::wasm_execution_error const& e) {return true;}
 bool is_tx_net_usage_exceeded(const tx_net_usage_exceeded& e) { return true; }
 bool is_block_net_usage_exceeded(const tx_cpu_usage_exceeded& e) { return true; }
 bool is_tx_cpu_usage_exceeded(const tx_cpu_usage_exceeded& e) { return true; }
@@ -273,10 +273,10 @@ BOOST_FIXTURE_TEST_CASE(action_receipt_tests, TESTER) { try {
       BOOST_REQUIRE_EQUAL(uint32_t(res->action_traces[0].receipt.code_sequence), 2);
       BOOST_REQUIRE_EQUAL(uint32_t(res->action_traces[0].receipt.abi_sequence), 1);
    }
-   set_code( config::system_account_name, eosio_bios_wast );
+   set_code( config::system_account_name, myeos_bios_wast );
 
-	set_code( N(testapi), eosio_bios_wast );
-   set_abi(N(testapi), eosio_bios_abi);
+	set_code( N(testapi), myeos_bios_wast );
+   set_abi(N(testapi), myeos_bios_abi);
 	set_code( N(testapi), test_api_wast );
 	res = CALL_TEST_FUNCTION( *this, "test_action", "assert_true", {});
    BOOST_REQUIRE_EQUAL(uint32_t(res->action_traces[0].receipt.code_sequence), 4);
@@ -303,7 +303,7 @@ BOOST_FIXTURE_TEST_CASE(action_tests, TESTER) { try {
 
    //test assert_false
    BOOST_CHECK_EXCEPTION( CALL_TEST_FUNCTION( *this, "test_action", "assert_false", {} ),
-                          eosio_assert_message_exception, eosio_assert_message_is("test_action::assert_false") );
+                          myeosio_assert_message_exception, myeosio_assert_message_is("test_action::assert_false") );
 
    // test read_action_normal
    dummy_action dummy13{DUMMY_ACTION_DEFAULT_A, DUMMY_ACTION_DEFAULT_B, DUMMY_ACTION_DEFAULT_C};
@@ -315,8 +315,8 @@ BOOST_FIXTURE_TEST_CASE(action_tests, TESTER) { try {
 
    // test read_action_to_0
    raw_bytes.resize((1<<16)+1);
-   BOOST_CHECK_EXCEPTION(CALL_TEST_FUNCTION( *this, "test_action", "read_action_to_0", raw_bytes), eosio::chain::wasm_execution_error,
-         [](const eosio::chain::wasm_execution_error& e) {
+   BOOST_CHECK_EXCEPTION(CALL_TEST_FUNCTION( *this, "test_action", "read_action_to_0", raw_bytes), myeosio::chain::wasm_execution_error,
+         [](const myeosio::chain::wasm_execution_error& e) {
             return expect_assert_message(e, "access violation");
          }
       );
@@ -327,8 +327,8 @@ BOOST_FIXTURE_TEST_CASE(action_tests, TESTER) { try {
 
    // test read_action_to_64k
    raw_bytes.resize(3);
-	BOOST_CHECK_EXCEPTION(CALL_TEST_FUNCTION( *this, "test_action", "read_action_to_64k", raw_bytes ), eosio::chain::wasm_execution_error,
-         [](const eosio::chain::wasm_execution_error& e) {
+	BOOST_CHECK_EXCEPTION(CALL_TEST_FUNCTION( *this, "test_action", "read_action_to_64k", raw_bytes ), myeosio::chain::wasm_execution_error,
+         [](const myeosio::chain::wasm_execution_error& e) {
             return expect_assert_message(e, "access violation");
          }
       );
@@ -411,7 +411,7 @@ BOOST_FIXTURE_TEST_CASE(action_tests, TESTER) { try {
    // test current_time
    produce_block();
    BOOST_CHECK_EXCEPTION( CALL_TEST_FUNCTION( *this, "test_action", "test_current_time", fc::raw::pack(now) ),
-                          eosio_assert_message_exception, eosio_assert_message_is("tmp == current_time()")     );
+                          myeosio_assert_message_exception, myeosio_assert_message_is("tmp == current_time()")     );
 
    // test test_current_receiver
    CALL_TEST_FUNCTION( *this, "test_action", "test_current_receiver", fc::raw::pack(N(testapi)));
@@ -542,8 +542,8 @@ BOOST_FIXTURE_TEST_CASE(cf_action_tests, TESTER) { try {
       BOOST_CHECK_EQUAL(ttrace->action_traces[0].inline_traces[0].act.authorization.size(), 0);
 
       BOOST_CHECK_EXCEPTION( CALL_TEST_FUNCTION( *this, "test_transaction", "send_cf_action_fail", {} ),
-                             eosio_assert_message_exception,
-                             eosio_assert_message_is("context free actions cannot have authorizations") );
+                             myeosio_assert_message_exception,
+                             myeosio_assert_message_is("context free actions cannot have authorizations") );
 
       BOOST_REQUIRE_EQUAL( validate(), true );
 } FC_LOG_AND_RETHROW() }
@@ -576,7 +576,7 @@ BOOST_FIXTURE_TEST_CASE(cfa_stateful_api, TESTER)  try {
 	set_code( N(testapi), test_api_wast );
 
    account_name a = N(testapi2);
-   account_name creator = N(eosio);
+   account_name creator = N(myeosio);
 
    signed_transaction trx;
 
@@ -606,7 +606,7 @@ BOOST_FIXTURE_TEST_CASE(deferred_cfa_failed, TESTER)  try {
 	set_code( N(testapi), test_api_wast );
 
    account_name a = N(testapi2);
-   account_name creator = N(eosio);
+   account_name creator = N(myeosio);
 
    signed_transaction trx;
 
@@ -642,7 +642,7 @@ BOOST_FIXTURE_TEST_CASE(deferred_cfa_success, TESTER)  try {
 	set_code( N(testapi), test_api_wast );
 
    account_name a = N(testapi2);
-   account_name creator = N(eosio);
+   account_name creator = N(myeosio);
 
    signed_transaction trx;
 
@@ -954,8 +954,8 @@ BOOST_FIXTURE_TEST_CASE(transaction_tests, TESTER) { try {
 
    // test send_action_inline_fail
    BOOST_CHECK_EXCEPTION( CALL_TEST_FUNCTION(*this, "test_transaction", "send_action_inline_fail", {}),
-                          eosio_assert_message_exception,
-                          eosio_assert_message_is("test_action::assert_false")                          );
+                          myeosio_assert_message_exception,
+                          myeosio_assert_message_is("test_action::assert_false")                          );
 
    //   test send_transaction
       CALL_TEST_FUNCTION(*this, "test_transaction", "send_transaction", {});
@@ -994,8 +994,8 @@ BOOST_FIXTURE_TEST_CASE(transaction_tests, TESTER) { try {
    CALL_TEST_FUNCTION(*this, "test_transaction", "test_tapos_block_prefix", fc::raw::pack(control->head_block_id()._hash[1]) );
 
    // test send_action_recurse
-   BOOST_CHECK_EXCEPTION(CALL_TEST_FUNCTION(*this, "test_transaction", "send_action_recurse", {}), eosio::chain::transaction_exception,
-         [](const eosio::chain::transaction_exception& e) {
+   BOOST_CHECK_EXCEPTION(CALL_TEST_FUNCTION(*this, "test_transaction", "send_action_recurse", {}), myeosio::chain::transaction_exception,
+         [](const myeosio::chain::transaction_exception& e) {
             return expect_assert_message(e, "inline action recursion depth reached");
          }
       );
@@ -1114,7 +1114,7 @@ BOOST_FIXTURE_TEST_CASE(deferred_transaction_tests, TESTER) { try {
    dtt_act2.delay_sec = 5;
 
    auto auth = authority(get_public_key("testapi", name(dtt_act2.permission_name).to_string()), 10);
-   auth.accounts.push_back( permission_level_weight{{N(testapi), config::eosio_code_name}, 1} );
+   auth.accounts.push_back( permission_level_weight{{N(testapi), config::myeosio_code_name}, 1} );
 
    push_action(config::system_account_name, updateauth::get_name(), "testapi", fc::mutable_variant_object()
            ("account", "testapi")
@@ -1326,33 +1326,33 @@ BOOST_FIXTURE_TEST_CASE(multi_index_tests, TESTER) { try {
    CALL_TEST_FUNCTION( *this, "test_multi_index", "idx_double_general", {});
    CALL_TEST_FUNCTION( *this, "test_multi_index", "idx_long_double_general", {});
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pk_iterator_exceed_end", {},
-                                           eosio_assert_message_exception, "cannot increment end iterator");
+                                           myeosio_assert_message_exception, "cannot increment end iterator");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_sk_iterator_exceed_end", {},
-                                           eosio_assert_message_exception, "cannot increment end iterator");
+                                           myeosio_assert_message_exception, "cannot increment end iterator");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pk_iterator_exceed_begin", {},
-                                           eosio_assert_message_exception, "cannot decrement iterator at beginning of table");
+                                           myeosio_assert_message_exception, "cannot decrement iterator at beginning of table");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_sk_iterator_exceed_begin", {},
-                                           eosio_assert_message_exception, "cannot decrement iterator at beginning of index");
+                                           myeosio_assert_message_exception, "cannot decrement iterator at beginning of index");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_pk_ref_to_other_table", {},
-                                           eosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
+                                           myeosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_sk_ref_to_other_table", {},
-                                           eosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
+                                           myeosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_pk_end_itr_to_iterator_to", {},
-                                           eosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
+                                           myeosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_pk_end_itr_to_modify", {},
-                                           eosio_assert_message_exception, "cannot pass end iterator to modify");
+                                           myeosio_assert_message_exception, "cannot pass end iterator to modify");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_pk_end_itr_to_erase", {},
-                                           eosio_assert_message_exception, "cannot pass end iterator to erase");
+                                           myeosio_assert_message_exception, "cannot pass end iterator to erase");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_sk_end_itr_to_iterator_to", {},
-                                           eosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
+                                           myeosio_assert_message_exception, "object passed to iterator_to is not in multi_index");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_sk_end_itr_to_modify", {},
-                                           eosio_assert_message_exception, "cannot pass end iterator to modify");
+                                           myeosio_assert_message_exception, "cannot pass end iterator to modify");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_pass_sk_end_itr_to_erase", {},
-                                           eosio_assert_message_exception, "cannot pass end iterator to erase");
+                                           myeosio_assert_message_exception, "cannot pass end iterator to erase");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_modify_primary_key", {},
-                                           eosio_assert_message_exception, "updater cannot change primary key when modifying an object");
+                                           myeosio_assert_message_exception, "updater cannot change primary key when modifying an object");
    CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_multi_index", "idx64_run_out_of_avl_pk", {},
-                                           eosio_assert_message_exception, "next primary key in table is at autoincrement limit");
+                                           myeosio_assert_message_exception, "next primary key in table is at autoincrement limit");
    CALL_TEST_FUNCTION( *this, "test_multi_index", "idx64_sk_cache_pk_lookup", {});
    CALL_TEST_FUNCTION( *this, "test_multi_index", "idx64_pk_cache_sk_lookup", {});
 
@@ -1375,7 +1375,7 @@ BOOST_FIXTURE_TEST_CASE(fixedpoint_tests, TESTER) { try {
 	CALL_TEST_FUNCTION( *this, "test_fixedpoint", "test_multiplication", {});
 	CALL_TEST_FUNCTION( *this, "test_fixedpoint", "test_division", {});
 	CALL_TEST_FUNCTION_AND_CHECK_EXCEPTION( *this, "test_fixedpoint", "test_division_by_0", {},
-                                          eosio_assert_message_exception, "divide by zero"     );
+                                          myeosio_assert_message_exception, "divide by zero"     );
 
    BOOST_REQUIRE_EQUAL( validate(), true );
 } FC_LOG_AND_RETHROW() }
@@ -1722,7 +1722,7 @@ BOOST_FIXTURE_TEST_CASE(permission_tests, TESTER) { try {
          .account    = N(testapi),
          .permission = N(active),
          .pubkeys    = {
-            public_key_type(string("EOS7GfRtyDWWgxV88a5TRaYY59XmHptyfjsFmHHfioGNJtPjpSmGX"))
+            public_key_type(string("MES7GfRtyDWWgxV88a5TRaYY59XmHptyfjsFmHHfioGNJtPjpSmGX"))
          }
       })
    );
@@ -1734,7 +1734,7 @@ BOOST_FIXTURE_TEST_CASE(permission_tests, TESTER) { try {
          .permission = N(active),
          .pubkeys    = {
             get_public_key(N(testapi), "active"),
-            public_key_type(string("EOS7GfRtyDWWgxV88a5TRaYY59XmHptyfjsFmHHfioGNJtPjpSmGX"))
+            public_key_type(string("MES7GfRtyDWWgxV88a5TRaYY59XmHptyfjsFmHHfioGNJtPjpSmGX"))
          }
       })
    );
@@ -1944,7 +1944,7 @@ BOOST_FIXTURE_TEST_CASE(permission_usage_tests, TESTER) { try {
                                        N(testapi), config::active_name,
                                        control->head_block_time() + fc::milliseconds(config::block_interval_ms)
                                      })
-   ), eosio_assert_message_exception );
+   ), myeosio_assert_message_exception );
 
    produce_blocks(5);
 
@@ -1952,7 +1952,7 @@ BOOST_FIXTURE_TEST_CASE(permission_usage_tests, TESTER) { try {
 
    push_action(config::system_account_name, linkauth::get_name(), N(bob), fc::mutable_variant_object()
            ("account", "bob")
-           ("code", "eosio")
+           ("code", "myeosio")
            ("type", "reqauth")
            ("requirement", "perm1")
    );
@@ -1986,7 +1986,7 @@ BOOST_FIXTURE_TEST_CASE(permission_usage_tests, TESTER) { try {
                                                             N(bob), N(perm1),
                                                             permission_creation_time
                                           })
-   ), eosio_assert_message_exception );
+   ), myeosio_assert_message_exception );
 
    CALL_TEST_FUNCTION( *this, "test_permission", "test_permission_last_used",
                        fc::raw::pack(test_permission_last_used_action{
@@ -2028,9 +2028,9 @@ BOOST_FIXTURE_TEST_CASE(account_creation_time_tests, TESTER) { try {
 } FC_LOG_AND_RETHROW() }
 
 /*************************************************************************************
- * eosio_assert_code_tests test cases
+ * myeosio_assert_code_tests test cases
  *************************************************************************************/
-BOOST_FIXTURE_TEST_CASE(eosio_assert_code_tests, TESTER) { try {
+BOOST_FIXTURE_TEST_CASE(myeosio_assert_code_tests, TESTER) { try {
    produce_block();
    create_account( N(testapi) );
    produce_block();
@@ -2038,7 +2038,7 @@ BOOST_FIXTURE_TEST_CASE(eosio_assert_code_tests, TESTER) { try {
 
    const char* abi_string = R"=====(
 {
-   "version": "eosio::abi/1.0",
+   "version": "myeosio::abi/1.0",
    "types": [],
    "structs": [],
    "actions": [],
@@ -2060,7 +2060,7 @@ BOOST_FIXTURE_TEST_CASE(eosio_assert_code_tests, TESTER) { try {
    produce_blocks(10);
 
    BOOST_CHECK_EXCEPTION( CALL_TEST_FUNCTION( *this, "test_action", "test_assert_code", fc::raw::pack((uint64_t)42) ),
-                          eosio_assert_code_exception, eosio_assert_code_is(42)                                        );
+                          myeosio_assert_code_exception, myeosio_assert_code_is(42)                                        );
 
    produce_block();
 
